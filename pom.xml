@@ -5,6 +5,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>common-base</module>
+        <module>common-security</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -36,7 +37,12 @@
             <dependency>
                 <groupId>cn.hwb</groupId>
                 <artifactId>common-base</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hwb</groupId>
+                <artifactId>common-security</artifactId>
+                <version>0.0.1</version>
             </dependency>
             <!-- 阿里云oss依赖 -->
             <dependency>
