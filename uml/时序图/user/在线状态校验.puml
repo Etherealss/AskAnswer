@@ -1,0 +1,38 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+skinparam shadowing false
+skinparam defaultFontName xfonts-wqy
+skinparam dpi 150
+skinparam activity  {
+    DiamondFontSize 14
+    ArrowFontSize 14
+    FontSize 14
+}
+
+participant 用户 as User
+participant 服务器 as Server
+participant 请求拦截 as AOP
+participant Token管理 as TokenService
+database Redis
+participant Token缓存 as CurUserTokenHolder
+
+activate User
+User -> Server ++: 发送请求
+Server -> AOP ++: 拦截请求
+AOP -> AOP ++--: 是否需要Token检验，假设需要验证
+AOP -> TokenService ++: 验证Token
+TokenService -> Redis++: Token是否存在
+alt Token不存在
+    TokenService <- Redis: Token不存在
+    AOP <- TokenService : Token不存在
+    Server <- AOP: 未登录
+    User <- Server: 未登录
+else Token存在
+    return Token信息
+    return Token信息
+    AOP -> CurUserTokenHolder++: 设置当前用户的Token信息，方便在业务流程中获取
+    return 设置完成
+    return 用户已登录
+    Server ->? :继续后续流程
+end
+@enduml

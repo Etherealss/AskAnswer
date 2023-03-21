@@ -1,0 +1,35 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+skinparam shadowing false
+skinparam defaultFontName xfonts-wqy
+skinparam dpi 150
+skinparam activity  {
+    DiamondFontSize 14
+    ArrowFontSize 14
+    FontSize 14
+}
+
+participant 用户 as User
+participant 服务器 as Server
+participant 回答业务管理 as AnswerService
+participant 问题业务管理 as QuestionService
+participant Token缓存 as CurUserTokenHolder
+database 数据库 as DB
+activate User
+User -> Server ++: 回答问题
+Server -> AnswerService ++: 回答问题
+AnswerService -> QuestionService ++: 获取问题所属年龄段
+return 问题所属年龄段
+AnswerService -> CurUserTokenHolder++: 从Token信息中获取用户生日
+return 用户生日
+AnswerService -> AnswerService ++--: 年龄段是否匹配
+alt 年龄段匹配
+    AnswerService -> DB ++: 保存回答
+    return 保存成功
+    Server <- AnswerService : 回答成功
+    User <- Server : 回答成功
+else 年龄段不匹配
+    Server <- AnswerService-- : 年龄段不匹配
+    User <- Server-- : 年龄段不匹配
+end
+@enduml
