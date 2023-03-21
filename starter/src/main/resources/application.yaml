@@ -1,0 +1,84 @@
+# 服务配置
+server:
+  port: 8083
+spring:
+  # 项目配置
+  application:
+    name: AskAnswer
+  # 环境
+  profiles:
+    active: dev
+  mvc:
+    static-path-pattern: /**
+  # redis配置
+  redis:
+    host: 119.23.214.198
+    port: 6379
+    lettuce:
+      pool:
+        # 连接池最大连接数
+        max-active: 8
+        # 最大阻塞等待时间（负数表示没有限制）
+        max-wait: -1
+        # 最大空闲连接
+        max-idle: 8
+        # 最小空闲连接
+        min-idle: 0
+    client-type: lettuce
+    timeout: 1800000
+    password: baotaredis123456
+  # 数据源配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/askanswer?characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+    # druid配置
+    druid:
+      aop-patterns: com.atguigu.admin.*  # 监控这个包下的所有spring组件
+      filters: stat,wall,slf4j  # 开启的功能，需要再配置具体的filter
+
+      stat-view-servlet: # 监控页配置
+        enabled: true # 默认没有开启
+        login-username: admin # 登录页限制登录用户
+        login-password: admin
+        resetEnable: false
+
+      web-stat-filter: #web监控
+        enabled: true
+        urlPattern: /*
+        exclusions: '*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*'
+
+      filter:
+        stat: # sql监控
+          slow-sql-millis: 1000 # 超过1000ms的查询都是慢查询
+          logSlowSql: true
+          enabled: true
+        wall: # 防火墙
+          enabled: true
+          config:
+            drop-table-allow: false # 禁止删除表操作
+  web:
+    resources:
+      static-locations: classpath:/templates/,classpath:/META-INF/resources/,classpath:/resources/,classpath:/static/,classpath:/public
+
+# mybatisplus配置
+mybatis-plus:
+  type-handlers-package: com.nowander.infrastructure.repository
+  type-enums-package: com.nowander.infrastructure.enums
+  mapper-locations: classpath*:mapper/*.xml
+  configuration: # 指定mybatis全局配置文件中的相关配置项
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.nologging.NoLoggingImpl
+
+logging:
+  config: classpath:log4j2.xml
+  level:
+    root: debug
+app:
+  token:
+    user:
+      expireMs: 864000000 # 测试10天 60 * 60 * 24 * 1000
+      headerName: Authentication
+      cacheKey: ${spring.application.name}:cache:token:str

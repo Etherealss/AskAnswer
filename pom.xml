@@ -6,6 +6,9 @@
     <modules>
         <module>common-base</module>
         <module>common-security</module>
+        <module>starter</module>
+        <module>user</module>
+        <module>question</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -31,6 +34,7 @@
         <druid.version>1.1.23</druid.version>
         <aliyun-oss.version>3.14.0</aliyun-oss.version>
         <fileupload.version>1.4</fileupload.version>
+        <jasypt.version>3.0.4</jasypt.version>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -43,6 +47,12 @@
                 <groupId>cn.hwb</groupId>
                 <artifactId>common-security</artifactId>
                 <version>0.0.1</version>
+            </dependency>
+            <!-- 配置文件加密 -->
+            <dependency>
+                <groupId>com.github.ulisesbocchio</groupId>
+                <artifactId>jasypt-spring-boot-starter</artifactId>
+                <version>${jasypt.version}</version>
             </dependency>
             <!-- 阿里云oss依赖 -->
             <dependency>
@@ -59,12 +69,39 @@
             <!-- Spring Boot -->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter</artifactId>
+                <version>${spring-boot.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!-- Spring Boot Web -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <version>${spring-boot.version}</version>
                 <exclusions>
                     <exclusion>
                         <artifactId>spring-boot-starter-logging</artifactId>
                         <groupId>org.springframework.boot</groupId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <!--测试-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <scope>test</scope>
+                <version>${spring-boot.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-starter-logging</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -155,19 +192,6 @@
                 <artifactId>lombok</artifactId>
                 <version>1.18.22</version>
                 <optional>true</optional>
-            </dependency>
-            <!--测试-->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-test</artifactId>
-                <version>${spring-boot.version}</version>
-                <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-starter-logging</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <!--AOP-->
             <dependency>

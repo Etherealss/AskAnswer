@@ -5,7 +5,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
-import java.util.Set;
 
 /**
  * @author wtk
@@ -15,6 +14,7 @@ import java.util.Set;
 @Data
 @ToString(callSuper = true)
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserTokenCertificate extends TokenCertificate {
 
@@ -23,9 +23,9 @@ public class UserTokenCertificate extends TokenCertificate {
     String username;
 
     /**
-     * 登录时间
+     * 生日
      */
-    Date loginTime;
+    Date birthday;
 
     public UserTokenCertificate(Integer userId, String username) {
         this.userId = userId;
