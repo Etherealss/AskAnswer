@@ -18,7 +18,7 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserTokenCertificate extends TokenCertificate {
 
-    Integer userId;
+    Long userId;
 
     String username;
 
@@ -27,8 +27,4 @@ public class UserTokenCertificate extends TokenCertificate {
      */
     Date birthday;
 
-    public UserTokenCertificate(Integer userId, String username) {
-        this.userId = userId;
-        this.username = username;
-    }
 }

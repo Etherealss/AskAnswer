@@ -26,6 +26,10 @@
             <groupId>cn.hwb</groupId>
             <artifactId>common-security</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.hwb</groupId>
+            <artifactId>user</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

@@ -23,7 +23,7 @@ public class UserTokenService extends RedisTokenService<UserTokenCertificate> {
     }
 
     @Override
-    public UserTokenCertificate verifyToken(String token) {
+    public UserTokenCertificate assertToken(String token) {
         TokenCertificate certificate = redisTemplate.opsForValue().get(tokenKey(token));
         if (certificate == null) {
             throw new TokenException(ResultCode.USER_TOKEN_INVALID);
@@ -32,9 +32,11 @@ public class UserTokenService extends RedisTokenService<UserTokenCertificate> {
     }
 
     @Override
-    public void invalidateToken(String token) {
-        // 来到这里，可以认为 token 有效
-        String tokenKey = tokenKey(token);
-        redisTemplate.opsForValue().getAndDelete(tokenKey);
+    public UserTokenCertificate getToken(String token) {
+        TokenCertificate certificate = redisTemplate.opsForValue().get(tokenKey(token));
+        if (certificate == null) {
+            return null;
+        }
+        return (UserTokenCertificate) certificate;
     }
 }

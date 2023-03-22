@@ -1,4 +1,4 @@
-package cn.hwb.user.service.user;
+package cn.hwb.askanswer.user.service.user;
 
 import cn.hwb.common.base.pojo.entity.IdentifiedEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -20,7 +20,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @TableName(value = "user")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SysUser extends IdentifiedEntity {
+public class UserEntity extends IdentifiedEntity {
 
     @TableField(value = "username")
     String username;

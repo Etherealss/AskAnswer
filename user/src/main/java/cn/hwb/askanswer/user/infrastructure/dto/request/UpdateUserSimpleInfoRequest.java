@@ -1,0 +1,28 @@
+package cn.hwb.askanswer.user.infrastructure.dto.request;
+
+import lombok.AccessLevel;
+import lombok.Data;
+import lombok.experimental.FieldDefaults;
+
+import javax.validation.constraints.*;
+import java.util.Date;
+
+/**
+ * @author wtk
+ * @date 2023-03-22
+ */
+@Data
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class UpdateUserSimpleInfoRequest {
+    @Size(min = 0, max = 100)
+    String signature;
+
+    @Pattern(regexp = "^[a-fA-F0-9]{64}$", message = "密码应该加密，是一个具有64位的十六进制字符串")
+    String curPassword;
+
+    @Pattern(regexp = "^[a-fA-F0-9]{64}$", message = "密码应该加密，是一个具有64位的十六进制字符串")
+    String newPassword;
+
+    @Past
+    Date birthday;
+}

@@ -40,10 +40,10 @@ public class HeaderInterceptor implements ConfigHandlerInterceptor {
     private void setUserToken(HttpServletRequest request) {
         String userToken = request.getHeader(userCertificateConfig.getHeaderName());
         if (StringUtils.hasText(userToken)) {
-            try {
-                UserTokenCertificate userCredential = tokenService.verifyToken(userToken);
-                UserSecurityContextHolder.set(userCredential);
-            } catch (TokenException ignored) {}
+            UserTokenCertificate tokenCertificate = tokenService.getToken(userToken);
+            if (tokenCertificate != null) {
+                UserSecurityContextHolder.set(tokenCertificate);
+            }
         }
     }
 
