@@ -85,8 +85,8 @@ spring:
 
 # mybatisplus配置
 mybatis-plus:
-  type-handlers-package: cn.hwb.common.base.repository
-  type-enums-package: cn.hwb.common.base.enums
+  type-handlers-package: cn.hwb.askanswer.common.database.repository
+  type-enums-package: cn.hwb.askanswer.**.enums
   mapper-locations: classpath*:mapper/*.xml
   configuration: # 指定mybatis全局配置文件中的相关配置项
     map-underscore-to-camel-case: true

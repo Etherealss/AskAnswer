@@ -30,6 +30,10 @@
             <groupId>cn.hwb</groupId>
             <artifactId>user</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.hwb</groupId>
+            <artifactId>question</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
