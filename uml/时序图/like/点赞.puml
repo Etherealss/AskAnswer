@@ -1,0 +1,33 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+'https://plantuml.com/sequence-diagram
+skinparam shadowing false
+skinparam defaultFontName xfonts-wqy
+skinparam defaultFontName times
+skinparam dpi 300
+skinparam activity  {
+    DiamondFontSize 14
+    ArrowFontSize 14
+    FontSize 14
+}
+
+participant 用户 as User
+participant 服务器 as Server
+participant 其他业务 as OtherService
+participant 点赞业务 as LikeService
+database 数据库 as DB
+
+activate User
+User -> Server ++ : 点赞
+Server -> OtherService ++ : 点赞目标是否存在
+return 假设存在
+Server -> LikeService ++ : 点赞
+LikeService -> DB ++ : 添加点赞关系
+return 添加成功
+LikeService -> DB ++ : 总点赞数+1
+return 增加成功
+return 完成
+return 完成
+deactivate User
+
+@enduml

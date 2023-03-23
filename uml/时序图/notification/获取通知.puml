@@ -1,0 +1,32 @@
+@startuml
+skinparam shadowing false
+skinparam defaultFontName xfonts-wqy
+skinparam defaultFontName times
+skinparam dpi 300
+skinparam activity  {
+    DiamondFontSize 14
+    ArrowFontSize 14
+    FontSize 14
+}
+
+participant 用户 as User
+participant 服务器 as Server
+participant Token缓存 as CurTokenHandler
+participant 通知业务 as NotificationService
+database 数据库 as DB
+
+activate User
+User -> Server ++: 获取通知
+Server -> CurTokenHandler ++ : 获取当前用户的ID
+return 用户ID
+Server -> NotificationService ++ : 根据用户ID获取用户通知
+NotificationService -> DB ++ : 获取用户已读的最后一条通知的ID
+return 通知ID
+NotificationService -> DB ++ : 批量获取所有未读通知
+return 通知
+NotificationService -> DB ++ : 更新已读的最后一条通知的ID
+return 完成
+return 通知
+return 通知
+deactivate User
+@enduml

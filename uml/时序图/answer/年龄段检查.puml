@@ -12,8 +12,8 @@ skinparam activity  {
 
 participant 用户 as User
 participant 服务器 as Server
-participant 回答业务管理 as AnswerService
-participant 问题业务管理 as QuestionService
+participant 回答业务 as AnswerService
+participant 问题业务 as QuestionService
 participant Token缓存 as CurUserTokenHolder
 database 数据库 as DB
 

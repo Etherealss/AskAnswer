@@ -1,0 +1,44 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+'https://plantuml.com/sequence-diagram
+skinparam shadowing false
+skinparam defaultFontName xfonts-wqy
+skinparam dpi 300
+skinparam activity  {
+    DiamondFontSize 14
+    ArrowFontSize 14
+    FontSize 14
+}
+
+participant 用户 as User
+participant 服务器 as Server
+participant 问题业务 as QuestionService
+participant 用户业务 as UserService
+database 数据库 as DB
+database Redis缓存 as Redis
+
+activate User
+User -> Server ++: 提供游标ID，\n分页获取问题列表
+Server -> QuestionService ++: 分页获取问题列表
+QuestionService -> DB ++: 根据游标ID分页获取数据
+return 问题列表
+QuestionService -> UserService ++: 获取问题作者的用户信息
+loop 问题列表
+    UserService -> Redis ++: 用户信息缓存
+    alt 缓存命中
+         UserService <- Redis : 用户信息
+    else 缓存不命中
+        return 无缓存信息
+        UserService -> DB ++: 获取用户信息
+        return 用户信息
+        UserService -> Redis ++ : 设置缓存
+        return 设置成功
+    end
+end
+return 用户信息
+return 页面信息
+return 页面信息
+deactivate User
+
+@enduml

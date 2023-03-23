@@ -12,7 +12,7 @@ skinparam activity  {
 participant 用户 as User
 participant 浏览器 as Browser
 participant 服务端 as  Server
-participant 用户业务管理 as UserService
+participant 用户业务 as UserService
 participant 唯一ID生成 as Uid
 database 数据库 as DB
 

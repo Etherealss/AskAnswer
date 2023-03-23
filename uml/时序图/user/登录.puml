@@ -13,8 +13,8 @@ skinparam activity  {
 participant 用户 as User
 participant 浏览器 as Browser
 participant 服务器 as Server
-participant 用户业务管理 as UserService
-participant Token业务管理 as TokenService
+participant 用户业务 as UserService
+participant Token业务 as TokenService
 database 数据库 as DB
 
 activate User

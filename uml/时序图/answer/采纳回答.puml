@@ -14,9 +14,10 @@ skinparam activity  {
 participant 用户 as User
 participant 浏览器 as Browser
 participant 服务器 as Server
-participant 问题业务管理 as QuestionService
-participant 回答业务管理 as AnswerService
+participant 问题业务 as QuestionService
+participant 回答业务 as AnswerService
 database 数据库 as DB
+participant 通知业务 as NotificationService
 
 activate User
 User -> Server ++: 采纳回答
@@ -31,14 +32,17 @@ else 记录数为1
     Server <- QuestionService --: 问题存在
     Server -> AnswerService ++: 根据回答ID更新回答
     AnswerService -> DB ++: 根据回答ID采纳回答
-    alt 回答存在
-        AnswerService <- DB: 更新1行记录
-        Server <- AnswerService: 采纳成功
-        User <- Server: 采纳成功
-    else 回答不存在
-        AnswerService <- DB--: 更新0行记录
-        Server <- AnswerService--: 回答不存在
-        User <- Server--: 回答不存在
+    alt 回答不存在
+        AnswerService <- DB: 更新0行记录
+        Server <- AnswerService: 回答不存在
+        User <- Server: 回答不存在
+    else 回答存在
+        AnswerService <- DB --: 更新1行记录
+        AnswerService --> NotificationService ++: 发布回答采纳通知
+        return 发布成功
+        Server <- AnswerService --: 采纳成功
+        User <- Server --: 采纳成功
+
     end
 end
 

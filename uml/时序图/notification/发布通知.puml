@@ -1,0 +1,22 @@
+@startuml
+skinparam shadowing false
+skinparam defaultFontName xfonts-wqy
+skinparam defaultFontName times
+skinparam dpi 300
+skinparam activity  {
+    DiamondFontSize 14
+    ArrowFontSize 14
+    FontSize 14
+}
+
+participant 其他业务 as OtherServer
+participant 通知业务 as NotificationService
+database 数据库 as DB
+
+activate OtherServer
+OtherServer -> NotificationService ++: 发布新通知
+NotificationService -> DB++: 保存通知
+return 保存成功
+return 保存成功
+deactivate OtherServer
+@enduml
