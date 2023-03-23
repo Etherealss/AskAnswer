@@ -1,4 +1,4 @@
-package cn.hwb.askanswer.user.service.user;
+package cn.hwb.askanswer.user.infrastructure.pojo.entity;
 
 import cn.hwb.common.base.pojo.entity.IdentifiedEntity;
 import com.baomidou.mybatisplus.annotation.TableField;

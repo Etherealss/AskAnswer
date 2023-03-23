@@ -1,6 +1,6 @@
 package cn.hwb.askanswer.user.controller;
 
-import cn.hwb.askanswer.user.infrastructure.dto.request.UserLoginRequest;
+import cn.hwb.askanswer.user.infrastructure.pojo.request.UserLoginRequest;
 import cn.hwb.askanswer.user.service.user.UserAuthService;
 import cn.hwb.common.base.web.ResponseAdvice;
 import cn.hwb.common.security.auth.annotation.AnonymousAccess;
@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author wtk

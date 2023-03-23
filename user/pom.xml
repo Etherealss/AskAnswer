@@ -26,6 +26,10 @@
             <groupId>cn.hwb</groupId>
             <artifactId>common-security</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.hwb</groupId>
+            <artifactId>common-database</artifactId>
+        </dependency>
         <!--测试-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

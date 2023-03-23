@@ -1,5 +1,6 @@
-package cn.hwb.askanswer.user.infrastructure.dto.request;
+package cn.hwb.askanswer.user.infrastructure.pojo.request;
 
+import cn.hwb.common.security.xss.XssEscape;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -15,6 +16,7 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UpdateUserSimpleInfoRequest {
     @Size(min = 0, max = 100)
+    @XssEscape
     String signature;
 
     @Pattern(regexp = "^[a-fA-F0-9]{64}$", message = "密码应该加密，是一个具有64位的十六进制字符串")

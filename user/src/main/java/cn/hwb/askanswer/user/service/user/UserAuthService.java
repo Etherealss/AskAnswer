@@ -1,6 +1,7 @@
 package cn.hwb.askanswer.user.service.user;
 
-import cn.hwb.askanswer.user.infrastructure.dto.request.UserLoginRequest;
+import cn.hwb.askanswer.user.infrastructure.pojo.request.UserLoginRequest;
+import cn.hwb.askanswer.user.infrastructure.pojo.entity.UserEntity;
 import cn.hwb.askanswer.user.mapper.UserMapper;
 import cn.hwb.common.base.crypt.PasswordEncryptor;
 import cn.hwb.common.base.enums.ResultCode;

@@ -1,7 +1,7 @@
 package cn.hwb.askanswer.user.service.user;
 
 import cn.hwb.askanswer.TestApplication;
-import cn.hwb.askanswer.user.infrastructure.dto.request.CreateUserRequest;
+import cn.hwb.askanswer.user.infrastructure.pojo.request.CreateUserRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

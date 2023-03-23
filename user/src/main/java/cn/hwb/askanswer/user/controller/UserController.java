@@ -1,9 +1,8 @@
 package cn.hwb.askanswer.user.controller;
 
-import cn.hwb.askanswer.user.infrastructure.dto.request.CreateUserRequest;
-import cn.hwb.askanswer.user.infrastructure.dto.request.UpdateUserSensitiveInfoRequest;
-import cn.hwb.askanswer.user.infrastructure.dto.request.UpdateUserSimpleInfoRequest;
-import cn.hwb.askanswer.user.infrastructure.dto.resp.UserBriefDTO;
+import cn.hwb.askanswer.user.infrastructure.pojo.request.CreateUserRequest;
+import cn.hwb.askanswer.user.infrastructure.pojo.request.UpdateUserSimpleInfoRequest;
+import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
 import cn.hwb.common.base.web.ResponseAdvice;
 import cn.hwb.common.security.auth.annotation.AnonymousAccess;

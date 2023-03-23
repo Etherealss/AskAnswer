@@ -1,4 +1,4 @@
-package cn.hwb.askanswer.user.infrastructure.dto.resp;
+package cn.hwb.askanswer.user.infrastructure.pojo.dto;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AccessLevel;
