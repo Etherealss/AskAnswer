@@ -1,6 +1,6 @@
 package cn.hwb.common.security.auth.service;
 
-import cn.hwb.common.base.exception.service.AuthenticationException;
+import cn.hwb.askanswer.common.base.exception.service.AuthenticationException;
 import cn.hwb.common.security.auth.annotation.AnonymousAccess;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

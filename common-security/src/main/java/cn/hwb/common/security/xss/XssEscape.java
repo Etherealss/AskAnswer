@@ -7,6 +7,7 @@ import java.lang.annotation.Target;
 
 /**
  * xss 转义
+ * @see XssEscapeAspect
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

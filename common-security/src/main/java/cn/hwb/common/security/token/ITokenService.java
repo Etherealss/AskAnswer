@@ -1,7 +1,7 @@
 package cn.hwb.common.security.token;
 
 
-import cn.hwb.common.security.token.user.UserTokenCertificate;
+import cn.hwb.common.security.auth.exception.TokenException;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
@@ -11,12 +11,12 @@ import org.springframework.lang.Nullable;
  */
 public interface ITokenService<T extends TokenCertificate> {
 
-    void createTokenAndSave(@NonNull TokenCertificate credential);
+    void completeTokenAndSave(@NonNull TokenCertificate credential);
 
     // TODO updateUserTokenCertificate 在用户权限更新时修改token权限缓存
 
     @NonNull
-    T assertToken(String token);
+    T assertToken(String token) throws TokenException;
 
     /**
      * 使 token 失效
@@ -30,5 +30,5 @@ public interface ITokenService<T extends TokenCertificate> {
      * @return 不存在时返回null
      */
     @Nullable
-    UserTokenCertificate getToken(String token);
+    T getToken(String token);
 }

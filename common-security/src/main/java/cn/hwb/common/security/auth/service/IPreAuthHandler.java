@@ -1,5 +1,7 @@
 package cn.hwb.common.security.auth.service;
 
+import cn.hwb.askanswer.common.base.exception.service.AuthenticationException;
+
 import java.lang.reflect.Method;
 
 /**
@@ -21,5 +23,5 @@ public interface IPreAuthHandler {
      * 如果 auth 不通过，抛出 {@code AuthenticationException} 异常以拦截请求
      * @param method 用于获取注解
      */
-    void doAuth(Method method);
+    void doAuth(Method method) throws AuthenticationException;
 }

@@ -1,8 +1,8 @@
 package cn.hwb.common.security.token.user;
 
 import cn.hutool.extra.spring.SpringUtil;
-import cn.hwb.common.base.enums.ResultCode;
-import cn.hwb.common.base.utils.ServletUtil;
+import cn.hwb.askanswer.common.base.enums.ResultCode;
+import cn.hwb.askanswer.common.base.utils.ServletUtil;
 import cn.hwb.common.security.auth.exception.TokenException;
 import cn.hwb.common.security.config.UserCertificateConfig;
 import org.springframework.lang.NonNull;

@@ -1,8 +1,7 @@
 package cn.hwb.common.security.auth.interceptor;
 
-import cn.hwb.common.base.interceptor.ConfigHandlerInterceptor;
+import cn.hwb.askanswer.common.base.interceptor.ConfigHandlerInterceptor;
 import cn.hwb.common.security.config.UserCertificateConfig;
-import cn.hwb.common.security.auth.exception.TokenException;
 import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import cn.hwb.common.security.token.user.UserTokenCertificate;
 import cn.hwb.common.security.token.user.UserTokenService;

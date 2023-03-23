@@ -1,6 +1,6 @@
 package cn.hwb.common.security.token.user;
 
-import cn.hwb.common.base.enums.ResultCode;
+import cn.hwb.askanswer.common.base.enums.ResultCode;
 import cn.hwb.common.security.auth.exception.TokenException;
 import cn.hwb.common.security.config.UserCertificateConfig;
 import cn.hwb.common.security.token.RedisTokenService;
@@ -23,7 +23,7 @@ public class UserTokenService extends RedisTokenService<UserTokenCertificate> {
     }
 
     @Override
-    public UserTokenCertificate assertToken(String token) {
+    public UserTokenCertificate assertToken(String token) throws TokenException {
         TokenCertificate certificate = redisTemplate.opsForValue().get(tokenKey(token));
         if (certificate == null) {
             throw new TokenException(ResultCode.USER_TOKEN_INVALID);

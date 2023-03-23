@@ -1,8 +1,8 @@
 package cn.hwb.common.security.auth.exception;
 
 
-import cn.hwb.common.base.enums.ResultCode;
-import cn.hwb.common.base.exception.service.AuthenticationException;
+import cn.hwb.askanswer.common.base.enums.ResultCode;
+import cn.hwb.askanswer.common.base.exception.service.AuthenticationException;
 
 /**
  * @author wtk

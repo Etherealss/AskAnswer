@@ -1,9 +1,6 @@
 package cn.hwb.common.security.token;
 
-import cn.hwb.common.base.enums.ResultCode;
-import cn.hwb.common.security.auth.exception.TokenException;
 import cn.hwb.common.security.config.UserCertificateConfig;
-import cn.hwb.common.security.token.user.UserTokenCertificate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -28,7 +25,7 @@ public abstract class RedisTokenService<T extends TokenCertificate> implements I
     protected final RedisTemplate<String, TokenCertificate> redisTemplate;
 
     @Override
-    public void createTokenAndSave(TokenCertificate certificate) {
+    public void completeTokenAndSave(TokenCertificate certificate) {
         Objects.requireNonNull(certificate, "TokenCertificate 不能为空");
         UUID token = UUID.randomUUID();
         certificate.setToken(token.toString());
