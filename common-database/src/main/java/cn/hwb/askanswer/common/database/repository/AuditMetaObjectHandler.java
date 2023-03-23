@@ -1,6 +1,6 @@
-package cn.hwb.common.security.repository.audit;
+package cn.hwb.askanswer.common.database.repository;
 
-import cn.hwb.common.base.pojo.entity.BaseEntity;
+import cn.hwb.askanswer.common.base.pojo.entity.BaseEntity;
 import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import cn.hwb.common.security.token.user.UserTokenCertificate;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;

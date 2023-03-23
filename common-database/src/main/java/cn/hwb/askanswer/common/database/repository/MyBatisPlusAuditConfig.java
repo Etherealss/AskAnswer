@@ -1,9 +1,7 @@
-package cn.hwb.common.security.repository.audit;
+package cn.hwb.askanswer.common.database.repository;
 
-import com.ulisesbocchio.jasyptspringboot.annotation.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
  * @author wtk
