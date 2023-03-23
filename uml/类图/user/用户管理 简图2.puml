@@ -1,0 +1,33 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam shadowing false
+skinparam defaultFontName xfonts-wqy
+skinparam defaultFontName console
+skinparam dpi 300
+skinparam activity  {
+    DiamondFontSize 14
+    ArrowFontSize 14
+    FontSize 14
+}
+
+class UpdateUserSimpleInfoRequest {
+    String signature
+    String curPassword
+    String newPassword
+    Date birthday
+}
+class CreateUserRequest {
+    String username
+    String password
+    Date birthday
+}
+class UserBriefDTO {
+    Long id
+    String username
+    String avatar
+    Date birthday
+    String signature
+    Date createTime
+}
+@enduml

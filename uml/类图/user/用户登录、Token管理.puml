@@ -1,0 +1,38 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam shadowing false
+skinparam defaultFontName xfonts-wqy
+skinparam defaultFontName console
+skinparam dpi 300
+skinparam activity  {
+    DiamondFontSize 14
+    ArrowFontSize 14
+    FontSize 14
+}
+
+class UserAuthController {
+    - UserAuthService userAuthService
+    + UserTokenCertificate login(UserLoginRequest req)
+    + Boolean verifyToken(String token)
+    + void logout(String token)
+}
+
+class UserAuthService {
+    - PasswordEncryptor passwordEncryptor
+    - UserTokenService tokenService
+    + UserTokenCertificate login(UserLoginRequest request)
+    + boolean verifyToken(String token)
+    + void invalidateToken(String token)
+}
+class PasswordEncryptor {
+    - MessageDigest messageDigest
+    + String encode(String password)
+    + boolean match(String checkPassword, String realPassword)
+}
+
+UserAuthController ..> UserAuthService : 业务处理
+UserAuthService ..> PasswordEncryptor : 密码散列化
+
+
+@enduml

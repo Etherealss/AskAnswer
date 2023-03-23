@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam shadowing false
+skinparam defaultFontName xfonts-wqy
+skinparam defaultFontName console
+skinparam dpi 300
+skinparam activity  {
+    DiamondFontSize 14
+    ArrowFontSize 14
+    FontSize 14
+}
+
+class PreAuthAspect {
+    - List<IPreAuthHandler> preAuthHandlers
+    + Object around(ProceedingJoinPoint joinPoint) throws Throwable
+}
+note right : AOP拦截Controller请求
+PreAuthAspect ..> IPreAuthHandler
+
+
+interface IPreAuthHandler {
+    boolean checkNeedAuth(Method method)
+    void doAuth(Method method) throws AuthenticationException
+}
+
+note right of IPreAuthHandler::checkNeedAuth
+判断是否需要进行认证
+end note
+note right of IPreAuthHandler::doAuth
+执行认证操作
+end note
+
+class UserTokenAuthHandler implements IPreAuthHandler {
+    + boolean checkNeedAuth(Method method)
+    + void doAuth(Method method) throws AuthenticationException
+}
+annotation AnonymousAccess {}
+
+UserTokenAuthHandler - AnonymousAccess
+UserTokenAuthHandler ..> UserTokenService: 验证Token
+
+class UserTokenService {
+    + UserTokenCertificate getToken(String token)
+}
+note right : 省略父类和无关方法
+@enduml

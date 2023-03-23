@@ -1,0 +1,56 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam shadowing false
+skinparam defaultFontName xfonts-wqy
+skinparam defaultFontName console
+skinparam dpi 300
+skinparam activity  {
+    DiamondFontSize 14
+    ArrowFontSize 14
+    FontSize 14
+}
+
+interface ITokenService<T extends TokenCertificate> {
+    + void completeTokenAndSave(TokenCertificate credential)
+    + {abstract} T assertToken(String token) throws TokenException
+    + {abstract} T getToken(String token)
+    + {abstract} void invalidateToken(String token)
+}
+abstract class RedisTokenService<T extends TokenCertificate> implements ITokenService {
+    # UserCertificateConfig config
+    # RedisTemplate<String, TokenCertificate> redisTemplate
+    + void createTokenAndSave(TokenCertificate certificate)
+    + void invalidateToken(String token)
+    # String tokenKey(String token)
+}
+
+note left of RedisTokenService : 通过Redis实现Token存取
+
+class UserTokenService<UserTokenCertificate> extends RedisTokenService {
+    + UserTokenCertificate assertToken(String token) throws TokenException
+    + UserTokenCertificate getToken(String token)
+}
+
+class UserCertificateConfig {
+    - String headerName
+    - String cacheKey
+    - Long expireMs
+}
+
+'RedisTokenService ..> UserCertificateConfig : Token配置
+UserCertificateConfig <.. RedisTokenService : 获取Token配置
+
+abstract class TokenCertificate {
+    - String token
+    - Date expiryDate
+}
+
+class UserTokenCertificate extends TokenCertificate {
+    - Long userId
+    - String username
+    - Date birthday
+}
+note bottom of UserTokenCertificate: 扩展Token，方便获取Token对应的用户信息
+UserTokenService -> UserTokenCertificate
+@enduml
