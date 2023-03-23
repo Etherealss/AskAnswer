@@ -1,0 +1,21 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+'https://plantuml.com/sequence-diagram
+skinparam shadowing false
+skinparam defaultFontName xfonts-wqy
+skinparam dpi 300
+skinparam activity  {
+    DiamondFontSize 14
+    ArrowFontSize 14
+    FontSize 14
+}
+
+participant 用户 as User
+participant 浏览器 as Browser
+participant 服务器 as Server
+participant Token缓存 as CurUserTokenHolder
+participant 问题业务管理 as QuestionService
+database 数据库 as DB
+
+@enduml

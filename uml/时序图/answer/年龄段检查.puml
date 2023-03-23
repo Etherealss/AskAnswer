@@ -2,7 +2,8 @@
 'https://plantuml.com/sequence-diagram
 skinparam shadowing false
 skinparam defaultFontName xfonts-wqy
-skinparam dpi 150
+skinparam defaultFontName times
+skinparam dpi 300
 skinparam activity  {
     DiamondFontSize 14
     ArrowFontSize 14
@@ -15,6 +16,7 @@ participant 回答业务管理 as AnswerService
 participant 问题业务管理 as QuestionService
 participant Token缓存 as CurUserTokenHolder
 database 数据库 as DB
+
 activate User
 User -> Server ++: 回答问题
 Server -> AnswerService ++: 回答问题

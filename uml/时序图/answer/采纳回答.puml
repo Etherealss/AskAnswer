@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+'https://plantuml.com/sequence-diagram
+skinparam shadowing false
+skinparam defaultFontName xfonts-wqy
+skinparam defaultFontName times
+skinparam dpi 300
+skinparam activity  {
+    DiamondFontSize 14
+    ArrowFontSize 14
+    FontSize 14
+}
+
+participant 用户 as User
+participant 浏览器 as Browser
+participant 服务器 as Server
+participant 问题业务管理 as QuestionService
+participant 回答业务管理 as AnswerService
+database 数据库 as DB
+
+activate User
+User -> Server ++: 采纳回答
+Server -> Server ++--: Token校验
+Server -> QuestionService ++: 问题是否存在
+QuestionService -> DB ++: 根据问题ID统计记录数
+return 记录数
+alt 记录数为0
+    Server <- QuestionService : 问题不存在
+    User <- Server : 问题不存在
+else 记录数为1
+    Server <- QuestionService --: 问题存在
+    Server -> AnswerService ++: 根据回答ID更新回答
+    AnswerService -> DB ++: 根据回答ID采纳回答
+    alt 回答存在
+        AnswerService <- DB: 更新1行记录
+        Server <- AnswerService: 采纳成功
+        User <- Server: 采纳成功
+    else 回答不存在
+        AnswerService <- DB--: 更新0行记录
+        Server <- AnswerService--: 回答不存在
+        User <- Server--: 回答不存在
+    end
+end
+
+deactivate User
+
+@enduml

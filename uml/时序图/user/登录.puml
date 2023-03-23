@@ -2,7 +2,8 @@
 'https://plantuml.com/sequence-diagram
 skinparam shadowing false
 skinparam defaultFontName xfonts-wqy
-skinparam dpi 150
+skinparam defaultFontName times
+skinparam dpi 300
 skinparam activity  {
     DiamondFontSize 14
     ArrowFontSize 14
@@ -12,7 +13,35 @@ skinparam activity  {
 participant 用户 as User
 participant 浏览器 as Browser
 participant 服务器 as Server
-participant 服务器 as Server
+participant 用户业务管理 as UserService
+participant Token业务管理 as TokenService
+database 数据库 as DB
 
+activate User
+User -> Browser ++: 用户登录
+Browser -> Browser ++--: 用户参数检查
+Browser -> Browser ++--: 用户密码散列化
+Browser -> Server ++ : 用户登录
+Server -> UserService ++: 用户登录
+UserService -> DB ++: 根据用户名获取信息
+alt 用户不存在
+    UserService <- DB: 用户不存在
+note left: 告知用户：\n用户名不存在
+else 用户存在
+    UserService <- DB --: 用户信息
+    UserService -> UserService++--: 用户密码散列化
+    UserService -> UserService++--: 比较用户密码\n和数据库密文
+    alt 密码不匹配
+        Server <- UserService : 密码错误
+        note left: 告知用户：\n密码错误
+    else 匹配成功
+        UserService -> TokenService ++: 生成Token
+        return Token证书
+        return 登录成功\n返回Token证书
+        return Token证书
+        return Token证书
+    end
+end
+deactivate User
 
 @enduml

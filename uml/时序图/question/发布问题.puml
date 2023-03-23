@@ -1,0 +1,47 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+skinparam shadowing false
+skinparam defaultFontName xfonts-wqy
+skinparam dpi 300
+skinparam activity  {
+    DiamondFontSize 10
+    ArrowFontSize 14
+    FontSize 14
+}
+
+participant 用户 as User
+participant 浏览器 as Browser
+participant 服务器 as Server
+participant Token缓存 as CurUserTokenHolder
+participant 问题业务管理 as QuestionService
+database 数据库 as DB
+
+activate User
+User -> Browser ++: 编辑问题并\n点击发布按钮
+Browser -> Browser ++--: 格式检查\n与XSS过滤
+Browser -> Server ++: 保存问题
+Server -> Server ++--: 格式检查与XSS过滤
+note right
+前端检查了参数合法性，
+后端也要再检查一遍，
+避免用户跳过浏览器，
+直接发送HTTP请求，
+向服务端传输非法数据
+end note
+
+Server -> Server ++--: 用户Token校验
+Server -> CurUserTokenHolder ++: 获取当前用户ID
+return 用户ID
+note left
+用户ID将被设置为作者
+end note
+Server -> QuestionService ++: 保存问题
+QuestionService -> DB ++: 保存问题
+return 保存成功\n返回问题ID
+return 问题ID
+return 问题ID
+return 问题ID
+
+deactivate User
+
+@enduml
