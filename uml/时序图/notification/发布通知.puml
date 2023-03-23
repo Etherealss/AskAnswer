@@ -8,7 +8,7 @@ skinparam activity  {
     ArrowFontSize 14
     FontSize 14
 }
-
+autonumber
 participant 其他业务 as OtherServer
 participant 通知业务 as NotificationService
 database 数据库 as DB

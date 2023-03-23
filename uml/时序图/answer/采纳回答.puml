@@ -10,7 +10,7 @@ skinparam activity  {
     ArrowFontSize 14
     FontSize 14
 }
-
+autonumber
 participant 用户 as User
 participant 浏览器 as Browser
 participant 服务器 as Server

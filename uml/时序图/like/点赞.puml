@@ -10,7 +10,7 @@ skinparam activity  {
     ArrowFontSize 14
     FontSize 14
 }
-
+autonumber
 participant 用户 as User
 participant 服务器 as Server
 participant 其他业务 as OtherService
