@@ -9,7 +9,7 @@
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>question</artifactId>
+    <artifactId>modules-user</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
@@ -30,9 +30,11 @@
             <groupId>cn.hwb</groupId>
             <artifactId>common-database</artifactId>
         </dependency>
+        <!--测试-->
         <dependency>
-            <groupId>cn.hwb</groupId>
-            <artifactId>user</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
         </dependency>
     </dependencies>
+
 </project>

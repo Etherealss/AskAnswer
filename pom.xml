@@ -7,9 +7,10 @@
         <module>common-base</module>
         <module>common-security</module>
         <module>starter</module>
-        <module>user</module>
-        <module>question</module>
+        <module>modules-user</module>
+        <module>modules-question</module>
         <module>common-database</module>
+        <module>modules-answer</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -55,12 +56,12 @@
             </dependency>
             <dependency>
                 <groupId>cn.hwb</groupId>
-                <artifactId>user</artifactId>
+                <artifactId>modules-user</artifactId>
                 <version>0.0.1</version>
             </dependency>
             <dependency>
                 <groupId>cn.hwb</groupId>
-                <artifactId>question</artifactId>
+                <artifactId>modules-question</artifactId>
                 <version>0.0.1</version>
             </dependency>
             <!-- 用于xss转义-->
