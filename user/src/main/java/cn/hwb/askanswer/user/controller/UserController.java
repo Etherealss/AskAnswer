@@ -4,7 +4,7 @@ import cn.hwb.askanswer.user.infrastructure.pojo.request.CreateUserRequest;
 import cn.hwb.askanswer.user.infrastructure.pojo.request.UpdateUserSimpleInfoRequest;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
-import cn.hwb.common.base.web.ResponseAdvice;
+import cn.hwb.askanswer.common.base.web.ResponseAdvice;
 import cn.hwb.common.security.auth.annotation.AnonymousAccess;
 import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import lombok.RequiredArgsConstructor;

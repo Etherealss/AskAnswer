@@ -2,7 +2,7 @@ package cn.hwb.askanswer.user.controller;
 
 import cn.hwb.askanswer.user.infrastructure.pojo.request.UserLoginRequest;
 import cn.hwb.askanswer.user.service.user.UserAuthService;
-import cn.hwb.common.base.web.ResponseAdvice;
+import cn.hwb.askanswer.common.base.web.ResponseAdvice;
 import cn.hwb.common.security.auth.annotation.AnonymousAccess;
 import cn.hwb.common.security.token.user.UserTokenCertificate;
 import lombok.RequiredArgsConstructor;

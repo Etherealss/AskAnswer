@@ -1,12 +1,11 @@
 package cn.hwb.askanswer.user.service.user;
 
-import cn.hwb.askanswer.user.infrastructure.pojo.request.UserLoginRequest;
+import cn.hwb.askanswer.common.base.crypt.PasswordEncryptor;
+import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
+import cn.hwb.askanswer.common.base.exception.service.PasswordNotMatchException;
 import cn.hwb.askanswer.user.infrastructure.pojo.entity.UserEntity;
+import cn.hwb.askanswer.user.infrastructure.pojo.request.UserLoginRequest;
 import cn.hwb.askanswer.user.mapper.UserMapper;
-import cn.hwb.common.base.crypt.PasswordEncryptor;
-import cn.hwb.common.base.enums.ResultCode;
-import cn.hwb.common.base.exception.BaseException;
-import cn.hwb.common.base.exception.service.NotFoundException;
 import cn.hwb.common.security.token.user.UserTokenCertificate;
 import cn.hwb.common.security.token.user.UserTokenService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
@@ -35,14 +34,14 @@ public class UserAuthService extends ServiceImpl<UserMapper, UserEntity> {
             throw new NotFoundException("用户不存在");
         }
         if (!passwordEncryptor.match(request.getPassword(), user.getPassword())) {
-            throw new BaseException(ResultCode.PASSWORD_NOT_MATCH);
+            throw new PasswordNotMatchException();
         }
         UserTokenCertificate tokenCertificate = new UserTokenCertificate(
                 user.getId(),
                 user.getUsername(),
                 user.getBirthday()
         );
-        tokenService.createTokenAndSave(tokenCertificate);
+        tokenService.completeTokenAndSave(tokenCertificate);
         return tokenCertificate;
     }
 

@@ -1,18 +1,17 @@
 package cn.hwb.askanswer.user.service.user;
 
+import cn.hwb.askanswer.common.base.crypt.PasswordEncryptor;
+import cn.hwb.askanswer.common.base.exception.rest.ParamMissingException;
+import cn.hwb.askanswer.common.base.exception.service.ExistException;
+import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
+import cn.hwb.askanswer.common.base.exception.service.PasswordNotMatchException;
 import cn.hwb.askanswer.user.infrastructure.converter.UserConverter;
-import cn.hwb.askanswer.user.infrastructure.pojo.request.CreateUserRequest;
-import cn.hwb.askanswer.user.infrastructure.pojo.request.UpdateUserSimpleInfoRequest;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.infrastructure.pojo.entity.UserEntity;
-import cn.hwb.askanswer.user.service.user.avatar.UserAvatarService;
-import cn.hwb.common.base.crypt.PasswordEncryptor;
-import cn.hwb.common.base.enums.ResultCode;
-import cn.hwb.common.base.exception.BaseException;
-import cn.hwb.common.base.exception.rest.ParamMissingException;
-import cn.hwb.common.base.exception.service.ExistException;
-import cn.hwb.common.base.exception.service.NotFoundException;
+import cn.hwb.askanswer.user.infrastructure.pojo.request.CreateUserRequest;
+import cn.hwb.askanswer.user.infrastructure.pojo.request.UpdateUserSimpleInfoRequest;
 import cn.hwb.askanswer.user.mapper.UserMapper;
+import cn.hwb.askanswer.user.service.user.avatar.UserAvatarService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -77,7 +76,7 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
                 throw new ParamMissingException("curPassword", "修改敏感信息需要提供密码");
             }
             if (!passwordEncryptor.match(req.getCurPassword(), user.getPassword())) {
-                throw new BaseException(ResultCode.PASSWORD_NOT_MATCH);
+                throw new PasswordNotMatchException();
             }
         }
         UserEntity update = userConverter.toEntity(req);

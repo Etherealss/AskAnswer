@@ -1,6 +1,6 @@
 package cn.hwb.askanswer.user.infrastructure.pojo.entity;
 
-import cn.hwb.common.base.pojo.entity.IdentifiedEntity;
+import cn.hwb.askanswer.common.base.pojo.entity.IdentifiedEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import java.util.Date;
