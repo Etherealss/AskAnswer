@@ -21,7 +21,7 @@ participant Token缓存 as CurUserTokenHolder
 activate User
 User -> Server ++: 发送请求
 Server -> AOP ++: 拦截请求
-AOP -> AOP ++--: 是否需要Token检验，假设需要验证
+AOP -> AOP ++--: 是否需要Token检验，\n假设需要验证
 AOP -> TokenService ++: 验证Token
 TokenService -> Redis++: Token是否存在
 alt Token不存在
