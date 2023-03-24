@@ -1,6 +1,8 @@
-package cn.hwb.askanswer.question.service.question;
+package cn.hwb.askanswer.question.infrastructure.pojo.entity;
 
-import cn.hwb.common.base.pojo.entity.IdentifiedEntity;
+import cn.hwb.askanswer.common.database.repository.List2JsonTypeHandler;
+import cn.hwb.askanswer.question.infrastructure.enums.AgeBracketEnum;
+import cn.hwb.askanswer.common.base.pojo.entity.IdentifiedEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -21,18 +23,18 @@ import java.util.List;
 @AllArgsConstructor
 @TableName(value = "question")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Question extends IdentifiedEntity {
+public class QuestionEntity extends IdentifiedEntity {
     @TableField(value = "title")
     String title;
 
     @TableField(value = "content")
     String content;
 
-    @TableField(value = "tags")
+    @TableField(value = "tags", typeHandler = List2JsonTypeHandler.class)
     List<String> tags;
 
     @TableField(value = "age_bracket")
-    Integer ageBracket;
+    AgeBracketEnum ageBracket;
 
     @TableField(value = "is_deleted")
     @TableLogic(value="0", delval="1")
