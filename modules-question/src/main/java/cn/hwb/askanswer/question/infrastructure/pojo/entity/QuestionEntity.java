@@ -38,5 +38,5 @@ public class QuestionEntity extends IdentifiedEntity {
 
     @TableField(value = "is_deleted")
     @TableLogic(value="0", delval="1")
-    Boolean deleted;
+    Boolean isDeleted;
 }
