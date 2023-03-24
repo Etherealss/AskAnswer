@@ -5,6 +5,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -15,12 +16,13 @@ import java.lang.reflect.Field;
  */
 @Aspect
 @Component
+@ConditionalOnProperty(value = "app.security.xss.enabled", havingValue = "true")
 @Slf4j
 public class XssEscapeAspect {
 
     @Before("@annotation(cn.hwb.common.security.xss.XssEscape)")
     public void escape(JoinPoint joinPoint) throws Exception {
-        log.info("进行XSS转义");
+        log.info("进行XSS转义检查");
         for (Object arg : joinPoint.getArgs()) {
             if (arg != null && arg.getClass().isAnnotationPresent(XssEscape.class)) {
                 Field[] fields = arg.getClass().getDeclaredFields();
