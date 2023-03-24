@@ -3,7 +3,7 @@ package cn.hwb.askanswer.answer.controller;
 import cn.hwb.askanswer.answer.infrastructure.pojo.dto.AnswerDTO;
 import cn.hwb.askanswer.answer.infrastructure.pojo.request.CreateAnswerRequest;
 import cn.hwb.askanswer.answer.infrastructure.pojo.request.UpdateAnswerRequest;
-import cn.hwb.askanswer.answer.service.question.AnswerService;
+import cn.hwb.askanswer.answer.service.answer.AnswerService;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
 import cn.hwb.askanswer.common.base.validation.CheckEntityExist;
 import cn.hwb.askanswer.common.base.web.ResponseAdvice;
@@ -46,8 +46,7 @@ public class AnswerController {
     }
 
     @DeleteMapping("/answers/{answersId}")
-    public void deleteQuestion(@PathVariable Long answersId,
-                               @PathVariable String questionId) {
+    public void deleteQuestion(@PathVariable Long answersId) {
         answerService.deleteById(answersId,
                 UserSecurityContextHolder.require().getUserId());
     }

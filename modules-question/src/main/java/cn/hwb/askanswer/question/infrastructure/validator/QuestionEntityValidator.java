@@ -1,4 +1,4 @@
-package cn.hwb.askanswer.question.infrastructure.validation;
+package cn.hwb.askanswer.question.infrastructure.validator;
 
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
 import cn.hwb.askanswer.common.base.validation.EntityValidator;

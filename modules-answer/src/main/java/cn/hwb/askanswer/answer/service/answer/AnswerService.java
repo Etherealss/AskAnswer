@@ -1,4 +1,4 @@
-package cn.hwb.askanswer.answer.service.question;
+package cn.hwb.askanswer.answer.service.answer;
 
 import cn.hwb.askanswer.answer.infrastructure.converter.AnswerConverter;
 import cn.hwb.askanswer.answer.infrastructure.pojo.dto.AnswerDTO;

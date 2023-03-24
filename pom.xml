@@ -11,6 +11,7 @@
         <module>modules-question</module>
         <module>common-database</module>
         <module>modules-answer</module>
+        <module>modules-comment</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -67,6 +68,11 @@
             <dependency>
                 <groupId>cn.hwb</groupId>
                 <artifactId>modules-question</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hwb</groupId>
+                <artifactId>modules-comment</artifactId>
                 <version>0.0.1</version>
             </dependency>
             <!-- 用于xss转义-->
