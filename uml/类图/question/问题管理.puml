@@ -1,0 +1,90 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+skinparam shadowing false
+skinparam defaultFontName xfonts-wqy
+skinparam defaultFontName console
+skinparam dpi 300
+skinparam activity  {
+    DiamondFontSize 14
+    ArrowFontSize 14
+    FontSize 14
+}
+
+class QuestionController {
+    - QuestionService questionService
+    + Long publish(CreateQuestionRequest req)
+    + void update(UpdateQuestionRequest req, Long questionId)
+    + void deleteQuestion(Long questionId)
+    + QuestionDTO findById(Long questionId)
+    + PageDTO<QuestionDTO> page(Long cursor, int size)
+}
+
+class QuestionService {
+    + {static} final int PAGE_SIZE = 10
+    - QuestionMapper questionMapper
+    + Long publish(CreateQuestionRequest req)
+    + void update(Long questionId, Long authorId, UpdateQuestionRequest req)
+    + void deleteById(Long questionId, Long userId)
+    + QuestionDTO findById(Long questionId)
+    + PageDTO<QuestionDTO> page(Long cursorId, int size)
+    - void checkCreator(Long questionId, Long userId)
+}
+
+QuestionController ..> QuestionService
+
+class PageDTO<T> {
+    - List<T> records
+    - Integer totalPage
+    - Integer pageSize
+    - Integer currentPage
+}
+ class QuestionDTO {
+    Long id
+    Long creator
+    Date createTime
+    Date modifyTime
+    String title
+    String content
+    List<String> tags
+    AgeBracketEnum ageBracket
+}
+class QuestionEntity {
+    - Long id
+    - Long creator
+    - Date createTime
+    - Date modifyTime
+    - String title
+    - String content
+    - List<String> tags
+    - AgeBracketEnum ageBracket
+    - Boolean deleted
+}
+note right: 显示所有字段\n省略继承结构
+interface QuestionConverter {
+    + QuestionEntity toEntity(CreateQuestionRequest req)
+    + QuestionEntity toEntity(UpdateQuestionRequest req)
+    + QuestionDTO toDto(QuestionEntity entity)
+}
+
+QuestionEntity <-- QuestionConverter : 转化为DTO返回前端
+QuestionConverter --> QuestionDTO: 转化为DTO返回前端
+QuestionDTO <- PageDTO : 分页对象
+
+class CreateQuestionRequest {
+    - String title
+    - String content
+    - List<String> tags
+    - AgeBracketEnum ageBracket
+}
+class UpdateQuestionRequest {
+    - String title
+    - String content
+    - List<String> tags
+    - AgeBracketEnum ageBracket
+}
+
+PageDTO -[hidden]> CreateQuestionRequest
+CreateQuestionRequest -[hidden]> UpdateQuestionRequest
+
+@enduml
