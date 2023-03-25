@@ -24,6 +24,10 @@
         </dependency>
         <dependency>
             <groupId>cn.hwb</groupId>
+            <artifactId>common-database</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.hwb</groupId>
             <artifactId>common-security</artifactId>
         </dependency>
         <dependency>
@@ -37,6 +41,10 @@
         <dependency>
             <groupId>cn.hwb</groupId>
             <artifactId>modules-answer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.hwb</groupId>
+            <artifactId>modules-comment</artifactId>
         </dependency>
     </dependencies>
 

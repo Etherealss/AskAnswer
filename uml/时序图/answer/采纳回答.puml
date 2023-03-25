@@ -1,6 +1,5 @@
 @startuml
 'https://plantuml.com/sequence-diagram
-'https://plantuml.com/sequence-diagram
 skinparam shadowing false
 skinparam defaultFontName xfonts-wqy
 skinparam defaultFontName times

@@ -1,4 +1,4 @@
-package src.main.java.cn.hwb.askanswer.answer.infrastructure.pojo.entity;
+package src.main.java.cn.hwb.askanswer.comment.infrastructure.pojo.entity;
 
 import cn.hwb.askanswer.common.base.pojo.entity.IdentifiedEntity;
 import com.baomidou.mybatisplus.annotation.TableField;

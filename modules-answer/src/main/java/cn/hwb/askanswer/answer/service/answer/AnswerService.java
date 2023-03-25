@@ -12,7 +12,6 @@ import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
 import cn.hwb.askanswer.common.base.pojo.event.question.QuestionCreatorValidateEvent;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,7 +64,6 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
                 .update();
     }
 
-
     public void deleteById(Long answerId, Long userId) {
         preCheck(null, answerId, userId);
         this.lambdaUpdate()
@@ -85,22 +83,17 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
     }
 
     private void preCheck(Long questionId, Long answerId, Long answerCreator) {
-        LambdaQueryChainWrapper<AnswerEntity> lambdaQuery = this.lambdaQuery()
-                .eq(AnswerEntity::getId, answerId);
-        if (answerCreator != null) {
-            lambdaQuery = lambdaQuery.select(AnswerEntity::getCreator);
-        }
-        if (questionId != null) {
-            lambdaQuery = lambdaQuery.select(AnswerEntity::getQuestionId);
-        }
-        AnswerEntity entity = lambdaQuery.one();
+        AnswerEntity entity = this.lambdaQuery()
+                .eq(AnswerEntity::getId, answerId)
+                .select(AnswerEntity::getQuestionId, AnswerEntity::getCreator)
+                .one();
         if (entity == null) {
             throw new NotFoundException(AnswerEntity.class, answerId.toString());
         }
-        if (answerCreator != null && !entity.getCreator().equals(answerCreator)) {
+        if (answerCreator != null && !answerCreator.equals(entity.getCreator())) {
             throw new NotCreatorException(answerCreator, answerId);
         }
-        if (questionId != null && !entity.getQuestionId().equals(questionId)) {
+        if (questionId != null && !questionId.equals(entity.getQuestionId())) {
             throw new ParamErrorException("回答对应的问题ID不匹配");
         }
     }

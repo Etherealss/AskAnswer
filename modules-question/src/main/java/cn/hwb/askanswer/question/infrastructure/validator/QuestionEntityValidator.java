@@ -1,7 +1,7 @@
 package cn.hwb.askanswer.question.infrastructure.validator;
 
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
-import cn.hwb.askanswer.common.base.validation.EntityValidator;
+import cn.hwb.askanswer.common.base.validation.entity.EntityValidator;
 import cn.hwb.askanswer.question.infrastructure.pojo.entity.QuestionEntity;
 import cn.hwb.askanswer.question.service.question.QuestionService;
 import lombok.RequiredArgsConstructor;

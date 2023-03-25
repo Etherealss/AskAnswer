@@ -3,7 +3,7 @@ package cn.hwb.askanswer.answer.infrastructure.validator;
 import cn.hwb.askanswer.answer.infrastructure.pojo.entity.AnswerEntity;
 import cn.hwb.askanswer.answer.service.answer.AnswerService;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
-import cn.hwb.askanswer.common.base.validation.EntityValidator;
+import cn.hwb.askanswer.common.base.validation.entity.EntityValidator;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
