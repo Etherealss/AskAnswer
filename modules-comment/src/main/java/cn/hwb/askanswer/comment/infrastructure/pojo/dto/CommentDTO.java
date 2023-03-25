@@ -18,4 +18,5 @@ public class CommentDTO {
     Date createTime;
     String content;
     Long targetId;
+    Long containerId;
 }

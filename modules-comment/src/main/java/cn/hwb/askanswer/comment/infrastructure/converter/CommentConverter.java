@@ -1,5 +1,6 @@
 package cn.hwb.askanswer.comment.infrastructure.converter;
 
+import cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateReplyRequest;
 import cn.hwb.askanswer.common.base.enums.MapperComponentModel;
 import org.mapstruct.Mapper;
 import cn.hwb.askanswer.comment.infrastructure.pojo.dto.CommentDTO;
@@ -13,5 +14,6 @@ import cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateCommentRequest
 @Mapper(componentModel = MapperComponentModel.SPRING)
 public interface CommentConverter {
     CommentEntity toEntity(CreateCommentRequest req);
+    CommentEntity toEntity(CreateReplyRequest req);
     CommentDTO toDto(CommentEntity entity);
 }

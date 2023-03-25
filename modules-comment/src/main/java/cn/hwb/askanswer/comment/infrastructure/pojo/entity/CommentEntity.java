@@ -23,6 +23,9 @@ public class CommentEntity extends IdentifiedEntity {
     @TableField(value = "target_id")
     Long targetId;
 
+    @TableField(value = "container_id")
+    Long containerId;
+
     @TableField(value = "content")
     String content;
 
