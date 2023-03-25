@@ -1,5 +1,6 @@
-package src.main.java.cn.hwb.askanswer.comment.controller;
+package cn.hwb.askanswer.comment.controller;
 
+import cn.hwb.askanswer.comment.service.comment.CommentService;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
 import cn.hwb.askanswer.common.base.validation.entity.EntityExist;
 import cn.hwb.askanswer.common.base.web.ResponseAdvice;
@@ -10,10 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import src.main.java.cn.hwb.askanswer.comment.infrastructure.pojo.dto.CommentDTO;
-import src.main.java.cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateCommentRequest;
-import src.main.java.cn.hwb.askanswer.comment.infrastructure.pojo.request.UpdateCommentRequest;
-import src.main.java.cn.hwb.askanswer.comment.service.comment.CommentService;
+import cn.hwb.askanswer.comment.infrastructure.pojo.dto.CommentDTO;
+import cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateCommentRequest;
+import cn.hwb.askanswer.comment.infrastructure.pojo.request.UpdateCommentRequest;
 
 /**
  * @author wtk

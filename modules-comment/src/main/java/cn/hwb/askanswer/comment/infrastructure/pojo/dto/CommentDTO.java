@@ -1,4 +1,4 @@
-package src.main.java.cn.hwb.askanswer.comment.infrastructure.pojo.dto;
+package cn.hwb.askanswer.comment.infrastructure.pojo.dto;
 
 import lombok.AccessLevel;
 import lombok.Data;

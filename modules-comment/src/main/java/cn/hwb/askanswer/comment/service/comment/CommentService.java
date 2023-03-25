@@ -1,5 +1,6 @@
-package src.main.java.cn.hwb.askanswer.comment.service.comment;
+package cn.hwb.askanswer.comment.service.comment;
 
+import cn.hwb.askanswer.comment.infrastructure.converter.CommentConverter;
 import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
@@ -7,12 +8,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import src.main.java.cn.hwb.askanswer.comment.infrastructure.converter.CommentConverter;
-import src.main.java.cn.hwb.askanswer.comment.infrastructure.pojo.dto.CommentDTO;
-import src.main.java.cn.hwb.askanswer.comment.infrastructure.pojo.entity.CommentEntity;
-import src.main.java.cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateCommentRequest;
-import src.main.java.cn.hwb.askanswer.comment.infrastructure.pojo.request.UpdateCommentRequest;
-import src.main.java.cn.hwb.askanswer.comment.mapper.CommentMapper;
+import cn.hwb.askanswer.comment.infrastructure.pojo.dto.CommentDTO;
+import cn.hwb.askanswer.comment.infrastructure.pojo.entity.CommentEntity;
+import cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateCommentRequest;
+import cn.hwb.askanswer.comment.infrastructure.pojo.request.UpdateCommentRequest;
+import cn.hwb.askanswer.comment.mapper.CommentMapper;
 
 import java.util.List;
 import java.util.stream.Collectors;

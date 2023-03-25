@@ -1,4 +1,4 @@
-package src.main.java.cn.hwb.askanswer.comment.infrastructure.enums;
+package cn.hwb.askanswer.comment.infrastructure.enums;
 
 import cn.hwb.askanswer.common.base.enums.BaseEnum;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package src.main.java.cn.hwb.askanswer.comment.infrastructure.pojo.request;
+package cn.hwb.askanswer.comment.infrastructure.pojo.request;
 
 import cn.hwb.common.security.xss.XssEscape;
 import lombok.AccessLevel;
