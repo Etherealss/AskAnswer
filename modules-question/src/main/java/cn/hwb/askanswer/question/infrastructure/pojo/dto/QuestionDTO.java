@@ -1,6 +1,7 @@
 package cn.hwb.askanswer.question.infrastructure.pojo.dto;
 
 import cn.hwb.askanswer.question.infrastructure.enums.AgeBracketEnum;
+import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -16,7 +17,7 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class QuestionDTO {
     Long id;
-    Long creator;
+    UserBriefDTO creator;
     Date createTime;
     Date modifyTime;
     String title;

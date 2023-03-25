@@ -9,6 +9,8 @@ import cn.hwb.askanswer.question.infrastructure.pojo.entity.QuestionEntity;
 import cn.hwb.askanswer.question.infrastructure.pojo.request.CreateQuestionRequest;
 import cn.hwb.askanswer.question.infrastructure.pojo.request.UpdateQuestionRequest;
 import cn.hwb.askanswer.question.mapper.QuestionMapper;
+import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
+import cn.hwb.askanswer.user.service.user.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +31,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
 
     private final QuestionConverter converter;
     private final QuestionMapper questionMapper;
+    private final UserService userService;
 
     public Long publish(CreateQuestionRequest req) {
         QuestionEntity questionEntity = converter.toEntity(req);
@@ -59,7 +62,9 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
         if (entity == null) {
             throw new NotFoundException(QuestionEntity.class, questionId.toString());
         }
-        return converter.toDto(entity);
+        QuestionDTO questionDTO = converter.toDto(entity);
+        questionDTO.setCreator(userService.getBriefById(entity.getCreator()));
+        return questionDTO;
     }
 
     public void checkCreator(Long questionId, Long userId) {
@@ -81,8 +86,12 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
                 .last(String.format("LIMIT %d", size))
                 .list()
                 .stream()
-                .map(converter::toDto)
-                .collect(Collectors.toList());
+                .map(e -> {
+                    UserBriefDTO userBrief = userService.getBriefById(e.getCreator());
+                    QuestionDTO answerDTO = converter.toDto(e);
+                    answerDTO.setCreator(userBrief);
+                    return answerDTO;
+                }).collect(Collectors.toList());
         return PageDTO.<QuestionDTO>builder()
                 .records(records)
                 .pageSize(size)
