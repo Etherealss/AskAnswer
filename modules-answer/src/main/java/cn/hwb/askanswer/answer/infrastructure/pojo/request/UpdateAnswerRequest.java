@@ -22,4 +22,6 @@ public class UpdateAnswerRequest {
     @Size(min = 1, max = 1000)
     @XssEscape
     String content;
+
+    Boolean isAnonymous;
 }

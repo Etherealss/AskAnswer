@@ -7,6 +7,7 @@ import cn.hwb.askanswer.answer.infrastructure.pojo.request.UpdateAnswerAcceptReq
 import cn.hwb.askanswer.answer.infrastructure.pojo.request.UpdateAnswerRequest;
 import cn.hwb.askanswer.common.base.enums.MapperComponentModel;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 /**
  * @author wtk
@@ -17,5 +18,6 @@ public interface AnswerConverter {
     AnswerEntity toEntity(CreateAnswerRequest req);
     AnswerEntity toEntity(UpdateAnswerRequest req);
     AnswerEntity toEntity(UpdateAnswerAcceptRequest req);
+    @Mapping(target = "creator", ignore = true)
     AnswerDTO toDto(AnswerEntity entity);
 }

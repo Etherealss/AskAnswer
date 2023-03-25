@@ -35,6 +35,9 @@ public class AnswerEntity extends IdentifiedEntity {
     @TableField(value = "is_accepted")
     Boolean isAccepted;
 
+    @TableField(value = "is_anonymous")
+    Boolean isAnonymous;
+
     @TableField(value = "is_deleted")
     @TableLogic(value="0", delval="1")
     Boolean isDeleted;

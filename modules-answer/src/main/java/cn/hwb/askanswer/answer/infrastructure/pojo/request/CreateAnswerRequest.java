@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 @XssEscape
 public class CreateAnswerRequest {
 
-    Long questionId;
+    Boolean isAnonymous;
 
     @NotBlank
     @Size(min = 1, max = 100)

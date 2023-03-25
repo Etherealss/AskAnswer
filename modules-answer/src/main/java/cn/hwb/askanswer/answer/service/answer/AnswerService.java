@@ -13,6 +13,8 @@ import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
 import cn.hwb.askanswer.common.base.pojo.event.question.QuestionCreatorValidateEvent;
+import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
+import cn.hwb.askanswer.user.service.user.UserService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +36,7 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
 
     private final AnswerConverter converter;
     private final AnswerMapper questionMapper;
+    private final UserService userService;
     private final ApplicationEventPublisher eventPublisher;
 
     public Long publish(Long questionId, CreateAnswerRequest req) {
@@ -80,7 +83,10 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
         if (entity == null) {
             throw new NotFoundException(AnswerEntity.class, questionId.toString());
         }
-        return converter.toDto(entity);
+        this.anonymousHandle(entity);
+        AnswerDTO answerDTO = converter.toDto(entity);
+        answerDTO.setCreator(userService.getBriefById(entity.getCreator()));
+        return answerDTO;
     }
 
     private void preCheck(Long questionId, Long answerId, Long answerCreator) {
@@ -109,11 +115,23 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
                 .last(String.format("LIMIT %d", size))
                 .list()
                 .stream()
-                .map(converter::toDto)
-                .collect(Collectors.toList());
+                .map(this::anonymousHandle)
+                .map(e -> {
+                    UserBriefDTO userBrief = userService.getBriefById(e.getCreator());
+                    AnswerDTO answerDTO = converter.toDto(e);
+                    answerDTO.setCreator(userBrief);
+                    return answerDTO;
+                }).collect(Collectors.toList());
         return PageDTO.<AnswerDTO>builder()
                 .records(records)
                 .pageSize(size)
                 .build();
+    }
+
+    private AnswerEntity anonymousHandle(AnswerEntity entity) {
+        if (entity.getIsAnonymous()) {
+            entity.setCreator(null);
+        }
+        return entity;
     }
 }

@@ -85,7 +85,7 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
                 .records(page.getRecords()
                         .stream().map(converter::toDto)
                         .collect(Collectors.toList())
-                ).totalPage(page.getTotal() > Integer.MAX_VALUE ?
+                ).totalPage(page.getTotal() < Integer.MAX_VALUE ?
                         (int) page.getTotal() : Integer.MAX_VALUE
                 ).build();
     }
