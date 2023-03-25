@@ -1,8 +1,9 @@
 package cn.hwb.askanswer.user.service.user;
 
 import cn.hwb.askanswer.common.base.crypt.PasswordEncryptor;
+import cn.hwb.askanswer.common.base.enums.ResultCode;
+import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
-import cn.hwb.askanswer.common.base.exception.service.PasswordNotMatchException;
 import cn.hwb.askanswer.user.infrastructure.pojo.entity.UserEntity;
 import cn.hwb.askanswer.user.infrastructure.pojo.request.UserLoginRequest;
 import cn.hwb.askanswer.user.mapper.UserMapper;
@@ -34,7 +35,7 @@ public class UserAuthService extends ServiceImpl<UserMapper, UserEntity> {
             throw new NotFoundException("用户不存在");
         }
         if (!passwordEncryptor.match(request.getPassword(), user.getPassword())) {
-            throw new PasswordNotMatchException();
+            throw new BadRequestException(ResultCode.PASSWORD_NOT_MATCH);
         }
         UserTokenCertificate tokenCertificate = new UserTokenCertificate(
                 user.getId(),

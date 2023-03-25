@@ -1,10 +1,11 @@
 package cn.hwb.askanswer.user.service.user;
 
 import cn.hwb.askanswer.common.base.crypt.PasswordEncryptor;
+import cn.hwb.askanswer.common.base.enums.ResultCode;
+import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import cn.hwb.askanswer.common.base.exception.rest.ParamMissingException;
 import cn.hwb.askanswer.common.base.exception.service.ExistException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
-import cn.hwb.askanswer.common.base.exception.service.PasswordNotMatchException;
 import cn.hwb.askanswer.user.infrastructure.converter.UserConverter;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.infrastructure.pojo.entity.UserEntity;
@@ -76,7 +77,7 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
                 throw new ParamMissingException("curPassword", "修改敏感信息需要提供密码");
             }
             if (!passwordEncryptor.match(req.getCurPassword(), user.getPassword())) {
-                throw new PasswordNotMatchException();
+                throw new BadRequestException(ResultCode.PASSWORD_NOT_MATCH);
             }
         }
         UserEntity update = userConverter.toEntity(req);
