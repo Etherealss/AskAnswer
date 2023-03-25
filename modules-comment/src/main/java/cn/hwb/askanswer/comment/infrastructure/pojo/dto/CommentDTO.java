@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author wtk
@@ -17,8 +16,6 @@ public class CommentDTO {
     Long id;
     Long creator;
     Date createTime;
-    Date modifyTime;
-    String title;
     String content;
-    List<String> tags;
+    Long targetId;
 }

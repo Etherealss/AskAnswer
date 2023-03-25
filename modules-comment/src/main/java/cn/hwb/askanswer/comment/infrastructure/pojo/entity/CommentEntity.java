@@ -17,7 +17,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName(value = "answer")
+@TableName(value = "comment")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentEntity extends IdentifiedEntity {
     @TableField(value = "target_id")

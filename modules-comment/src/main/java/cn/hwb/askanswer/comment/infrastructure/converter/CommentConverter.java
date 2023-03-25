@@ -5,7 +5,6 @@ import org.mapstruct.Mapper;
 import cn.hwb.askanswer.comment.infrastructure.pojo.dto.CommentDTO;
 import cn.hwb.askanswer.comment.infrastructure.pojo.entity.CommentEntity;
 import cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateCommentRequest;
-import cn.hwb.askanswer.comment.infrastructure.pojo.request.UpdateCommentRequest;
 
 /**
  * @author wtk
@@ -14,6 +13,5 @@ import cn.hwb.askanswer.comment.infrastructure.pojo.request.UpdateCommentRequest
 @Mapper(componentModel = MapperComponentModel.SPRING)
 public interface CommentConverter {
     CommentEntity toEntity(CreateCommentRequest req);
-    CommentEntity toEntity(UpdateCommentRequest req);
     CommentDTO toDto(CommentEntity entity);
 }

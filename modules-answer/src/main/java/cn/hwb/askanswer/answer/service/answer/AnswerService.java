@@ -7,7 +7,8 @@ import cn.hwb.askanswer.answer.infrastructure.pojo.request.CreateAnswerRequest;
 import cn.hwb.askanswer.answer.infrastructure.pojo.request.UpdateAnswerAcceptRequest;
 import cn.hwb.askanswer.answer.infrastructure.pojo.request.UpdateAnswerRequest;
 import cn.hwb.askanswer.answer.mapper.AnswerMapper;
-import cn.hwb.askanswer.common.base.exception.rest.ParamErrorException;
+import cn.hwb.askanswer.common.base.enums.ResultCode;
+import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
@@ -94,12 +95,15 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
             throw new NotCreatorException(answerCreator, answerId);
         }
         if (questionId != null && !questionId.equals(entity.getQuestionId())) {
-            throw new ParamErrorException("回答对应的问题ID不匹配");
+            String format = String.format("'%s'回答的问题并非'%s'",
+                    answerId.toString(), questionId.toString());
+            throw new BadRequestException(ResultCode.ANSWER_TARGET_NOT_MATCH, format);
         }
     }
 
-    public PageDTO<AnswerDTO> page(Long cursorId, int size) {
+    public PageDTO<AnswerDTO> page(Long cursorId, int size, Long questionId) {
         List<AnswerDTO> records = this.lambdaQuery()
+                .eq(AnswerEntity::getQuestionId, questionId)
                 .gt(AnswerEntity::getId, cursorId)
                 .orderByDesc(AnswerEntity::getId)
                 .last(String.format("LIMIT %d", size))

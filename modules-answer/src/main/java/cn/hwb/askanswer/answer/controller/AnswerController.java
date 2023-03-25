@@ -83,6 +83,6 @@ public class AnswerController {
             log.debug("分页的size不能小于0，size: {}", size);
             size = 10;
         }
-        return answerService.page(cursor, size);
+        return answerService.page(cursor, size, questionId);
     }
 }
