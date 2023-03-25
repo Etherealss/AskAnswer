@@ -2,6 +2,7 @@ package cn.hwb.askanswer.answer.controller;
 
 import cn.hwb.askanswer.answer.infrastructure.pojo.dto.AnswerDTO;
 import cn.hwb.askanswer.answer.infrastructure.pojo.request.CreateAnswerRequest;
+import cn.hwb.askanswer.answer.infrastructure.pojo.request.UpdateAnswerAcceptRequest;
 import cn.hwb.askanswer.answer.infrastructure.pojo.request.UpdateAnswerRequest;
 import cn.hwb.askanswer.answer.service.answer.AnswerService;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
@@ -40,15 +41,26 @@ public class AnswerController {
     @PutMapping("/answers/{answersId}")
     @XssEscape
     public void update(@RequestBody @Validated UpdateAnswerRequest req,
+                       @PathVariable @CheckEntityExist(DEFAULT) Long questionId,
                        @PathVariable Long answersId) {
-        Long userId = UserSecurityContextHolder.require().getUserId();
-        answerService.update(answersId, userId, req);
+        Long answerCreator = UserSecurityContextHolder.require().getUserId();
+        answerService.update(questionId, answersId, answerCreator, req);
+    }
+
+    @PutMapping("/answers/{answersId}/accepted")
+    @XssEscape
+    public void accpetAnswer(@RequestBody @Validated UpdateAnswerAcceptRequest req,
+                             @PathVariable @CheckEntityExist(DEFAULT) Long questionId,
+                             @PathVariable Long answersId) {
+        Long questionCreator = UserSecurityContextHolder.require().getUserId();
+        answerService.update(questionId, answersId, questionCreator, req);
     }
 
     @DeleteMapping("/answers/{answersId}")
-    public void deleteQuestion(@PathVariable Long answersId) {
+    public void deleteAnswer(@PathVariable Long answersId) {
+        Long answerCreator = UserSecurityContextHolder.require().getUserId();
         answerService.deleteById(answersId,
-                UserSecurityContextHolder.require().getUserId());
+                answerCreator);
     }
 
     @GetMapping("/answers/{answersId}")

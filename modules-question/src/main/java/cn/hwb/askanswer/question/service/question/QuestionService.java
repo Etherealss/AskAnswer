@@ -62,7 +62,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
         return converter.toDto(entity);
     }
 
-    private void checkCreator(Long questionId, Long userId) {
+    public void checkCreator(Long questionId, Long userId) {
         QuestionEntity entity = this.lambdaQuery()
                 .eq(QuestionEntity::getId, questionId)
                 .select(QuestionEntity::getCreator).one();
