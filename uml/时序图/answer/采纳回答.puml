@@ -34,8 +34,8 @@ else 记录数为1
     AnswerService -> DB ++: 根据回答ID采纳回答
     alt 回答不存在
         AnswerService <- DB: 更新0行记录
-        Server <- AnswerService: 回答不存在
-        User <- Server: 回答不存在
+        Server <- AnswerService: 回答不存在或问题不匹配
+        User <- Server: 回答不存在\n或问题不匹配
     else 回答存在
         AnswerService <- DB --: 更新1行记录
         AnswerService --> NotificationService ++: 发布回答采纳通知
