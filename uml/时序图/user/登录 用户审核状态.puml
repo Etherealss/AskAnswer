@@ -1,0 +1,43 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+skinparam shadowing false
+skinparam defaultFontName xfonts-wqy
+skinparam defaultFontName times
+skinparam dpi 300
+skinparam activity  {
+    DiamondFontSize 14
+    ArrowFontSize 14
+    FontSize 14
+}
+autonumber
+
+participant 用户 as User
+participant 浏览器 as Browser
+participant 服务器 as Server
+participant 用户业务 as UserService
+participant Token业务 as TokenService
+database 数据库 as DB
+
+activate User
+User -> Browser ++: 用户登录
+Browser -> Browser ++--: 用户参数检查
+Browser -> Browser ++--: 用户密码散列化
+Browser -> Server ++ : 用户登录
+Server -> UserService ++: 用户登录
+UserService -> DB ++: 根据用户名获取信息
+note left: 用户不存在时终止流程，通知用户注册
+UserService <- DB --: 用户信息
+UserService -> UserService++--: 判断用户审核状态
+note left: 用户未审核时终止流程，通知用户等待审核通过
+UserService -> UserService++--: 用户密码散列化
+UserService -> UserService++--: 比较用户密码\n和数据库密文
+note left: 密码不匹配时终止流程，通知密码错误
+return 登录校验通过
+Server -> TokenService ++: 创建Token证书
+return Token证书
+return Token证书
+return Token证书
+return Token证书
+deactivate User
+
+@enduml
