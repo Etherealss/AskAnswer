@@ -16,6 +16,7 @@ participant 服务端 as  Server
 participant 用户业务 as UserService
 participant 唯一ID生成 as Uid
 database 数据库 as DB
+database 文件存储 as OSS
 
 
 activate User
@@ -24,19 +25,18 @@ Browser -> Browser ++--: 校验信息合法性
 Browser -> Server ++: 注册用户
 Server -> UserService ++: 检查用户名是否存在
 UserService -> DB ++: 查询用户名是否存在
-alt 用户名存在
- UserService <-- DB : 用户名存在
- Server <-- UserService : 用户名已存在
- User <-- Server : 用户名已存在
-else 用户名不存在
- return 用户名不存在
- UserService -> Uid ++: 生成用户ID
- return 用户ID
- UserService -> DB ++: 创建用户
- return 成功
- return 返回系统分配的用户ID
- return 用户ID
- return 用户ID
-end
+note left : 用户名已存在时，终止流程并通知用户
+return 假设用户名不存在
+UserService -> Uid ++: 生成用户ID
+return 用户ID
+UserService -> OSS ++: 根据用户ID保存审核图片
+return 图片URL
+UserService -> DB ++: 创建用户，\n保存用户信息和图片URL
+note left : 用户初始状态为未审核
+return 成功
+return 返回系统分配的用户ID
+return 用户ID
+
+return 用户ID
 deactivate User
 @enduml
