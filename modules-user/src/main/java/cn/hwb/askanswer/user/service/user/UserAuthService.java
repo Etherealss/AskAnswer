@@ -27,7 +27,6 @@ public class UserAuthService extends ServiceImpl<UserMapper, UserEntity> {
     private final UserTokenService tokenService;
 
     public UserTokenCertificate login(UserLoginRequest request) {
-        String encode = passwordEncryptor.encode(request.getPassword());
         QueryWrapper<UserEntity> query = new QueryWrapper<>();
         query.eq("username", request.getUsername());
         UserEntity user = this.baseMapper.selectOne(query);
