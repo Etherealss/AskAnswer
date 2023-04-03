@@ -1,7 +1,7 @@
 package cn.hwb.askanswer.question.infrastructure.pojo.entity;
 
 import cn.hwb.askanswer.common.database.repository.List2JsonTypeHandler;
-import cn.hwb.askanswer.question.infrastructure.enums.AgeBracketEnum;
+import cn.hwb.askanswer.common.base.enums.AgeBracketEnum;
 import cn.hwb.askanswer.common.base.pojo.entity.IdentifiedEntity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;

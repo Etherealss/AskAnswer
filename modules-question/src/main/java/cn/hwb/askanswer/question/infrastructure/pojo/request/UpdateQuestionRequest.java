@@ -1,7 +1,7 @@
 package cn.hwb.askanswer.question.infrastructure.pojo.request;
 
 import cn.hwb.askanswer.common.base.validation.ListStringValidation;
-import cn.hwb.askanswer.question.infrastructure.enums.AgeBracketEnum;
+import cn.hwb.askanswer.common.base.enums.AgeBracketEnum;
 import cn.hwb.common.security.xss.XssEscape;
 import lombok.AccessLevel;
 import lombok.Data;

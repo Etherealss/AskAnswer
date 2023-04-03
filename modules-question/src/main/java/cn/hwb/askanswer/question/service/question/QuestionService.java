@@ -1,5 +1,6 @@
 package cn.hwb.askanswer.question.service.question;
 
+import cn.hwb.askanswer.common.base.enums.AgeBracketEnum;
 import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
@@ -33,8 +34,9 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
     private final QuestionMapper questionMapper;
     private final UserService userService;
 
-    public Long publish(CreateQuestionRequest req) {
+    public Long publish(CreateQuestionRequest req, AgeBracketEnum ageBracket) {
         QuestionEntity questionEntity = converter.toEntity(req);
+        questionEntity.setAgeBracket(ageBracket);
         this.save(questionEntity);
         return questionEntity.getId();
     }

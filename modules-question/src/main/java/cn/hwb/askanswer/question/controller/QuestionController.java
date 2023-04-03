@@ -1,5 +1,6 @@
 package cn.hwb.askanswer.question.controller;
 
+import cn.hwb.askanswer.common.base.enums.AgeBracketEnum;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
 import cn.hwb.askanswer.common.base.web.ResponseAdvice;
 import cn.hwb.askanswer.question.infrastructure.pojo.dto.QuestionDTO;
@@ -13,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 /**
  * @author wtk
@@ -30,7 +33,8 @@ public class QuestionController {
     @PostMapping("/questions")
     @XssEscape
     public Long publish(@RequestBody @Validated CreateQuestionRequest req) {
-        return questionService.publish(req);
+        Date birthday = UserSecurityContextHolder.require().getBirthday();
+        return questionService.publish(req, AgeBracketEnum.getByBirthday(birthday));
     }
 
     @PutMapping("/questions/{questionId}")

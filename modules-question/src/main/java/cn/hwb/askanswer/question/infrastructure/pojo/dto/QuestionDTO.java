@@ -1,6 +1,6 @@
 package cn.hwb.askanswer.question.infrastructure.pojo.dto;
 
-import cn.hwb.askanswer.question.infrastructure.enums.AgeBracketEnum;
+import cn.hwb.askanswer.common.base.enums.AgeBracketEnum;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import lombok.AccessLevel;
 import lombok.Data;
