@@ -1,0 +1,19 @@
+version: '3'
+services:
+  # 参考：
+  # https://juejin.cn/post/6844903872557760526
+  # https://blog.csdn.net/qq_27790011/article/details/103015306
+  # https://blog.csdn.net/weixin_44953227/article/details/117997825
+  nowander:
+    image: askanswer:0.0.1
+    # 指定容器名称
+    container_name: askanswer
+    restart: always
+    # 指定服务运行的端口
+    ports:
+      - 8082:8083
+    # 指定容器中需要挂载的文件
+    volumes:
+      - /var/lib/docker/volumes/askanswer/logs:/var/logs
+    depends_on:
+      - redis

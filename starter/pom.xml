@@ -15,6 +15,10 @@
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <start-class>cn.hwb.askanswer.Application</start-class>
+        <project.image-name>ask_answer</project.image-name>
+        <project.build.directory>/Users/etherealss/IdeaProjects/AskAnswer</project.build.directory>
+        <java.version>1.8</java.version>
     </properties>
 
     <dependencies>
@@ -47,5 +51,36 @@
             <artifactId>modules-comment</artifactId>
         </dependency>
     </dependencies>
-
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>repackage</id>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <mainClass>
+                        ${start-class}
+                    </mainClass>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.1</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                    <buildDirectory>${project.build.directory}</buildDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

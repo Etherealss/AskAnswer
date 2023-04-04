@@ -1,6 +1,6 @@
 # 服务配置
 server:
-  port: 8080
+  port: 8085
 
 app:
   security:
@@ -21,6 +21,7 @@ app:
     bucket-name: nowander
     access-key-id:
     access-key-secret:
+    file-client-type:
 
 spring:
   # 项目配置
@@ -50,9 +51,9 @@ spring:
     password: baotaredis123456
   # 数据源配置
   datasource:
-    url: jdbc:mysql://localhost:3306/ask_answer?characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
-    username: root
-    password: 123456
+    url: jdbc:mysql://119.23.214.198:3306/ask_answer?characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
+    username: ask_answer
+    password: baotamysql123456
     driver-class-name: com.mysql.cj.jdbc.Driver
 
     # druid配置
