@@ -25,6 +25,7 @@ public class UserSecurityContextHolder {
         Objects.requireNonNull(userCredential.getUsername());
         Objects.requireNonNull(userCredential.getToken());
         Objects.requireNonNull(userCredential.getBirthday());
+        Objects.requireNonNull(userCredential.getRoles());
         USER_CREDENTIALS.set(userCredential);
     }
 

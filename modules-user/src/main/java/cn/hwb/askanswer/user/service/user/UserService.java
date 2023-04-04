@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,6 +46,7 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
         UserEntity userEntity = userConverter.toEntity(request);
         userEntity.setAvatar(userAvatarService.getDefaultAvatar());
         userEntity.setPassword(passwordEncryptor.encode(userEntity.getPassword()));
+        userEntity.setRoles(new ArrayList<>(0));
         this.save(userEntity);
         return userEntity.getId();
     }

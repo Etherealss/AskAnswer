@@ -1,12 +1,14 @@
 package cn.hwb.askanswer.user.infrastructure.pojo.entity;
 
 import cn.hwb.askanswer.common.base.pojo.entity.IdentifiedEntity;
+import cn.hwb.askanswer.common.database.repository.List2JsonTypeHandler;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.util.Date;
-
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author wtk
@@ -36,4 +38,7 @@ public class UserEntity extends IdentifiedEntity {
 
     @TableField(value = "signature")
     String signature;
+
+    @TableField(value = "roles", typeHandler = List2JsonTypeHandler.class)
+    List<String> roles;
 }
