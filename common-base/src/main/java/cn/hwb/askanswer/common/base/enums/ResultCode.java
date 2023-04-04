@@ -32,6 +32,7 @@ public enum ResultCode {
     USER_TOKEN_MISSING(HttpStatus.UNAUTHORIZED, 40101001, "[用户token缺失]"),
     USER_TOKEN_INVALID(HttpStatus.UNAUTHORIZED, 40101002, "[用户token无效或已过期]"),
     PASSWORD_NOT_MATCH(40001003, "[密码错误]"),
+    USER_UN_REVIEW(HttpStatus.FORBIDDEN, 40301004, "[用户审核未完成]"),
 
     // --------------- question 02 ---------------
 

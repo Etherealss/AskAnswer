@@ -8,7 +8,6 @@ import cn.hwb.askanswer.user.infrastructure.pojo.entity.UserEntity;
 import cn.hwb.askanswer.user.infrastructure.pojo.request.UserLoginRequest;
 import cn.hwb.askanswer.user.mapper.UserMapper;
 import cn.hwb.common.security.token.user.UserTokenCertificate;
-import cn.hwb.common.security.token.user.UserTokenService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +21,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserAuthService extends ServiceImpl<UserMapper, UserEntity> {
+public class UserTokenService extends ServiceImpl<UserMapper, UserEntity> {
     private final PasswordEncryptor passwordEncryptor;
-    private final UserTokenService tokenService;
+    private final cn.hwb.common.security.token.user.UserTokenService tokenService;
 
     public UserTokenCertificate login(UserLoginRequest request) {
         QueryWrapper<UserEntity> query = new QueryWrapper<>();
@@ -35,6 +34,9 @@ public class UserAuthService extends ServiceImpl<UserMapper, UserEntity> {
         }
         if (!passwordEncryptor.match(request.getPassword(), user.getPassword())) {
             throw new BadRequestException(ResultCode.PASSWORD_NOT_MATCH);
+        }
+        if (!user.getIsReviewed()) {
+            throw new BadRequestException(ResultCode.USER_UN_REVIEW);
         }
         UserTokenCertificate tokenCertificate = new UserTokenCertificate(
                 user.getId(),

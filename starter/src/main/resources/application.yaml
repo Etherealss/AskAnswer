@@ -1,6 +1,6 @@
 # 服务配置
 server:
-  port: 8086
+  port: 8085
 
 app:
   security:
@@ -11,7 +11,10 @@ app:
       oss:
         dir: avatars/
         default-avatar-key: avatars/default-boy.png
-        cache-key: avatars/default-boy.png
+        cache-key: ${spring.application.name}:cache:token:str:default-avatars
+    review:
+      oss:
+        dir: review/
   token:
     user:
       expireMs: 864000000 # 测试10天 60 * 60 * 24 * 1000

@@ -5,6 +5,7 @@ import cn.hwb.askanswer.common.database.repository.List2JsonTypeHandler;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.List;
 @ToString(callSuper = true)
 @Getter
 @Setter
+@Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName(value = "user")
@@ -41,4 +43,10 @@ public class UserEntity extends IdentifiedEntity {
 
     @TableField(value = "roles", typeHandler = List2JsonTypeHandler.class)
     List<String> roles;
+
+    @TableField(value = "review_img")
+    String reviewImg;
+
+    @TableField(value = "is_reviewed")
+    Boolean isReviewed;
 }

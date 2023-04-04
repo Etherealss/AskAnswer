@@ -14,6 +14,7 @@ import cn.hwb.askanswer.user.infrastructure.pojo.request.CreateUserRequest;
 import cn.hwb.askanswer.user.infrastructure.pojo.request.UpdateUserSimpleInfoRequest;
 import cn.hwb.askanswer.user.mapper.UserMapper;
 import cn.hwb.askanswer.user.service.user.avatar.UserAvatarService;
+import cn.hwb.askanswer.user.service.user.review.UserReviewService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,25 +38,28 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
     private final UserMapper userMapper;
     private final UserConverter userConverter;
     private final UserAvatarService userAvatarService;
+    private final UserReviewService userReviewService;
     private final PasswordEncryptor passwordEncryptor;
 
     public Long createUser(CreateUserRequest request) {
         if (this.checkUsernameExists(request.getUsername())) {
             throw new ExistException(UserEntity.class, request.getUsername());
         }
-        UserEntity userEntity = userConverter.toEntity(request);
-        userEntity.setAvatar(userAvatarService.getDefaultAvatar());
+        UserEntity userEntity = userConverter.toEntity(request)
+                .setAvatar(userAvatarService.getDefaultAvatar())
+                .setRoles(new ArrayList<>(0))
+                .setIsReviewed(false)
+                .setReviewImg("");
         userEntity.setPassword(passwordEncryptor.encode(userEntity.getPassword()));
-        userEntity.setRoles(new ArrayList<>(0));
         this.save(userEntity);
         return userEntity.getId();
     }
 
     public UserBriefDTO getBriefById(Long userId) {
-        UserEntity user = lambdaQuery().eq(UserEntity::getId, userId).one();
-        if (user == null) {
-            throw new NotFoundException(UserEntity.class, userId.toString());
-        }
+        UserEntity user = lambdaQuery()
+                .eq(UserEntity::getId, userId)
+                .oneOpt()
+                .orElseThrow(() -> new NotFoundException(UserEntity.class, userId.toString()));
         return userConverter.toBriefDTO(user);
     }
 
@@ -71,10 +75,10 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
     }
 
     public void update(Long userId, UpdateUserSimpleInfoRequest req) {
-        UserEntity user = lambdaQuery().eq(UserEntity::getId, userId).one();
-        if (user == null) {
-            throw new NotFoundException(UserEntity.class, userId.toString());
-        }
+        UserEntity user = lambdaQuery()
+                .eq(UserEntity::getId, userId)
+                .oneOpt()
+                .orElseThrow(() -> new NotFoundException(UserEntity.class, userId.toString()));
         String newPassword = req.getNewPassword();
         if (StringUtils.hasText(newPassword) || req.getBirthday() != null) {
             if (!StringUtils.hasText(req.getCurPassword())) {
@@ -104,5 +108,28 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
             throw new NotFoundException(UserEntity.class, userId.toString());
         }
         return url;
+    }
+
+    public void reviewPass(Long userId) {
+        boolean update = this.lambdaUpdate()
+                .eq(UserEntity::getId, userId)
+                .set(UserEntity::getIsReviewed, true)
+                .update();
+        if (!update) {
+            throw new NotFoundException(UserEntity.class, userId.toString());
+        }
+    }
+
+    public void reviewFail(Long userId) {
+        userMapper.deleteById(userId);
+    }
+
+    public String getReviewImg(Long userId) {
+        UserEntity entity = this.lambdaQuery()
+                .eq(UserEntity::getId, userId)
+                .select(UserEntity::getReviewImg)
+                .oneOpt()
+                .orElseThrow(() -> new NotFoundException(UserEntity.class, userId.toString()));
+        return entity.getReviewImg();
     }
 }

@@ -100,8 +100,8 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.FORBIDDEN)
     @ExceptionHandler(AccessDeniedException.class)
     public Result<Void> handle(AccessDeniedException e) {
-        log.info("[无权访问]" + e.getMessage());
-        return new Result<>(false, ResultCode.FORBIDDEN_REQUEST);
+        log.info("[无权访问]{}", e.getMessage());
+        return new Result<>(false, ResultCode.PERMISSION_NOT_MATCH);
     }
 
     /**
