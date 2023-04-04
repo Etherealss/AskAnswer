@@ -1,7 +1,7 @@
 package cn.hwb.askanswer.user.controller;
 
 import cn.hwb.askanswer.user.infrastructure.pojo.request.UserLoginRequest;
-import cn.hwb.askanswer.user.service.user.UserTokenService;
+import cn.hwb.askanswer.user.service.user.UserAuthService;
 import cn.hwb.askanswer.common.base.web.ResponseAdvice;
 import cn.hwb.common.security.auth.annotation.AnonymousAccess;
 import cn.hwb.common.security.token.user.UserTokenCertificate;
@@ -21,22 +21,22 @@ import org.springframework.web.bind.annotation.*;
 @ResponseAdvice
 public class UserTokenController {
 
-    private final UserTokenService userTokenService;
+    private final UserAuthService userAuthService;
 
     @PostMapping
     @AnonymousAccess
     public UserTokenCertificate login(@RequestBody @Validated UserLoginRequest req) {
-        return userTokenService.login(req);
+        return userAuthService.login(req);
     }
 
     @GetMapping("/{token}")
     @AnonymousAccess
     public Boolean verifyToken(@PathVariable String token) {
-        return userTokenService.verifyToken(token);
+        return userAuthService.verifyToken(token);
     }
 
     @DeleteMapping("/{token}")
     public void logout(@PathVariable String token) {
-        userTokenService.invalidateToken(token);
+        userAuthService.invalidateToken(token);
     }
 }

@@ -8,6 +8,7 @@ import cn.hwb.askanswer.user.infrastructure.pojo.entity.UserEntity;
 import cn.hwb.askanswer.user.infrastructure.pojo.request.UserLoginRequest;
 import cn.hwb.askanswer.user.mapper.UserMapper;
 import cn.hwb.common.security.token.user.UserTokenCertificate;
+import cn.hwb.common.security.token.user.UserTokenService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +22,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class UserTokenService extends ServiceImpl<UserMapper, UserEntity> {
+public class UserAuthService extends ServiceImpl<UserMapper, UserEntity> {
     private final PasswordEncryptor passwordEncryptor;
-    private final cn.hwb.common.security.token.user.UserTokenService tokenService;
+    private final UserTokenService tokenService;
 
     public UserTokenCertificate login(UserLoginRequest request) {
         QueryWrapper<UserEntity> query = new QueryWrapper<>();
