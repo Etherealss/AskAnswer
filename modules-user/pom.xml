@@ -30,6 +30,10 @@
             <groupId>cn.hwb</groupId>
             <artifactId>common-database</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.hwb</groupId>
+            <artifactId>common-file</artifactId>
+        </dependency>
         <!--测试-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

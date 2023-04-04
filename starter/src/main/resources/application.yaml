@@ -10,7 +10,8 @@ app:
     avatar:
       oss:
         dir: avatars/
-        default-avatar: default-boy.png
+        default-avatar-key: avatars/default-boy.png
+        cache-key: avatars/default-boy.png
   token:
     user:
       expireMs: 864000000 # 测试10天 60 * 60 * 24 * 1000

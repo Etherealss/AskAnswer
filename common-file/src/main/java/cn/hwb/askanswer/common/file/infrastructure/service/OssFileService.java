@@ -133,6 +133,6 @@ public class OssFileService {
     private String buildUrl(URL fileUrl) {
         // url = "https://" + bucketName + ".oss-cn-guangzhou.aliyuncs.com/" + bucketName+"/"+ 文件访问路径 + 请求参数/签名;
         log.debug("fileHost: {}, fileName: {}", fileUrl.getHost(), fileUrl.getFile());
-        return URL_PREFIX + fileUrl.getHost() + "/" + fileUrl.getFile();
+        return URL_PREFIX + fileUrl.getHost() +  fileUrl.getFile();
     }
 }

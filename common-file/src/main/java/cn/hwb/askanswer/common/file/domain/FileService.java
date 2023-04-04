@@ -32,7 +32,7 @@ public class FileService {
      * @return
      * @throws IOException
      */
-    public FileUploadDTO uploadFile(MultipartFile avatarFile, String filePath, String fileName) throws IOException {
+    public FileUploadDTO uploadFile(MultipartFile avatarFile, String fileDir, String fileName) throws IOException {
         if (!StringUtils.hasText(fileName)) {
             fileName = avatarFile.getOriginalFilename();
         }
@@ -41,12 +41,12 @@ public class FileService {
         }
         String fileExt = FileUtil.getFileExt(fileName);
         String fileContentType = FileUtil.getContentType(fileExt);
-        String fileKey = filePath + "/" + fileName;
+        String fileKey = fileDir + "/" + fileName;
         String fileUrl = ossFileService.upload(avatarFile.getInputStream(), fileKey, fileContentType);
 
         FileUploadDTO fileUploadDTO = new FileUploadDTO();
         fileUploadDTO.setFileKey(fileKey);
-        fileUploadDTO.setFilePath(filePath);
+        fileUploadDTO.setFileDir(fileDir);
         fileUploadDTO.setFileName(fileName);
         fileUploadDTO.setFileContentType(fileContentType);
         fileUploadDTO.setFileExt(fileExt);

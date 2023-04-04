@@ -2,31 +2,42 @@ package cn.hwb.askanswer.common.base.utils;
 
 import cn.hutool.core.util.StrUtil;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author wtk
  * @date 2022-04-30
  */
 public class FileUtil {
+    private static final Set<String> IMAGE_EXT;
     public static final Map<String, String> FILE_EXTENSIONS;
 
     static {
-        FILE_EXTENSIONS = new HashMap<>();
-        FILE_EXTENSIONS.put(".bmp", "image/bmp");
-        FILE_EXTENSIONS.put(".gif", "image/gif");
-        FILE_EXTENSIONS.put(".jpeg", "image/jpg");
-        FILE_EXTENSIONS.put(".jpg", "image/jpg");
-        FILE_EXTENSIONS.put(".png", "image/png");
-        FILE_EXTENSIONS.put(".html", "text/html");
-        FILE_EXTENSIONS.put(".txt", "text/plain");
-        FILE_EXTENSIONS.put(".vsd", "application/vnd.visio");
-        FILE_EXTENSIONS.put(".pptx", "application/vnd.ms-powerpoint");
-        FILE_EXTENSIONS.put(".ppt", "application/vnd.ms-powerpoint");
-        FILE_EXTENSIONS.put(".docx", "application/msword");
-        FILE_EXTENSIONS.put(".doc", "application/msword");
-        FILE_EXTENSIONS.put(".xml", "text/xml");
+        Map<String, String> map = new HashMap<>();
+        map.put(".bmp", "image/bmp");
+        map.put(".gif", "image/gif");
+        map.put(".jpeg", "image/jpg");
+        map.put(".jpg", "image/jpg");
+        map.put(".png", "image/png");
+        map.put(".html", "text/html");
+        map.put(".txt", "text/plain");
+        map.put(".vsd", "application/vnd.visio");
+        map.put(".pptx", "application/vnd.ms-powerpoint");
+        map.put(".ppt", "application/vnd.ms-powerpoint");
+        map.put(".docx", "application/msword");
+        map.put(".doc", "application/msword");
+        map.put(".xml", "text/xml");
+        FILE_EXTENSIONS = Collections.unmodifiableMap(map);
+
+        Set<String> set = new HashSet<>();
+        set.add(".jpeg");
+        set.add(".jpg");
+        set.add(".png");
+        IMAGE_EXT = Collections.unmodifiableSet(set);
+    }
+
+    public static boolean isImageExt(String fileExt) {
+        return IMAGE_EXT.contains(fileExt);
     }
 
     /**

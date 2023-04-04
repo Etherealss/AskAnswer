@@ -11,7 +11,7 @@ import lombok.experimental.FieldDefaults;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class FileUploadDTO {
-    String filePath;
+    String fileDir;
     String fileName;
     String fileExt;
     String fileContentType;

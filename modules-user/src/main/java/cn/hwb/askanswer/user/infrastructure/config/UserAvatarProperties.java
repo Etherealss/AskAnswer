@@ -20,5 +20,5 @@ public class UserAvatarProperties {
     @NotBlank
     String dir;
     @NotBlank
-    String defaultAvatar;
+    String defaultAvatarKey;
 }

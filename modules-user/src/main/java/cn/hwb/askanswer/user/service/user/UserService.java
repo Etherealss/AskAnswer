@@ -6,6 +6,7 @@ import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import cn.hwb.askanswer.common.base.exception.rest.ParamMissingException;
 import cn.hwb.askanswer.common.base.exception.service.ExistException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
+import cn.hwb.askanswer.common.file.domain.FileUploadDTO;
 import cn.hwb.askanswer.user.infrastructure.converter.UserConverter;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.infrastructure.pojo.entity.UserEntity;
@@ -18,6 +19,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collection;
 import java.util.List;
@@ -88,4 +90,17 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
         this.saveOrUpdate(update);
     }
 
+    public String updateAvatar(Long userId, MultipartFile file) {
+        FileUploadDTO fileUploadDTO = userAvatarService.uploadAvatar(file, userId);
+        String url = fileUploadDTO.getUrl();
+        boolean update = this.lambdaUpdate()
+                .eq(UserEntity::getId, userId)
+                .set(UserEntity::getAvatar, url)
+                .update();
+        if (!update) {
+            // 有Token校验在前，此处一般不会NotFound
+            throw new NotFoundException(UserEntity.class, userId.toString());
+        }
+        return url;
+    }
 }
