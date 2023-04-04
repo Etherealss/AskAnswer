@@ -2,6 +2,7 @@ package cn.hwb.askanswer.common.file.domain;
 
 import cn.hwb.askanswer.common.base.exception.rest.ParamMissingException;
 import cn.hwb.askanswer.common.base.utils.FileUtil;
+import cn.hwb.askanswer.common.file.infrastructure.service.OssFileService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;

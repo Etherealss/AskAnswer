@@ -28,11 +28,6 @@ import javax.validation.constraints.NotBlank;
 @Slf4j
 public class OssProperties {
     /**
-     * 文件客户端类型
-     */
-    @NotBlank
-    private String fileClientType;
-    /**
      * OSS地址（不同服务器，地址不同）
      */
     @NotBlank

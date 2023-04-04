@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    status="warn" 日志框架本身的输出日志级别
+    monitorInterval="5" 自动加载配置文件的间隔时间，不低于 5 秒。可以实现热更新
+-->
+<Configuration status="warn" monitorInterval="5">
+    <!-- 集中配置属性进行管理。使用:${name} -->
+    <properties>
+        <property name="fileLevel">trace</property>
+        <property name="rootLevel">trace</property>
+        <!--控制台输出格式-->
+        <!--%d{HH:mm:ss.SSS} [%t] [%-5level] %c{36}:%L - %m%n-->
+        <property name="consolePatternLayout">
+            %d{mm:ss.SSS} %l %n[%level] %m%n
+        </property>
+        <!--文件输出格式-->
+        <property name="filePatternLayout">
+            [%d{yyyy-MM-dd HH:mm:ss.SSS}] [%-5level] %l %c{36} - %m%n
+        </property>
+        <Property name="charset">utf-8</Property>
+    </properties>
+
+    <!-- 日志处理 -->
+    <Appenders>
+        <!-- 普通信息 控制台输出 -->
+        <Console name="simpleConsole" target="SYSTEM_OUT">
+            <PatternLayout pattern="${consolePatternLayout}"/>
+            <!-- 控制台输出WARN级别以下的信息 -->
+            <ThresholdFilter level="WARN" onMatch="DENY" onMismatch="ACCEPT"/>
+        </Console>
+
+        <!-- 警告信息 控制台输出 -->
+        <Console name="warningConsole" target="SYSTEM_ERR">
+            <PatternLayout pattern="${consolePatternLayout}"/>
+            <!-- 控制台只输出WARN及以上级别的信息 -->
+            <ThresholdFilter level="WARN" onMatch="ACCEPT" onMismatch="DENY"/>
+        </Console>
+    </Appenders>
+
+    <!--logger 定义-->
+    <Loggers>
+        <logger name="testLogger" level="trace" additivity="true">
+        </logger>
+
+        <!--使用 rootLogger 配置 日志级别-->
+        <Root level="${rootLevel}">
+            <AppenderRef ref="simpleConsole"/>
+            <AppenderRef ref="warningConsole"/>
+        </Root>
+    </Loggers>
+</Configuration>
