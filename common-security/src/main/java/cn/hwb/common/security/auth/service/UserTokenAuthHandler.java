@@ -1,7 +1,8 @@
 package cn.hwb.common.security.auth.service;
 
-import cn.hwb.askanswer.common.base.exception.service.AuthenticationException;
 import cn.hwb.common.security.auth.annotation.AnonymousAccess;
+import cn.hwb.common.security.auth.exception.TokenException;
+import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -15,23 +16,20 @@ import java.lang.reflect.Method;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class UserPreAuthHandler implements IPreAuthHandler {
+public class UserTokenAuthHandler implements IPreAuthHandler {
 
     @Override
     public boolean checkNeedAuth(Method method) {
-        if (method.getAnnotation(AnonymousAccess.class) != null) {
-            log.info("匿名访问接口，无需检验");
-            return false;
-        }
-        return true;
+        // 没有注解说明需要检查，返回true
+        return method.getAnnotation(AnonymousAccess.class) == null;
     }
 
     @Override
     public void doAuth(Method method) {
         try {
-            // TODO 年龄段验证
-        } catch (AuthenticationException e) {
-            log.debug("请求认证不通过：{}", e.getMessage());
+            UserSecurityContextHolder.require();
+        } catch (TokenException e) {
+            log.debug("请求Token校验不通过：{}", e.getMessage());
             throw e;
         }
     }

@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
  */
 @Getter
 public enum ResultCode {
-    // --------------- common ---------------
+    // --------------- common 400 ---------------
     OK(HttpStatus.OK, 20000001, "OK"),
     BAD_REQUEST(40000001, "请求报文语法错误[参数校验失败]"),
     MISSING_PARAM(40000002, "[参数缺失]"),
@@ -18,9 +18,14 @@ public enum ResultCode {
     MISMATCH(40000005, "[信息不匹配]"),
     OPERATE_UNSUPPORTED(40000006, "[请求不支持]"),
     NOT_AUTHOR(40000007, "[非创建者]"),
+    // --------------- common 401 ---------------
     UNAUTHORIZED(HttpStatus.UNAUTHORIZED, 40100001, "[未认证身份]"),
-    FORBIDDEN_REQUEST(HttpStatus.FORBIDDEN, 40300001, "[没有权限]"),
+    // --------------- common 403 ---------------
+    PERMISSION_NOT_MATCH(HttpStatus.FORBIDDEN, 40300001, "[没有访问权限]"),
+    ROLE_NOT_MATCH(HttpStatus.FORBIDDEN, 40300002, "[非可访问角色]"),
+    // --------------- common 404 ---------------
     NOT_FOUND(HttpStatus.NOT_FOUND, 40400001, "[目标不存在]"),
+    // --------------- common 500 ---------------
     SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, 50000001, "[服务运行异常]"),
 
     // --------------- user 01 ---------------

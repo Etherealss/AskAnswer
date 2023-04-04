@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author wtk
@@ -26,5 +27,10 @@ public class UserTokenCertificate extends TokenCertificate {
      * 生日
      */
     Date birthday;
+
+    /**
+     * 身份
+     */
+    List<String> roles;
 
 }
