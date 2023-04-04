@@ -37,7 +37,7 @@ public class PasswordEncryptor {
         byte[] encrypted = messageDigest.digest(password.getBytes(StandardCharsets.UTF_8));
         BigInteger bigInt = new BigInteger(1, encrypted);
         String encode = bigInt.toString(16);
-        log.info("原始密码：{}，加密密文：{}", password, encode);
+        log.debug("原始密码：{}，加密密文：{}", password, encode);
         return encode;
     }
 

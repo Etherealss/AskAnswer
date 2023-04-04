@@ -6,8 +6,10 @@ import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import cn.hwb.askanswer.common.base.exception.rest.ParamMissingException;
 import cn.hwb.askanswer.common.base.exception.service.ExistException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
+import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
 import cn.hwb.askanswer.common.file.domain.FileUploadDTO;
 import cn.hwb.askanswer.user.infrastructure.converter.UserConverter;
+import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserAuthDTO;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.infrastructure.pojo.entity.UserEntity;
 import cn.hwb.askanswer.user.infrastructure.pojo.request.CreateUserRequest;
@@ -15,6 +17,7 @@ import cn.hwb.askanswer.user.infrastructure.pojo.request.UpdateUserSimpleInfoReq
 import cn.hwb.askanswer.user.mapper.UserMapper;
 import cn.hwb.askanswer.user.service.user.avatar.UserAvatarService;
 import cn.hwb.askanswer.user.service.user.review.UserReviewService;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -110,6 +113,18 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
         return url;
     }
 
+    public void updateReviewImg(Long userId, MultipartFile file) {
+        FileUploadDTO fileUploadDTO = userReviewService.uploadAvatar(userId, file);
+        String reviewImgUrl = fileUploadDTO.getUrl();
+        boolean update = this.lambdaUpdate()
+                .eq(UserEntity::getId, userId)
+                .set(UserEntity::getReviewImg, reviewImgUrl)
+                .update();
+        if (!update) {
+            throw new NotFoundException(UserEntity.class, userId.toString());
+        }
+    }
+
     public void reviewPass(Long userId) {
         boolean update = this.lambdaUpdate()
                 .eq(UserEntity::getId, userId)
@@ -131,5 +146,23 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
                 .oneOpt()
                 .orElseThrow(() -> new NotFoundException(UserEntity.class, userId.toString()));
         return entity.getReviewImg();
+    }
+
+    public UserAuthDTO get4Review(Long userId) {
+        UserEntity entity = this.lambdaQuery()
+                .eq(UserEntity::getId, userId)
+                .oneOpt()
+                .orElseThrow(() -> new NotFoundException(UserEntity.class, userId.toString()));
+        return userConverter.toAuthDTO(entity);
+    }
+
+    public PageDTO<UserAuthDTO> page4Review(int currentPage, int size) {
+        Page<UserEntity> page = lambdaQuery()
+                .eq(UserEntity::getIsReviewed, false)
+                .page(new Page<>(currentPage, size));
+        List<UserAuthDTO> collect = page.getRecords().stream()
+                .map(userConverter::toAuthDTO)
+                .collect(Collectors.toList());
+        return new PageDTO<>(collect, page);
     }
 }

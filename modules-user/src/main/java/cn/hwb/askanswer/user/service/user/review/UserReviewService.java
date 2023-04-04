@@ -33,11 +33,11 @@ public class UserReviewService {
 
     /**
      * 上传审核图片
-     * @param imgFile
      * @param userId
+     * @param imgFile
      * @return 头像保存路径，同时也是访问文件的url
      */
-    public FileUploadDTO uploadAvatar(MultipartFile imgFile, Long userId) {
+    public FileUploadDTO uploadAvatar(Long userId, MultipartFile imgFile) {
         ImgFileUtil.verifyImgFile(imgFile);
         String originalFilename = imgFile.getOriginalFilename();
         assert originalFilename != null;
