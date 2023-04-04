@@ -1,6 +1,6 @@
 # 服务配置
 server:
-  port: 8085
+  port: 8086
 
 app:
   security:
@@ -36,6 +36,7 @@ spring:
   redis:
     host: 119.23.214.198
     port: 6379
+    password: ENC(NY6bEoeHaQcgsAxCyh+BU+8axpSeKgtZ4yczB/41ofjEKMIUETqhdYsk+XPeMyYpgkW+0c7lszXGAtL7zsjoXA==)
     lettuce:
       pool:
         # 连接池最大连接数
@@ -48,12 +49,12 @@ spring:
         min-idle: 0
     client-type: lettuce
     timeout: 1800000
-    password: baotaredis123456
+
   # 数据源配置
   datasource:
     url: jdbc:mysql://119.23.214.198:3306/ask_answer?characterEncoding=utf-8&useSSL=false&serverTimezone=GMT%2B8
-    username: ask_answer
-    password: baotamysql123456
+    username: ENC(Sg+vwSHxNysc1vQDbPr9U+zgrAoqiQsCUY7sEemhr7LzpLY2XoFImabOymCosReQ)
+    password: ENC(ea6ZbQDbQtYRgvIr+23UP0lSFFJvM6LOSJh6KYhQgUKEq2bcKKlUw/nSdrf5E8diUHwgWc4U+Arv+9QBfIto4A==)
     driver-class-name: com.mysql.cj.jdbc.Driver
 
     # druid配置

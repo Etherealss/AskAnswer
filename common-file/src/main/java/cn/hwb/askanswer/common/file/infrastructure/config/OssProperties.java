@@ -1,4 +1,4 @@
-package cn.hwb.common.file.infrastructure.config;
+package cn.hwb.askanswer.common.file.infrastructure.config;
 
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.OSSClientBuilder;
@@ -12,6 +12,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.annotation.Validated;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * @author wang tengkun
@@ -28,22 +30,27 @@ public class OssProperties {
     /**
      * 文件客户端类型
      */
+    @NotBlank
     private String fileClientType;
     /**
      * OSS地址（不同服务器，地址不同）
      */
+    @NotBlank
     private String endpoint;
     /**
      * OSS键id（去OSS控制台获取）
      */
+    @NotBlank
     private String accessKeyId;
     /**
      * OSS秘钥（去OSS控制台获取）
      */
+    @NotBlank
     private String accessKeySecret;
     /**
      * OSS桶名称（这个是自己创建bucket时候的命名）
      */
+    @NotBlank
     private String bucketName;
 
     @Bean

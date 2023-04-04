@@ -1,4 +1,4 @@
-package cn.hwb.common.file.domain;
+package cn.hwb.askanswer.common.file.domain;
 
 import cn.hwb.askanswer.common.base.exception.rest.ParamMissingException;
 import cn.hwb.askanswer.common.base.utils.FileUtil;

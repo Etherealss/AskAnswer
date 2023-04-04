@@ -1,4 +1,4 @@
-package cn.hwb.common.file.domain;
+package cn.hwb.askanswer.common.file.domain;
 
 import lombok.AccessLevel;
 import lombok.Data;

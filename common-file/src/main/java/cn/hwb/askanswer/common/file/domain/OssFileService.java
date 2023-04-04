@@ -1,7 +1,7 @@
-package cn.hwb.common.file.domain;
+package cn.hwb.askanswer.common.file.domain;
 
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
-import cn.hwb.common.file.infrastructure.config.OssProperties;
+import cn.hwb.askanswer.common.file.infrastructure.config.OssProperties;
 import com.aliyun.oss.OSS;
 import com.aliyun.oss.model.CannedAccessControlList;
 import com.aliyun.oss.model.OSSObject;
