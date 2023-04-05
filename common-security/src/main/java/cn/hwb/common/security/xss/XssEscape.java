@@ -7,7 +7,10 @@ import java.lang.annotation.Target;
 
 /**
  * xss 转义
- * @see XssEscapeAspect 声明在方法上以开启方法参数、参数类、类字段上以开启检查
+ * 用法：声明在方法上、方法参数的类上、类中需要检查的字段上，以开启检查
+ * @see XssEscapeAspect
+ * @author wtk
+ * @date 2023-03-23
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.METHOD, ElementType.PARAMETER, ElementType.FIELD})
