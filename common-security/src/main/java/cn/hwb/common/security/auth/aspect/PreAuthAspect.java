@@ -24,23 +24,11 @@ import java.util.List;
 @Slf4j
 public class PreAuthAspect {
 
-    /**
-     * 定义AOP签名 (切入所有使用鉴权注解的方法)
-     */
-    public static final String POINTCUR_REQUEST_MAPPING = ""
-            + "@annotation(org.springframework.web.bind.annotation.GetMapping) || "
-            + "@annotation(org.springframework.web.bind.annotation.PostMapping) || "
-            + "@annotation(org.springframework.web.bind.annotation.DeleteMapping) || "
-            + "@annotation(org.springframework.web.bind.annotation.PutMapping) || "
-            + "@annotation(org.springframework.web.bind.annotation.RequestMapping)";
-
-    public static final String POINTCUR_CONTROLLER = "execution(* com.nowander..controller..*.*(..))";
-
     private final List<IPreAuthHandler> preAuthHandlers;
     /**
      * AOP签名
      */
-    @Pointcut(POINTCUR_CONTROLLER)
+    @Pointcut("execution(* cn.hwb..controller..*.*(..))")
     public void pointcut() {
     }
 
