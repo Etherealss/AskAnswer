@@ -55,6 +55,14 @@
             <artifactId>modules-like</artifactId>
         </dependency>
         <dependency>
+            <groupId>cn.hwb</groupId>
+            <artifactId>modules-collection</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.hwb</groupId>
+            <artifactId>modules-notification</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
         </dependency>

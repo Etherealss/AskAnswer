@@ -34,5 +34,13 @@
             <groupId>cn.hwb</groupId>
             <artifactId>modules-user</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.hwb</groupId>
+            <artifactId>modules-collection</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.hwb</groupId>
+            <artifactId>modules-notification</artifactId>
+        </dependency>
     </dependencies>
 </project>

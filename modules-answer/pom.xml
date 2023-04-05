@@ -38,6 +38,10 @@
             <groupId>cn.hwb</groupId>
             <artifactId>modules-like</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.hwb</groupId>
+            <artifactId>modules-notification</artifactId>
+        </dependency>
     </dependencies>
 
 </project>
