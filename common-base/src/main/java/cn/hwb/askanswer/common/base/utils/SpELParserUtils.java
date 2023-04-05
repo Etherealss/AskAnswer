@@ -5,6 +5,7 @@ import org.springframework.core.DefaultParameterNameDiscoverer;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.ParseException;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.expression.spel.support.StandardEvaluationContext;
 
@@ -64,8 +65,8 @@ public class SpELParserUtils {
             Expression expression = SPEL_EXPRESSION_PARSER.parseExpression(spelExpression);
             //获取表达式的值
             return expression.getValue(context, clz);
-        } catch (Exception e) {
-            log.error(e.getMessage());
+        } catch (ParseException e) {
+            log.warn("SpEL解析失败：{}", e.getMessage());
             throw new RuntimeException(e.getMessage());
         }
     }

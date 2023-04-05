@@ -15,6 +15,8 @@ import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
 import cn.hwb.askanswer.common.base.pojo.event.question.QuestionCreatorValidateEvent;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
+import cn.hwb.common.security.agelimit.AgeLimitVerifier;
+import cn.hwb.common.security.auth.exception.AgeLimitedException;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -38,8 +40,13 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
     private final AnswerMapper questionMapper;
     private final UserService userService;
     private final ApplicationEventPublisher eventPublisher;
+    private final AgeLimitVerifier ageLimitVerifier;
 
     public Long publish(Long questionId, CreateAnswerRequest req) {
+        boolean verify = ageLimitVerifier.verify(questionId);
+        if (!verify) {
+            throw new AgeLimitedException("当前用户年龄段受限");
+        }
         AnswerEntity answerEntity = converter.toEntity(req);
         answerEntity.setQuestionId(questionId);
         this.save(answerEntity);
@@ -79,10 +86,8 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
     public AnswerDTO findById(Long questionId) {
         AnswerEntity entity = this.lambdaQuery()
                 .eq(AnswerEntity::getId, questionId)
-                .one();
-        if (entity == null) {
-            throw new NotFoundException(AnswerEntity.class, questionId.toString());
-        }
+                .oneOpt()
+                .orElseThrow(() -> new NotFoundException(AnswerEntity.class, questionId.toString()));
         this.anonymousHandle(entity);
         AnswerDTO answerDTO = converter.toDto(entity);
         answerDTO.setCreator(userService.getBriefById(entity.getCreator()));
@@ -93,10 +98,8 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
         AnswerEntity entity = this.lambdaQuery()
                 .eq(AnswerEntity::getId, answerId)
                 .select(AnswerEntity::getQuestionId, AnswerEntity::getCreator)
-                .one();
-        if (entity == null) {
-            throw new NotFoundException(AnswerEntity.class, answerId.toString());
-        }
+                .oneOpt()
+                .orElseThrow(() -> new NotFoundException(AnswerEntity.class, questionId.toString()));
         if (answerCreator != null && !answerCreator.equals(entity.getCreator())) {
             throw new NotCreatorException(answerCreator, answerId);
         }

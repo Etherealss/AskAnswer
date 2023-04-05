@@ -38,6 +38,7 @@ public enum ResultCode {
 
     // --------------- answer 03 ---------------
     ANSWER_TARGET_NOT_MATCH(40003001, "[回答目标不匹配]"),
+    AGE_NOT_ALLOW(HttpStatus.FORBIDDEN, 40303002, "[年龄段不符合]"),
 
     // --------------- comment 04 ---------------
     COMMENT_TARGET_NOT_MATCH(40004001, "[评论目标不匹配]"),

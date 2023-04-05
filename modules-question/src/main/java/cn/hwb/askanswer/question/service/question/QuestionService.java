@@ -60,22 +60,28 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
     public QuestionDTO findById(Long questionId) {
         QuestionEntity entity = this.lambdaQuery()
                 .eq(QuestionEntity::getId, questionId)
-                .one();
-        if (entity == null) {
-            throw new NotFoundException(QuestionEntity.class, questionId.toString());
-        }
+                .oneOpt()
+                .orElseThrow(() -> new NotFoundException(QuestionEntity.class, questionId.toString()));
         QuestionDTO questionDTO = converter.toDto(entity);
         questionDTO.setCreator(userService.getBriefById(entity.getCreator()));
         return questionDTO;
     }
 
+    public AgeBracketEnum findAgeById(Long questionId) {
+        QuestionEntity entity = this.lambdaQuery()
+                .eq(QuestionEntity::getId, questionId)
+                .select(QuestionEntity::getAgeBracket)
+                .oneOpt()
+                .orElseThrow(() -> new NotFoundException(QuestionEntity.class, questionId.toString()));
+        return entity.getAgeBracket();
+    }
+
     public void checkCreator(Long questionId, Long userId) {
         QuestionEntity entity = this.lambdaQuery()
                 .eq(QuestionEntity::getId, questionId)
-                .select(QuestionEntity::getCreator).one();
-        if (entity == null) {
-            throw new NotFoundException(QuestionEntity.class, questionId.toString());
-        }
+                .select(QuestionEntity::getCreator)
+                .oneOpt()
+                .orElseThrow(() -> new NotFoundException(QuestionEntity.class, questionId.toString()));
         if (!entity.getCreator().equals(userId)) {
             throw new NotCreatorException(userId, questionId);
         }
