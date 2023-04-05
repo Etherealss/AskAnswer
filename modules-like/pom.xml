@@ -9,14 +9,13 @@
         <version>0.0.1</version>
     </parent>
 
-    <artifactId>modules-answer</artifactId>
+    <artifactId>modules-like</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
     <dependencies>
         <dependency>
             <groupId>cn.hwb</groupId>
@@ -24,19 +23,11 @@
         </dependency>
         <dependency>
             <groupId>cn.hwb</groupId>
-            <artifactId>common-database</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.hwb</groupId>
             <artifactId>common-security</artifactId>
         </dependency>
         <dependency>
             <groupId>cn.hwb</groupId>
-            <artifactId>modules-user</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>cn.hwb</groupId>
-            <artifactId>modules-like</artifactId>
+            <artifactId>common-database</artifactId>
         </dependency>
     </dependencies>
 

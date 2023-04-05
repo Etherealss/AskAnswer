@@ -13,6 +13,7 @@
         <module>modules-answer</module>
         <module>modules-comment</module>
         <module>common-file</module>
+        <module>modules-like</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -79,6 +80,11 @@
             <dependency>
                 <groupId>cn.hwb</groupId>
                 <artifactId>common-file</artifactId>
+                <version>0.0.1</version>
+            </dependency>
+            <dependency>
+                <groupId>cn.hwb</groupId>
+                <artifactId>modules-like</artifactId>
                 <version>0.0.1</version>
             </dependency>
             <!-- 用于xss转义-->

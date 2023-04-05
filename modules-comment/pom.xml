@@ -34,5 +34,9 @@
             <groupId>cn.hwb</groupId>
             <artifactId>modules-user</artifactId>
         </dependency>
+        <dependency>
+            <groupId>cn.hwb</groupId>
+            <artifactId>modules-like</artifactId>
+        </dependency>
     </dependencies>
 </project>
