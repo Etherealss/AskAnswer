@@ -1,4 +1,4 @@
-package cn.hwb.askanswer.user.controller;
+package cn.hwb.askanswer.user.controller.user;
 
 import cn.hwb.askanswer.user.infrastructure.pojo.request.UserLoginRequest;
 import cn.hwb.askanswer.user.service.user.UserAuthService;

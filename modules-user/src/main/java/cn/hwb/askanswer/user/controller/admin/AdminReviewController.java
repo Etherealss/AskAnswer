@@ -1,4 +1,4 @@
-package cn.hwb.askanswer.user.controller;
+package cn.hwb.askanswer.user.controller.admin;
 
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
 import cn.hwb.askanswer.common.base.web.ResponseAdvice;
