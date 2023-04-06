@@ -1,4 +1,4 @@
-package cn.hwb.askanswer.notification.infrastructure.pojo.vo;
+package cn.hwb.askanswer.common.base.pojo.vo;
 
 import lombok.AccessLevel;
 import lombok.Data;

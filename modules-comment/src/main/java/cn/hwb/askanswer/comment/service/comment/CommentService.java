@@ -6,17 +6,15 @@ import cn.hwb.askanswer.comment.infrastructure.pojo.entity.CommentEntity;
 import cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateCommentRequest;
 import cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateReplyRequest;
 import cn.hwb.askanswer.comment.mapper.CommentMapper;
-import cn.hwb.askanswer.common.base.enums.NotificationTargetType;
 import cn.hwb.askanswer.common.base.enums.NotificationType;
 import cn.hwb.askanswer.common.base.enums.ResultCode;
 import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
+import cn.hwb.askanswer.common.base.pojo.vo.NotificationTemplate;
 import cn.hwb.askanswer.common.base.utils.IntegerUtil;
 import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
 import cn.hwb.askanswer.like.service.LikeRelationService;
-import cn.hwb.askanswer.notification.infrastructure.pojo.request.PublishNotificationRequest;
-import cn.hwb.askanswer.notification.infrastructure.pojo.vo.NotificationTemplate;
 import cn.hwb.askanswer.notification.service.NotificationService;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserPageDTO;
@@ -78,14 +76,13 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
         NotificationTemplate notificationTemplate = new NotificationTemplate()
                 .setTargetId(commentBe.getId())
                 .setTargetDesc("评论")
-                .setTargetType(NotificationTargetType.COMMENT.getCode())
                 .setUserId(UserSecurityContextHolder.require().getUserId())
                 .setUsername(UserSecurityContextHolder.require().getUsername());
         // 向被评论的用户发送通知
-        notificationService.publish(new PublishNotificationRequest()
-                .setProps(notificationTemplate)
-                .setType(NotificationType.LIKE)
-                .setRcvrId(commentBe.getCreator())
+        notificationService.publish(
+                NotificationType.COMMENT_NEW_LIKE,
+                commentBe,
+                "评论"
         );
     }
 

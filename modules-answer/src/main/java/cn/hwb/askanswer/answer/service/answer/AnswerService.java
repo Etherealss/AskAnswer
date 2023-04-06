@@ -19,14 +19,11 @@ import cn.hwb.askanswer.common.base.pojo.event.QuestionCreatorValidateEvent;
 import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
 import cn.hwb.askanswer.like.service.LikeRelationService;
 import cn.hwb.askanswer.like.service.LikeService;
-import cn.hwb.askanswer.notification.infrastructure.pojo.request.PublishNotificationRequest;
-import cn.hwb.askanswer.notification.infrastructure.pojo.vo.NotificationTemplate;
 import cn.hwb.askanswer.notification.service.NotificationService;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
 import cn.hwb.common.security.agelimit.AgeLimitVerifier;
 import cn.hwb.common.security.auth.exception.AgeLimitedException;
-import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -97,25 +94,13 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
                 .set(AnswerEntity::getIsAccepted, req.getIsAccepted())
                 .update();
         if (req.getIsAccepted()) {
-            publishNotification(answerId, answer);
+            // 回答被采纳通知
+            notificationService.publish(
+                    NotificationType.ANSWER_ACCEPTED,
+                    answer,
+                    answer.getTitle()
+            );
         }
-    }
-
-    private void publishNotification(Long answerId, AnswerEntity answer) {
-        // 填充采纳通知的相关信息
-        NotificationTemplate template = new NotificationTemplate()
-                // 被采纳的回答
-                .setTargetId(answerId)
-                // 被采纳的回答标题
-                .setTargetDesc(answer.getTitle())
-                .setUsername(UserSecurityContextHolder.require().getUsername())
-                .setUserId(answer.getCreator());
-        // 向被评论的回答作者发送通知
-        notificationService.publish(new PublishNotificationRequest()
-                .setProps(template)
-                .setType(NotificationType.ANSWER_BE_ACCEPTED)
-                .setRcvrId(answer.getCreator())
-        );
     }
 
     public void deleteById(Long answerId, Long userId) {
@@ -214,17 +199,11 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
                 .orElseThrow(() -> new NotFoundException(AnswerEntity.class, answerId.toString()));
         // 问题存在，点赞
         likeService.like(likeUserId, answerId, LikeTargetType.ANSWER);
-        // 填充点赞通知的相关信息
-        NotificationTemplate notificationTemplate = new NotificationTemplate()
-                .setTargetId(answerId)
-                .setTargetDesc(answer.getTitle())
-                .setUserId(likeUserId)
-                .setUsername(UserSecurityContextHolder.require().getUsername());
         // 向被点赞的回答作者发送通知
-        notificationService.publish(new PublishNotificationRequest()
-                .setProps(notificationTemplate)
-                .setType(NotificationType.ANSWER_NEW_LIKE)
-                .setRcvrId(answer.getCreator())
+        notificationService.publish(
+                NotificationType.ANSWER_NEW_LIKE,
+                answer,
+                answer.getTitle()
         );
     }
 
@@ -248,17 +227,11 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
                 .oneOpt()
                 .orElseThrow(() -> new NotFoundException(AnswerEntity.class, answerId.toString()));
         Long commentId = commentService.publish(answerId, req);
-        // 填充评论通知的相关信息
-        NotificationTemplate template = new NotificationTemplate()
-                .setTargetId(answerId)
-                .setTargetDesc(answer.getTitle())
-                .setUsername(UserSecurityContextHolder.require().getUsername())
-                .setUserId(answer.getCreator());
-        // 向被评论的回答作者发送通知
-        notificationService.publish(new PublishNotificationRequest()
-                .setProps(template)
-                .setType(NotificationType.ANSWER_NEW_COMMENT)
-                .setRcvrId(answer.getCreator())
+        // 回答被评论通知
+        notificationService.publish(
+                NotificationType.ANSWER_NEW_COMMENT,
+                answer,
+                answer.getTitle()
         );
         return commentId;
     }

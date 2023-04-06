@@ -1,6 +1,5 @@
 package cn.hwb.askanswer.notification.infrastructure.pojo.resp;
 
-import cn.hwb.askanswer.common.base.enums.NotificationType;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -16,7 +15,7 @@ import java.util.Date;
 public class NotificationResp {
     Long id;
 
-    NotificationType type;
+    String type;
 
     Object props;
 

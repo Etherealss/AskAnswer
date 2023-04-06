@@ -1,14 +1,12 @@
 package cn.hwb.askanswer.question.service.question;
 
 import cn.hwb.askanswer.collection.service.CollectionRelationService;
+import cn.hwb.askanswer.collection.service.CollectionService;
 import cn.hwb.askanswer.common.base.enums.AgeBracketEnum;
-import cn.hwb.askanswer.common.base.enums.NotificationTargetType;
 import cn.hwb.askanswer.common.base.enums.NotificationType;
 import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
-import cn.hwb.askanswer.notification.infrastructure.pojo.request.PublishNotificationRequest;
-import cn.hwb.askanswer.notification.infrastructure.pojo.vo.NotificationTemplate;
 import cn.hwb.askanswer.notification.service.NotificationService;
 import cn.hwb.askanswer.question.infrastructure.converter.QuestionConverter;
 import cn.hwb.askanswer.question.infrastructure.pojo.dto.QuestionDTO;
@@ -18,7 +16,6 @@ import cn.hwb.askanswer.question.infrastructure.pojo.request.UpdateQuestionReque
 import cn.hwb.askanswer.question.mapper.QuestionMapper;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
-import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -44,6 +41,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
     private final UserService userService;
     private final NotificationService notificationService;
     private final CollectionRelationService collectionRelationService;
+    private final CollectionService collectionService;
 
     public Long publish(CreateQuestionRequest req, AgeBracketEnum ageBracket) {
         QuestionEntity questionEntity = converter.toEntity(req);
@@ -141,24 +139,37 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
                 .build();
     }
 
-    public void afterBeAnswered(Long questionId, Long answerUserId) {
+    public void afterBeAnswered(Long questionId) {
         QuestionEntity question = this.lambdaQuery()
                 .eq(QuestionEntity::getId, questionId)
                 .select(QuestionEntity::getTitle, QuestionEntity::getCreator)
                 .oneOpt()
                 .orElseThrow(() -> new NotFoundException(QuestionEntity.class, questionId.toString()));
-        // 填充"新回答"通知的相关信息
-        NotificationTemplate template = new NotificationTemplate()
-                .setTargetId(questionId)
-                .setTargetDesc(question.getTitle())
-                .setTargetType(NotificationTargetType.QUESTION.getCode())
-                .setUsername(UserSecurityContextHolder.require().getUsername())
-                .setUserId(answerUserId);
         // 向被回答问题的作者发送通知
-        notificationService.publish(new PublishNotificationRequest()
-                .setProps(template)
-                .setType(NotificationType.ANSWER)
-                .setRcvrId(question.getCreator())
+        notificationService.publish(
+                NotificationType.QUESTION_NEW_ANSWER,
+                question,
+                question.getTitle()
+        );
+    }
+
+    /**
+     * 收藏
+     * @param questionId 被收藏的问题
+     * @param userId 收藏的用户
+     */
+    public void addCollection(Long questionId, Long userId) {
+        // 判断问题是否存在，并查询作者和标题
+        QuestionEntity question = this.lambdaQuery()
+                .eq(QuestionEntity::getId, questionId)
+                .select(QuestionEntity::getCreator, QuestionEntity::getTitle)
+                .oneOpt()
+                .orElseThrow(() -> new NotFoundException(QuestionEntity.class, questionId.toString()));
+        collectionService.addCollection(userId, questionId);
+        notificationService.publish(
+                NotificationType.QUESTION_COLLECTED,
+                question,
+                question.getTitle()
         );
     }
 }

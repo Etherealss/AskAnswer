@@ -1,8 +1,7 @@
 package cn.hwb.askanswer.question.controller;
 
-import cn.hwb.askanswer.collection.service.CollectionService;
-import cn.hwb.askanswer.common.base.validation.entity.EntityExist;
 import cn.hwb.askanswer.common.base.web.ResponseAdvice;
+import cn.hwb.askanswer.question.service.question.QuestionService;
 import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,13 +20,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @ResponseAdvice
 public class QuestionCollectionController {
-    private static final String DEFAULT = "answerEntityValidator";
 
-    private final CollectionService collectionService;
+    private final QuestionService questionService;
 
     @PostMapping
-    public void addRelation(@PathVariable @EntityExist(DEFAULT) Long questionId) {
+    public void addRelation(@PathVariable Long questionId) {
         Long userId = UserSecurityContextHolder.require().getUserId();
-        collectionService.addCollection(userId, questionId);
+        questionService.addCollection(questionId, userId);
     }
 }

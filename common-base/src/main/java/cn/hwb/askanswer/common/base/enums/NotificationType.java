@@ -15,6 +15,6 @@ public class NotificationType {
     public static final String ANSWER_NEW_COMMENT = "answerNewComment";
     public static final String COMMENT_NEW_REPLY = "commentNewReply";
     public static final String QUESTION_NEW_ANSWER = "questionNewAnswer";
-    public static final String QUESTION_BE_COLLECTED = "questionBeCollected";
-    public static final String ANSWER_BE_ACCEPTED = "answerBeAccepted";
+    public static final String QUESTION_COLLECTED = "questionCollected";
+    public static final String ANSWER_ACCEPTED = "answerAccepted";
 }
