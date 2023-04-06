@@ -7,6 +7,9 @@ import cn.hwb.askanswer.answer.infrastructure.pojo.request.CreateAnswerRequest;
 import cn.hwb.askanswer.answer.infrastructure.pojo.request.UpdateAnswerAcceptRequest;
 import cn.hwb.askanswer.answer.infrastructure.pojo.request.UpdateAnswerRequest;
 import cn.hwb.askanswer.answer.mapper.AnswerMapper;
+import cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateCommentRequest;
+import cn.hwb.askanswer.comment.service.comment.CommentService;
+import cn.hwb.askanswer.common.base.enums.NotificationType;
 import cn.hwb.askanswer.common.base.enums.ResultCode;
 import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
@@ -15,10 +18,16 @@ import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
 import cn.hwb.askanswer.common.base.pojo.event.QuestionCreatorValidateEvent;
 import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
 import cn.hwb.askanswer.like.service.LikeRelationService;
+import cn.hwb.askanswer.like.service.LikeService;
+import cn.hwb.askanswer.notification.infrastructure.pojo.request.PublishNotificationCommand;
+import cn.hwb.askanswer.notification.infrastructure.pojo.vo.CommentNotificationTemplate;
+import cn.hwb.askanswer.notification.infrastructure.pojo.vo.LikeNotificationTemplate;
+import cn.hwb.askanswer.notification.service.NotificationService;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
 import cn.hwb.common.security.agelimit.AgeLimitVerifier;
 import cn.hwb.common.security.auth.exception.AgeLimitedException;
+import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -46,6 +55,9 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
     private final ApplicationEventPublisher eventPublisher;
     private final AgeLimitVerifier ageLimitVerifier;
     private final LikeRelationService likeRelationService;
+    private final LikeService likeService;
+    private final NotificationService notificationService;
+    private final CommentService commentService;
 
     public Long publish(Long questionId, CreateAnswerRequest req) {
         boolean verify = ageLimitVerifier.verify(questionId);
@@ -88,11 +100,11 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
                 .remove();
     }
 
-    public AnswerDTO findById(Long questionId) {
+    public AnswerDTO findById(Long answerId) {
         AnswerEntity entity = this.lambdaQuery()
-                .eq(AnswerEntity::getId, questionId)
+                .eq(AnswerEntity::getId, answerId)
                 .oneOpt()
-                .orElseThrow(() -> new NotFoundException(AnswerEntity.class, questionId.toString()));
+                .orElseThrow(() -> new NotFoundException(AnswerEntity.class, answerId.toString()));
         this.anonymousHandle(entity);
         AnswerDTO answerDTO = converter.toDto(entity);
         answerDTO.setCreator(userService.getBriefById(entity.getCreator()));
@@ -163,10 +175,61 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
                 .build();
     }
 
+    public void answerBeLiked(Long answerId, Long likeUserId) {
+        // 先判断问题是否存在
+        AnswerEntity answer = this.lambdaQuery()
+                .eq(AnswerEntity::getId, answerId)
+                .select(AnswerEntity::getCreator, AnswerEntity::getTitle)
+                .oneOpt()
+                .orElseThrow(() -> new NotFoundException(AnswerEntity.class, answerId.toString()));
+        // 问题存在，点赞
+        likeService.like(likeUserId, answerId, LikeTargetType.ANSWER);
+        // 填充点赞通知的相关信息
+        LikeNotificationTemplate likeNotificationTemplate = new LikeNotificationTemplate()
+                .setAnswerId(answerId)
+                .setAnswerTitle(answer.getTitle())
+                .setUserId(likeUserId)
+                .setUsername(UserSecurityContextHolder.require().getUsername());
+        // 向被点赞的回答作者发送通知
+        notificationService.publish(new PublishNotificationCommand()
+                .setProps(likeNotificationTemplate)
+                .setType(NotificationType.ANSWER)
+                .setRcvrId(answer.getCreator())
+        );
+    }
+
+    /**
+     * 匿名回答需要隐藏作者
+     * @param entity
+     * @return
+     */
     private AnswerEntity anonymousHandle(AnswerEntity entity) {
         if (entity.getIsAnonymous()) {
             entity.setCreator(null);
         }
         return entity;
+    }
+
+    public Long publishComment(Long answerId, CreateCommentRequest req) {
+        // 判断问题是否存在，并查询问题的作者与标题，用于填充到通知里
+        AnswerEntity answer = this.lambdaQuery()
+                .eq(AnswerEntity::getId, answerId)
+                .select(AnswerEntity::getCreator, AnswerEntity::getTitle)
+                .oneOpt()
+                .orElseThrow(() -> new NotFoundException(AnswerEntity.class, answerId.toString()));
+        Long commentId = commentService.publish(answerId, req);
+        // 填充评论通知的相关信息
+        CommentNotificationTemplate likeNotificationTemplate = new CommentNotificationTemplate()
+                .setAnswerId(answerId)
+                .setUsername(UserSecurityContextHolder.require().getUsername())
+                .setAnswerTitle(answer.getTitle())
+                .setUserId(answer.getCreator());
+        // 向被评论的回答作者发送通知
+        notificationService.publish(new PublishNotificationCommand()
+                .setProps(likeNotificationTemplate)
+                .setType(NotificationType.COMMENT)
+                .setRcvrId(answer.getCreator())
+        );
+        return commentId;
     }
 }

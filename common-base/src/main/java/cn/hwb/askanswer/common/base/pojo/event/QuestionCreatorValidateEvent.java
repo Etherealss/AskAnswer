@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
+ * 验证当前用户是否为问题作者的事件
  * @author wtk
  * @date 2023-03-25
  */

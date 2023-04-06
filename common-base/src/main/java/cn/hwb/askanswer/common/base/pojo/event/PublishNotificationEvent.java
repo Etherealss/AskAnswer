@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.ToString;
 
 /**
+ * 发布通知的事件
  * @author wang tengkun
  * @date 2023/4/6
  */
@@ -17,7 +18,10 @@ public class PublishNotificationEvent extends DomainEvent {
     Object props;
     Long rcvrId;
 
-    public PublishNotificationEvent(Long userId) {
+    public PublishNotificationEvent(Long userId, NotificationType type, Object props, Long rcvrId) {
         super(userId);
+        this.type = type;
+        this.props = props;
+        this.rcvrId = rcvrId;
     }
 }

@@ -36,6 +36,10 @@
         </dependency>
         <dependency>
             <groupId>cn.hwb</groupId>
+            <artifactId>modules-comment</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cn.hwb</groupId>
             <artifactId>modules-like</artifactId>
         </dependency>
         <dependency>

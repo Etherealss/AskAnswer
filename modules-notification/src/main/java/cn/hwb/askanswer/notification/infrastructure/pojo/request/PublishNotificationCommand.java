@@ -2,7 +2,10 @@ package cn.hwb.askanswer.notification.infrastructure.pojo.request;
 
 import cn.hwb.askanswer.common.base.enums.NotificationType;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotNull;
@@ -13,6 +16,9 @@ import javax.validation.constraints.NotNull;
  */
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor
+@AllArgsConstructor
+@Accessors(chain = true)
 public class PublishNotificationCommand {
     @NotNull
     NotificationType type;

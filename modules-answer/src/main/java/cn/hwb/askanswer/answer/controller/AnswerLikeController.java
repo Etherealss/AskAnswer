@@ -5,8 +5,6 @@ import cn.hwb.askanswer.answer.service.answer.AnswerService;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
 import cn.hwb.askanswer.common.base.validation.entity.EntityExist;
 import cn.hwb.askanswer.common.base.web.ResponseAdvice;
-import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
-import cn.hwb.askanswer.like.service.LikeService;
 import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 public class AnswerLikeController {
     private static final String ANSWER = "answerEntityValidator";
 
-    private final LikeService likeService;
     private final AnswerService answerService;
 
     /**
@@ -32,9 +29,9 @@ public class AnswerLikeController {
      * @param answerId
      */
     @PostMapping("/answers/{answerId}/likes/relations")
-    public void addLike(@PathVariable @EntityExist(ANSWER) Long answerId) {
+    public void addLike(@PathVariable Long answerId) {
         Long userId = UserSecurityContextHolder.require().getUserId();
-        likeService.like(userId, answerId, LikeTargetType.ANSWER);
+        answerService.answerBeLiked(answerId, userId);
     }
 
     @GetMapping("/pages/answers/likes/relations")
