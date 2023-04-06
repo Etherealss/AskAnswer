@@ -1,6 +1,5 @@
-package cn.hwb.askanswer.common.base.pojo.event.question;
+package cn.hwb.askanswer.common.base.pojo.event;
 
-import cn.hwb.askanswer.common.base.pojo.event.DomainEvent;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

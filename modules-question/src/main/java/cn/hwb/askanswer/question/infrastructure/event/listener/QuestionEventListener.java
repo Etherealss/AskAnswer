@@ -1,6 +1,6 @@
 package cn.hwb.askanswer.question.infrastructure.event.listener;
 
-import cn.hwb.askanswer.common.base.pojo.event.question.QuestionCreatorValidateEvent;
+import cn.hwb.askanswer.common.base.pojo.event.QuestionCreatorValidateEvent;
 import cn.hwb.askanswer.question.service.question.QuestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
