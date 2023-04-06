@@ -11,6 +11,8 @@ import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
 import cn.hwb.askanswer.common.base.utils.IntegerUtil;
+import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
+import cn.hwb.askanswer.like.service.LikeRelationService;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserPageDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
@@ -21,7 +23,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -40,6 +44,7 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
     private final CommentConverter converter;
     private final CommentMapper questionMapper;
     private final UserService userService;
+    private final LikeRelationService likeRelationService;
 
     public Long publish(Long targetId, CreateCommentRequest req) {
         CommentEntity commentEntity = converter.toEntity(req);
@@ -105,7 +110,7 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
                 .collect(Collectors.toList());
         Map<Long, UserBriefDTO> userMap = records.stream()
                 .map(CommentDTO::getCreator)
-                .distinct()
+                .distinct() // 去重
                 .map(userService::getBriefById)
                 .collect(Collectors.toMap(UserBriefDTO::getId, Function.identity()));
         UserPageDTO<CommentDTO> userPageDTO = new UserPageDTO<>();
@@ -133,9 +138,37 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
         page.setPageSize(size);
         Map<Long, UserBriefDTO> userMap = records.stream()
                 .map(CommentDTO::getCreator)
-                .distinct()
+                .distinct() // 去重
                 .map(userService::getBriefById)
                 .collect(Collectors.toMap(UserBriefDTO::getId, Function.identity()));
+        page.setUserMap(userMap);
+        return page;
+    }
+
+    public UserPageDTO<CommentDTO> pageByLike(Long userId, Long cursorId, int size) {
+        List<Long> commentIds = likeRelationService.page(userId, cursorId, size, LikeTargetType.COMMENT);
+        List<CommentDTO> records;
+        if (CollectionUtils.isEmpty(commentIds)) {
+            records = Collections.emptyList();
+        } else {
+            records = this.lambdaQuery()
+                    .in(CommentEntity::getId, commentIds)
+                    .orderByDesc(CommentEntity::getId)
+                    .last(String.format("LIMIT %d", size))
+                    .list()
+                    .stream()
+                    .map(converter::toDto)
+                    .collect(Collectors.toList());
+        }
+        UserPageDTO<CommentDTO> page = new UserPageDTO<>();
+        page.setRecords(records);
+        page.setPageSize(size);
+        Map<Long, UserBriefDTO> userMap = records.stream()
+                .map(CommentDTO::getCreator)
+                .distinct() // 去重
+                .map(userService::getBriefById)
+                .collect(Collectors.toMap(UserBriefDTO::getId, Function.identity()));
+        page.setUserMap(userMap);
         return page;
     }
 }
