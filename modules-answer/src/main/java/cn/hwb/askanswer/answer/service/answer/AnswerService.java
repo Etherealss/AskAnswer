@@ -12,7 +12,9 @@ import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
-import cn.hwb.askanswer.common.base.pojo.event.question.QuestionCreatorValidateEvent;
+import cn.hwb.askanswer.common.base.pojo.event.QuestionCreatorValidateEvent;
+import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
+import cn.hwb.askanswer.like.service.LikeRelationService;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
 import cn.hwb.common.security.agelimit.AgeLimitVerifier;
@@ -22,7 +24,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,6 +45,7 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
     private final UserService userService;
     private final ApplicationEventPublisher eventPublisher;
     private final AgeLimitVerifier ageLimitVerifier;
+    private final LikeRelationService likeRelationService;
 
     public Long publish(Long questionId, CreateAnswerRequest req) {
         boolean verify = ageLimitVerifier.verify(questionId);
@@ -114,6 +119,33 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
         List<AnswerDTO> records = this.lambdaQuery()
                 .eq(AnswerEntity::getQuestionId, questionId)
                 .gt(AnswerEntity::getId, cursorId)
+                .orderByDesc(AnswerEntity::getId)
+                .last(String.format("LIMIT %d", size))
+                .list()
+                .stream()
+                .map(this::anonymousHandle)
+                .map(e -> {
+                    UserBriefDTO userBrief = userService.getBriefById(e.getCreator());
+                    AnswerDTO answerDTO = converter.toDto(e);
+                    answerDTO.setCreator(userBrief);
+                    return answerDTO;
+                }).collect(Collectors.toList());
+        return PageDTO.<AnswerDTO>builder()
+                .records(records)
+                .pageSize(size)
+                .build();
+    }
+
+    public PageDTO<AnswerDTO> pageByLikes(Long userId, Long cursorId, int size) {
+        List<Long> answerIds = likeRelationService.page(userId, cursorId, size, LikeTargetType.ANSWER);
+        if (CollectionUtils.isEmpty(answerIds)) {
+            return PageDTO.<AnswerDTO>builder()
+                    .records(Collections.emptyList())
+                    .pageSize(size)
+                    .build();
+        }
+        List<AnswerDTO> records = this.lambdaQuery()
+                .in(AnswerEntity::getId, answerIds)
                 .orderByDesc(AnswerEntity::getId)
                 .last(String.format("LIMIT %d", size))
                 .list()
