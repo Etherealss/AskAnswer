@@ -18,32 +18,16 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class LikeCountService extends ServiceImpl<LikeCountMapper, LikeCountEntity> {
+    private final LikeCountMapper mapper;
 
     @Transactional(rollbackFor = Exception.class)
     public void increase(Long targetId) {
-        this.incre(targetId, 1);
+        mapper.incre(targetId, 1);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void decrease(Long targetId) {
-        this.incre(targetId, -1);
-    }
-
-    private void incre(Long targetId, int value) {
-        Optional<LikeCountEntity> opt = this.lambdaQuery()
-                .eq(LikeCountEntity::getId, targetId)
-                .select(LikeCountEntity::getId, LikeCountEntity::getCount)
-                .oneOpt();
-        if (opt.isPresent()) {
-            LikeCountEntity entity = opt.get();
-            entity.setCount(entity.getCount() + value);
-            this.updateById(entity);
-        } else {
-            LikeCountEntity entity = new LikeCountEntity();
-            entity.setId(targetId);
-            entity.setCount(value);
-            this.save(entity);
-        }
+        mapper.incre(targetId, -1);
     }
 
     public int get(Long targetId) {
