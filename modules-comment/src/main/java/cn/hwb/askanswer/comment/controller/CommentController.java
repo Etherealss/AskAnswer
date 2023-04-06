@@ -1,17 +1,14 @@
 package cn.hwb.askanswer.comment.controller;
 
 import cn.hwb.askanswer.comment.infrastructure.pojo.dto.CommentDTO;
-import cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateCommentRequest;
 import cn.hwb.askanswer.comment.service.comment.CommentService;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
 import cn.hwb.askanswer.common.base.validation.entity.EntityExist;
 import cn.hwb.askanswer.common.base.web.ResponseAdvice;
 import cn.hwb.common.security.auth.annotation.AnonymousAccess;
 import cn.hwb.common.security.token.user.UserSecurityContextHolder;
-import cn.hwb.common.security.xss.XssEscape;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -29,15 +26,6 @@ public class CommentController {
     private static final String ANSWER = "answerEntityValidator";
 
     private final CommentService commentService;
-
-    @PostMapping("/comments")
-    @XssEscape
-    @EntityExist
-    public Long publish(@RequestBody @Validated CreateCommentRequest req,
-                        @PathVariable @EntityExist(QUESTION) Long questionId,
-                        @PathVariable @EntityExist(ANSWER) Long answerId) {
-        return commentService.publish(answerId, req);
-    }
 
     @DeleteMapping("/comments/{commentId}")
     public void delete(@PathVariable Long commentId) {

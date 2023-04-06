@@ -2,7 +2,7 @@ package cn.hwb.askanswer.notification.service;
 
 import cn.hwb.askanswer.common.base.pojo.event.PublishNotificationEvent;
 import cn.hwb.askanswer.notification.infrastructure.converter.NotificationConverter;
-import cn.hwb.askanswer.notification.infrastructure.pojo.request.PublishNotificationCommand;
+import cn.hwb.askanswer.notification.infrastructure.pojo.request.PublishNotificationRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
@@ -21,7 +21,7 @@ public class NotificationListener {
 
     @EventListener(PublishNotificationEvent.class)
     public void handlerEvent(PublishNotificationEvent event) {
-        PublishNotificationCommand command = converter.toCommand(event);
+        PublishNotificationRequest command = converter.toCommand(event);
         notificationService.publish(command);
     }
 }

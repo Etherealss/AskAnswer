@@ -1,6 +1,7 @@
 package cn.hwb.askanswer.user.service.user;
 
 import cn.hwb.askanswer.common.base.crypt.PasswordEncryptor;
+import cn.hwb.askanswer.common.base.enums.AgeBracketEnum;
 import cn.hwb.askanswer.common.base.enums.ResultCode;
 import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
@@ -43,6 +44,7 @@ public class UserAuthService extends ServiceImpl<UserMapper, UserEntity> {
                 user.getId(),
                 user.getUsername(),
                 user.getBirthday(),
+                AgeBracketEnum.getByBirthday(user.getBirthday()),
                 user.getRoles()
         );
         tokenService.completeTokenAndSave(tokenCertificate);

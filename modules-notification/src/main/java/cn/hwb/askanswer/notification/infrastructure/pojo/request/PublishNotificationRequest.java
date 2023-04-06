@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class PublishNotificationCommand {
+public class PublishNotificationRequest {
     @NotNull
     NotificationType type;
 

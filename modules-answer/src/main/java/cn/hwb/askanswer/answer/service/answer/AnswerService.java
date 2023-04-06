@@ -9,6 +9,7 @@ import cn.hwb.askanswer.answer.infrastructure.pojo.request.UpdateAnswerRequest;
 import cn.hwb.askanswer.answer.mapper.AnswerMapper;
 import cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateCommentRequest;
 import cn.hwb.askanswer.comment.service.comment.CommentService;
+import cn.hwb.askanswer.common.base.enums.NotificationTargetType;
 import cn.hwb.askanswer.common.base.enums.NotificationType;
 import cn.hwb.askanswer.common.base.enums.ResultCode;
 import cn.hwb.askanswer.common.base.exception.BadRequestException;
@@ -19,9 +20,8 @@ import cn.hwb.askanswer.common.base.pojo.event.QuestionCreatorValidateEvent;
 import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
 import cn.hwb.askanswer.like.service.LikeRelationService;
 import cn.hwb.askanswer.like.service.LikeService;
-import cn.hwb.askanswer.notification.infrastructure.pojo.request.PublishNotificationCommand;
-import cn.hwb.askanswer.notification.infrastructure.pojo.vo.CommentNotificationTemplate;
-import cn.hwb.askanswer.notification.infrastructure.pojo.vo.LikeNotificationTemplate;
+import cn.hwb.askanswer.notification.infrastructure.pojo.request.PublishNotificationRequest;
+import cn.hwb.askanswer.notification.infrastructure.pojo.vo.NotificationTemplate;
 import cn.hwb.askanswer.notification.service.NotificationService;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
@@ -67,7 +67,9 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
         AnswerEntity answerEntity = converter.toEntity(req);
         answerEntity.setQuestionId(questionId);
         this.save(answerEntity);
-        return answerEntity.getId();
+        Long answerId = answerEntity.getId();
+
+        return answerId;
     }
 
     public void update(Long questionId, Long answerId, Long answerCreator, UpdateAnswerRequest req) {
@@ -185,15 +187,16 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
         // 问题存在，点赞
         likeService.like(likeUserId, answerId, LikeTargetType.ANSWER);
         // 填充点赞通知的相关信息
-        LikeNotificationTemplate likeNotificationTemplate = new LikeNotificationTemplate()
-                .setAnswerId(answerId)
-                .setAnswerTitle(answer.getTitle())
+        NotificationTemplate notificationTemplate = new NotificationTemplate()
+                .setTargetId(answerId)
+                .setTargetDesc(answer.getTitle())
+                .setTargetType(NotificationTargetType.ANSWER.getCode())
                 .setUserId(likeUserId)
                 .setUsername(UserSecurityContextHolder.require().getUsername());
         // 向被点赞的回答作者发送通知
-        notificationService.publish(new PublishNotificationCommand()
-                .setProps(likeNotificationTemplate)
-                .setType(NotificationType.ANSWER)
+        notificationService.publish(new PublishNotificationRequest()
+                .setProps(notificationTemplate)
+                .setType(NotificationType.LIKE)
                 .setRcvrId(answer.getCreator())
         );
     }
@@ -219,14 +222,15 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
                 .orElseThrow(() -> new NotFoundException(AnswerEntity.class, answerId.toString()));
         Long commentId = commentService.publish(answerId, req);
         // 填充评论通知的相关信息
-        CommentNotificationTemplate likeNotificationTemplate = new CommentNotificationTemplate()
-                .setAnswerId(answerId)
+        NotificationTemplate template = new NotificationTemplate()
+                .setTargetId(answerId)
+                .setTargetDesc(answer.getTitle())
+                .setTargetType(NotificationTargetType.ANSWER.getCode())
                 .setUsername(UserSecurityContextHolder.require().getUsername())
-                .setAnswerTitle(answer.getTitle())
                 .setUserId(answer.getCreator());
         // 向被评论的回答作者发送通知
-        notificationService.publish(new PublishNotificationCommand()
-                .setProps(likeNotificationTemplate)
+        notificationService.publish(new PublishNotificationRequest()
+                .setProps(template)
                 .setType(NotificationType.COMMENT)
                 .setRcvrId(answer.getCreator())
         );

@@ -33,7 +33,7 @@ public class ReplyController {
     @XssEscape
     @EntityExist
     public Long publish(@RequestBody @Validated CreateReplyRequest req,
-                        @PathVariable @EntityExist(COMMENT) Long commentId) {
+                        @PathVariable Long commentId) {
         return commentService.publish(commentId, req);
     }
 

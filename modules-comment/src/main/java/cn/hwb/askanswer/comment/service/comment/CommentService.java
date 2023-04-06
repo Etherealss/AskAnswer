@@ -6,6 +6,8 @@ import cn.hwb.askanswer.comment.infrastructure.pojo.entity.CommentEntity;
 import cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateCommentRequest;
 import cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateReplyRequest;
 import cn.hwb.askanswer.comment.mapper.CommentMapper;
+import cn.hwb.askanswer.common.base.enums.NotificationTargetType;
+import cn.hwb.askanswer.common.base.enums.NotificationType;
 import cn.hwb.askanswer.common.base.enums.ResultCode;
 import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
@@ -13,9 +15,13 @@ import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
 import cn.hwb.askanswer.common.base.utils.IntegerUtil;
 import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
 import cn.hwb.askanswer.like.service.LikeRelationService;
+import cn.hwb.askanswer.notification.infrastructure.pojo.request.PublishNotificationRequest;
+import cn.hwb.askanswer.notification.infrastructure.pojo.vo.NotificationTemplate;
+import cn.hwb.askanswer.notification.service.NotificationService;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserPageDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
+import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -45,6 +51,7 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
     private final CommentMapper questionMapper;
     private final UserService userService;
     private final LikeRelationService likeRelationService;
+    private final NotificationService notificationService;
 
     public Long publish(Long targetId, CreateCommentRequest req) {
         CommentEntity commentEntity = converter.toEntity(req);
@@ -55,10 +62,31 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
     }
 
     public Long publish(Long targetId, CreateReplyRequest req) {
+        CommentEntity targetComment = this.lambdaQuery()
+                .eq(CommentEntity::getTargetId, targetId)
+                .oneOpt()
+                .orElseThrow(() -> new NotFoundException(CommentEntity.class, targetId.toString()));
         CommentEntity commentEntity = converter.toEntity(req);
         commentEntity.setTargetId(targetId);
         this.save(commentEntity);
+        this.sendNotification(targetComment);
         return commentEntity.getId();
+    }
+
+    private void sendNotification(CommentEntity commentBe) {
+        // 填充"新评论"通知的相关信息
+        NotificationTemplate notificationTemplate = new NotificationTemplate()
+                .setTargetId(commentBe.getId())
+                .setTargetDesc("评论")
+                .setTargetType(NotificationTargetType.COMMENT.getCode())
+                .setUserId(UserSecurityContextHolder.require().getUserId())
+                .setUsername(UserSecurityContextHolder.require().getUsername());
+        // 向被评论的用户发送通知
+        notificationService.publish(new PublishNotificationRequest()
+                .setProps(notificationTemplate)
+                .setType(NotificationType.LIKE)
+                .setRcvrId(commentBe.getCreator())
+        );
     }
 
     public void deleteById(Long commentId, Long curUserId) {

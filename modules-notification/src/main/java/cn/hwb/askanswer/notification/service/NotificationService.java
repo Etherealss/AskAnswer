@@ -1,12 +1,13 @@
 package cn.hwb.askanswer.notification.service;
 
+import cn.hwb.askanswer.common.base.enums.NotificationType;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
 import cn.hwb.askanswer.notification.infrastructure.converter.NotificationConverter;
 import cn.hwb.askanswer.notification.infrastructure.pojo.entity.NotificationEntity;
-import cn.hwb.askanswer.notification.infrastructure.pojo.request.PublishNotificationCommand;
+import cn.hwb.askanswer.notification.infrastructure.pojo.request.PublishNotificationRequest;
 import cn.hwb.askanswer.notification.infrastructure.pojo.resp.NotificationResp;
 import cn.hwb.askanswer.notification.mapper.NotificationMapper;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,18 +28,35 @@ public class NotificationService extends ServiceImpl<NotificationMapper, Notific
 
     private final NotificationConverter notificationConverter;
 
-    public PageDTO<NotificationResp> page(Long userId, int currentPage, int size, boolean unread) {
-        Page<NotificationEntity> page = this.lambdaQuery()
-                .eq(NotificationEntity::getRcvrId, userId)
-                .page(new Page<>(currentPage, size));
-        List<NotificationResp> records = page.getRecords().stream()
+    /**
+     * 游标分页获取通知
+     * @param rcvrId 通知的接收者的ID
+     * @param type 通知类型
+     * @param cursorId 游标ID
+     * @param size 分页显示的数量
+     * @return
+     */
+    public PageDTO<NotificationResp> page(Long rcvrId, NotificationType type, Long cursorId, int size) {
+        LambdaQueryChainWrapper<NotificationEntity> query = this.lambdaQuery()
+                .eq(NotificationEntity::getRcvrId, rcvrId);
+        if (type != null) {
+            // 按类型查
+            query.eq(NotificationEntity::getType, type);
+        }
+        List<NotificationResp> records = query
+                .last(String.format("LIMIT %d", size))
+                .list()
+                .stream()
                 .map(notificationConverter::toResp)
                 .collect(Collectors.toList());
-        return new PageDTO<>(records, page);
+        return PageDTO.<NotificationResp>builder()
+                .records(records)
+                .pageSize(size)
+                .build();
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void publish(PublishNotificationCommand command) {
+    public void publish(PublishNotificationRequest command) {
         NotificationEntity entity = notificationConverter.toEntity(command);
         entity.setIsRead(false);
         this.save(entity);

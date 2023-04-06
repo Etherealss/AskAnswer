@@ -1,5 +1,6 @@
 package cn.hwb.common.security.token.user;
 
+import cn.hwb.askanswer.common.base.enums.AgeBracketEnum;
 import cn.hwb.common.security.token.TokenCertificate;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -27,6 +28,11 @@ public class UserTokenCertificate extends TokenCertificate {
      * 生日
      */
     Date birthday;
+
+    /**
+     * 年龄段
+     */
+    AgeBracketEnum ageBracket;
 
     /**
      * 身份

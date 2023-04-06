@@ -21,11 +21,12 @@ public class UserSecurityContextHolder {
     private static final UserCertificateConfig TOKEN_CONFIG = SpringUtil.getBean(UserCertificateConfig.class);
 
     public static void set(UserTokenCertificate userCredential) {
-        Objects.requireNonNull(userCredential.getUserId());
-        Objects.requireNonNull(userCredential.getUsername());
-        Objects.requireNonNull(userCredential.getToken());
-        Objects.requireNonNull(userCredential.getBirthday());
-        Objects.requireNonNull(userCredential.getRoles());
+        Objects.requireNonNull(userCredential.getUserId(), "Token中不包含UserId");
+        Objects.requireNonNull(userCredential.getUsername(), "Token中不包含Username");
+        Objects.requireNonNull(userCredential.getToken(), "Token中不包含Token字符串");
+        Objects.requireNonNull(userCredential.getBirthday(), "Token中不包含生日");
+        Objects.requireNonNull(userCredential.getAgeBracket(), "Token中不包含年龄段");
+        Objects.requireNonNull(userCredential.getRoles(), "Token中不包含角色");
         USER_CREDENTIALS.set(userCredential);
     }
 
