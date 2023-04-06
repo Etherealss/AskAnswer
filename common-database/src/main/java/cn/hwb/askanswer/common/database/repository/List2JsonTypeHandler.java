@@ -28,7 +28,7 @@ public class List2JsonTypeHandler extends BaseTypeHandler<List<?>> {
             String s = objectMapper.writeValueAsString(objects);
             preparedStatement.setString(i, s);
         } catch (JsonProcessingException e) {
-            throw new SQLException("参数转换失败，无法将Set：'" + objects.toString() + "' 转换为JSON类型");
+            throw new SQLException("参数转换失败，无法将列表：'" + objects.toString() + "' 转换为JSON类型");
         }
     }
 
