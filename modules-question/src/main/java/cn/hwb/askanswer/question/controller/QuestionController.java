@@ -70,8 +70,9 @@ public class QuestionController {
     }
 
     @GetMapping("/pages/questions/collections/relations")
-    public PageDTO<QuestionDTO> pageCollections(@RequestParam(value = "cursor", defaultValue = "0") Long cursor,
-                                                @RequestParam(value = "size", defaultValue = "10") int size) {
+    public PageDTO<QuestionDTO> pageCollections(
+            @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         if (size < 0) {
             log.debug("分页的size不能小于0，size: {}", size);
             size = 10;

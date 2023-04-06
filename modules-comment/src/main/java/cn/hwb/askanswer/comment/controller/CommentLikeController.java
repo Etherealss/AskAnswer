@@ -2,6 +2,7 @@ package cn.hwb.askanswer.comment.controller;
 
 import cn.hwb.askanswer.common.base.validation.entity.EntityExist;
 import cn.hwb.askanswer.common.base.web.ResponseAdvice;
+import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
 import cn.hwb.askanswer.like.service.LikeService;
 import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,6 @@ public class CommentLikeController {
     @PostMapping
     public void addLike(@PathVariable @EntityExist(DEFAULT) Long commentId) {
         Long userId = UserSecurityContextHolder.require().getUserId();
-        likeService.like(userId, commentId);
+        likeService.like(userId, commentId, LikeTargetType.COMMENT);
     }
 }

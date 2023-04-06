@@ -2,6 +2,7 @@ package cn.hwb.askanswer.like.service;
 
 import cn.hwb.askanswer.common.base.exception.service.ExistException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
+import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,11 @@ public class LikeService {
     private final LikeRelationService likeRelationService;
 
     @Transactional(rollbackFor = Exception.class)
-    public void like(Long userId, Long targetId) {
+    public void like(Long userId, Long targetId, LikeTargetType targetType) {
         if (likeRelationService.isLiked(userId, targetId)) {
             throw new ExistException("点赞记录已存在");
         }
-        likeRelationService.create(userId, targetId);
+        likeRelationService.create(userId, targetId, targetType);
         likeCountService.increase(targetId);
     }
 

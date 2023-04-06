@@ -17,7 +17,9 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -98,9 +100,9 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
                 .stream()
                 .map(e -> {
                     UserBriefDTO userBrief = userService.getBriefById(e.getCreator());
-                    QuestionDTO answerDTO = converter.toDto(e);
-                    answerDTO.setCreator(userBrief);
-                    return answerDTO;
+                    QuestionDTO questionDTO = converter.toDto(e);
+                    questionDTO.setCreator(userBrief);
+                    return questionDTO;
                 }).collect(Collectors.toList());
         return PageDTO.<QuestionDTO>builder()
                 .records(records)
@@ -110,15 +112,21 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
 
     public PageDTO<QuestionDTO> pageByCollection(Long userId, Long cursorId, int size) {
         List<Long> questionIds = collectionRelationService.page(userId, cursorId, size);
+        if (CollectionUtils.isEmpty(questionIds)) {
+            return PageDTO.<QuestionDTO>builder()
+                  .records(Collections.emptyList())
+                  .pageSize(size)
+                  .build();
+        }
         List<QuestionDTO> records = this.lambdaQuery()
                 .in(QuestionEntity::getId, questionIds)
                 .list()
                 .stream()
                 .map(e -> {
                     UserBriefDTO userBrief = userService.getBriefById(e.getCreator());
-                    QuestionDTO answerDTO = converter.toDto(e);
-                    answerDTO.setCreator(userBrief);
-                    return answerDTO;
+                    QuestionDTO questionDTO = converter.toDto(e);
+                    questionDTO.setCreator(userBrief);
+                    return questionDTO;
                 }).collect(Collectors.toList());
         return PageDTO.<QuestionDTO>builder()
                 .records(records)

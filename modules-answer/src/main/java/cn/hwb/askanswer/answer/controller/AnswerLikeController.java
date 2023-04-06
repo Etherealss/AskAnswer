@@ -2,6 +2,7 @@ package cn.hwb.askanswer.answer.controller;
 
 import cn.hwb.askanswer.common.base.validation.entity.EntityExist;
 import cn.hwb.askanswer.common.base.web.ResponseAdvice;
+import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
 import cn.hwb.askanswer.like.service.LikeService;
 import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,6 @@ public class AnswerLikeController {
     @PostMapping
     public void addLike(@PathVariable @EntityExist(DEFAULT) Long answerId) {
         Long userId = UserSecurityContextHolder.require().getUserId();
-        likeService.like(userId, answerId);
+        likeService.like(userId, answerId, LikeTargetType.ANSWER);
     }
 }

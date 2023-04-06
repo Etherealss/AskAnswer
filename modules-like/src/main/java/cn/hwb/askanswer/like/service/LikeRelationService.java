@@ -1,5 +1,6 @@
 package cn.hwb.askanswer.like.service;
 
+import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
 import cn.hwb.askanswer.like.infrastructure.pojo.entity.LikeRelationEntity;
 import cn.hwb.askanswer.like.mapper.LikeRelationMapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -21,10 +22,11 @@ import java.util.stream.Collectors;
 public class LikeRelationService extends ServiceImpl<LikeRelationMapper, LikeRelationEntity> {
 
     @Transactional(rollbackFor = Exception.class)
-    public void create(Long userId, Long targetId) {
+    public void create(Long userId, Long targetId, LikeTargetType targetType) {
         LikeRelationEntity entity = new LikeRelationEntity();
         entity.setCreator(userId);
         entity.setTargetId(targetId);
+        entity.setTargetType(targetType);
         this.save(entity);
     }
 
@@ -43,8 +45,10 @@ public class LikeRelationService extends ServiceImpl<LikeRelationMapper, LikeRel
               .count() > 0;
     }
 
-    public List<Long> page(Long cursorId, int size) {
+    public List<Long> page(Long userId, Long cursorId, int size, LikeTargetType targetType) {
         List<Long> targetIds = this.lambdaQuery()
+                .eq(LikeRelationEntity::getCreator, userId)
+                .eq(LikeRelationEntity::getTargetType, targetType)
                 .gt(LikeRelationEntity::getTargetId, cursorId)
                 .orderByDesc(LikeRelationEntity::getCreateTime)
                 .last(String.format("LIMIT %d", size))
