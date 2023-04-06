@@ -1,6 +1,5 @@
 package cn.hwb.askanswer.notification.infrastructure.pojo.request;
 
-import cn.hwb.askanswer.common.base.enums.NotificationType;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +20,7 @@ import javax.validation.constraints.NotNull;
 @Accessors(chain = true)
 public class PublishNotificationRequest {
     @NotNull
-    NotificationType type;
+    String type;
 
     @NotNull
     Object props;

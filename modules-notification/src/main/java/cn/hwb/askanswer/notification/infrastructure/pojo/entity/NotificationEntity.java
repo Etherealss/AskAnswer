@@ -1,7 +1,6 @@
 package cn.hwb.askanswer.notification.infrastructure.pojo.entity;
 
 import cn.hwb.askanswer.common.base.pojo.entity.IdentifiedEntity;
-import cn.hwb.askanswer.common.base.enums.NotificationType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
@@ -21,7 +20,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NotificationEntity extends IdentifiedEntity {
     @TableField("type")
-    NotificationType type;
+    String type;
 
     @TableField(value = "props", typeHandler = JacksonTypeHandler.class)
     Object props;

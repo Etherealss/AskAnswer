@@ -1,6 +1,5 @@
 package cn.hwb.askanswer.common.base.enums;
 
-import cn.hwb.askanswer.common.base.enums.BaseEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,13 +9,12 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public enum NotificationType implements BaseEnum {
-    LIKE(0, "like"),
-    COMMENT(1, "comment"),
-    ANSWER(2, "answer"),
-    ;
-
-    private final int code;
-    private final String name;
-
+public class NotificationType {
+    public static final String ANSWER_NEW_LIKE = "answerNewLike";
+    public static final String COMMENT_NEW_LIKE = "commentNewLike";
+    public static final String ANSWER_NEW_COMMENT = "answerNewComment";
+    public static final String COMMENT_NEW_REPLY = "commentNewReply";
+    public static final String QUESTION_NEW_ANSWER = "questionNewAnswer";
+    public static final String QUESTION_BE_COLLECTED = "questionBeCollected";
+    public static final String ANSWER_BE_ACCEPTED = "answerBeAccepted";
 }

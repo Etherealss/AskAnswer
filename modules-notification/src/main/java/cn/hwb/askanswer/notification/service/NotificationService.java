@@ -1,6 +1,5 @@
 package cn.hwb.askanswer.notification.service;
 
-import cn.hwb.askanswer.common.base.enums.NotificationType;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
 import cn.hwb.askanswer.notification.infrastructure.converter.NotificationConverter;
 import cn.hwb.askanswer.notification.infrastructure.pojo.entity.NotificationEntity;
@@ -36,7 +35,7 @@ public class NotificationService extends ServiceImpl<NotificationMapper, Notific
      * @param size 分页显示的数量
      * @return
      */
-    public PageDTO<NotificationResp> page(Long rcvrId, NotificationType type, Long cursorId, int size) {
+    public PageDTO<NotificationResp> page(Long rcvrId, String type, Long cursorId, int size) {
         LambdaQueryChainWrapper<NotificationEntity> query = this.lambdaQuery()
                 .eq(NotificationEntity::getRcvrId, rcvrId);
         if (type != null) {

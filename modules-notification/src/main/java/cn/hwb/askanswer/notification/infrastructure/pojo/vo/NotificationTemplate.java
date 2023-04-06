@@ -29,11 +29,6 @@ public class NotificationTemplate {
     String username;
 
     /**
-     * 目标类型
-     */
-    Integer targetType;
-
-    /**
      * 目标ID，例如对于回答点赞通知，targetId=回答ID
      */
     Long targetId;
