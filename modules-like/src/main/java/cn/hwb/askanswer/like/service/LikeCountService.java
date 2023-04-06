@@ -20,12 +20,12 @@ import java.util.Optional;
 public class LikeCountService extends ServiceImpl<LikeCountMapper, LikeCountEntity> {
 
     @Transactional(rollbackFor = Exception.class)
-    public void add(Long targetId) {
+    public void increase(Long targetId) {
         this.incre(targetId, 1);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void sub(Long targetId) {
+    public void decrease(Long targetId) {
         this.incre(targetId, -1);
     }
 

@@ -21,28 +21,28 @@ import java.util.Optional;
 public class CollectionCountService extends ServiceImpl<CollectionCountMapper, CollectionCountEntity> {
 
     @Transactional(rollbackFor = Exception.class)
-    public void add(Long targetId) {
+    public void increase(Long targetId) {
         this.incre(targetId, 1);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void sub(Long targetId) {
+    public void decrease(Long targetId) {
         this.incre(targetId, -1);
     }
 
-    private void incre(Long targetId, int value) {
+    private void incre(Long targetId, int incre) {
         Optional<CollectionCountEntity> opt = this.lambdaQuery()
                 .eq(CollectionCountEntity::getId, targetId)
                 .select(CollectionCountEntity::getId, CollectionCountEntity::getCount)
                 .oneOpt();
         if (opt.isPresent()) {
             CollectionCountEntity entity = opt.get();
-            entity.setCount(entity.getCount() + value);
+            entity.setCount(entity.getCount() + incre);
             this.updateById(entity);
         } else {
             CollectionCountEntity entity = new CollectionCountEntity();
             entity.setId(targetId);
-            entity.setCount(value);
+            entity.setCount(incre);
             this.save(entity);
         }
     }

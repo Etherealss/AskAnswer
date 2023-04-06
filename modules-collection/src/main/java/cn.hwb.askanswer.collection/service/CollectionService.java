@@ -19,20 +19,20 @@ public class CollectionService {
     private final CollectionRelationService collectionRelationService;
 
     @Transactional(rollbackFor = Exception.class)
-    public void like(Long userId, Long targetId) {
-        if (collectionRelationService.isLiked(userId, targetId)) {
+    public void addCollection(Long userId, Long targetId) {
+        if (collectionRelationService.isCollected(userId, targetId)) {
             throw new ExistException("点赞记录已存在");
         }
-        collectionRelationService.create(userId, targetId);
-        collectionCountService.add(targetId);
+        collectionRelationService.addCollection(userId, targetId);
+        collectionCountService.increase(targetId);
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void dislike(Long userId, Long targetId) {
-        if (!collectionRelationService.isLiked(userId, targetId)) {
+    public void removeCollection(Long userId, Long targetId) {
+        if (!collectionRelationService.isCollected(userId, targetId)) {
             throw new NotFoundException("点赞记录不存在");
         }
-        collectionRelationService.remove(userId, targetId);
-        collectionCountService.sub(targetId);
+        collectionRelationService.removeCollection(userId, targetId);
+        collectionCountService.decrease(targetId);
     }
 }

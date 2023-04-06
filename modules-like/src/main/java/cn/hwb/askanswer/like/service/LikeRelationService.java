@@ -8,6 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 /**
  * @author wtk
  * @date 2023-04-05
@@ -38,5 +41,17 @@ public class LikeRelationService extends ServiceImpl<LikeRelationMapper, LikeRel
               .eq(LikeRelationEntity::getCreator, userId)
               .eq(LikeRelationEntity::getTargetId, targetId)
               .count() > 0;
+    }
+
+    public List<Long> page(Long cursorId, int size) {
+        List<Long> targetIds = this.lambdaQuery()
+                .gt(LikeRelationEntity::getTargetId, cursorId)
+                .orderByDesc(LikeRelationEntity::getCreateTime)
+                .last(String.format("LIMIT %d", size))
+                .list()
+                .stream()
+                .map(LikeRelationEntity::getTargetId)
+                .collect(Collectors.toList());
+        return targetIds;
     }
 }

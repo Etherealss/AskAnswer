@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName(value = "like_count")
+@TableName(value = "collection_count")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CollectionCountEntity extends IdentifiedEntity {
     @TableField(value = "count")

@@ -24,7 +24,7 @@ public class LikeService {
             throw new ExistException("点赞记录已存在");
         }
         likeRelationService.create(userId, targetId);
-        likeCountService.add(targetId);
+        likeCountService.increase(targetId);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -33,6 +33,6 @@ public class LikeService {
             throw new NotFoundException("点赞记录不存在");
         }
         likeRelationService.remove(userId, targetId);
-        likeCountService.sub(targetId);
+        likeCountService.decrease(targetId);
     }
 }

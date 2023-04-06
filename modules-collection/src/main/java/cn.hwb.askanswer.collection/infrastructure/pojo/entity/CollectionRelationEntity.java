@@ -16,7 +16,7 @@ import lombok.experimental.FieldDefaults;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName(value = "like_relation")
+@TableName(value = "collection")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CollectionRelationEntity extends BaseEntity {
     @TableField(value = "target_id")

@@ -22,16 +22,16 @@ public class CollectionRelationController {
     private final CollectionService collectionService;
 
     @GetMapping("/{targetId}")
-    public Boolean checkLike(@PathVariable Long targetId) {
-        return collectionRelationService.isLiked(
+    public Boolean addCollection(@PathVariable Long targetId) {
+        return collectionRelationService.isCollected(
                 UserSecurityContextHolder.require().getUserId(),
                 targetId
         );
     }
 
     @DeleteMapping("/{targetId}")
-    public void dislike(@PathVariable Long targetId) {
-        collectionService.dislike(
+    public void removeCollection(@PathVariable Long targetId) {
+        collectionService.removeCollection(
                 UserSecurityContextHolder.require().getUserId(),
                 targetId
         );

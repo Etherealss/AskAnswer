@@ -1,5 +1,6 @@
 package cn.hwb.askanswer.question.service.question;
 
+import cn.hwb.askanswer.collection.service.CollectionRelationService;
 import cn.hwb.askanswer.common.base.enums.AgeBracketEnum;
 import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
@@ -33,6 +34,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
     private final QuestionConverter converter;
     private final QuestionMapper questionMapper;
     private final UserService userService;
+    private final CollectionRelationService collectionRelationService;
 
     public Long publish(CreateQuestionRequest req, AgeBracketEnum ageBracket) {
         QuestionEntity questionEntity = converter.toEntity(req);
@@ -92,6 +94,24 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
                 .gt(QuestionEntity::getId, cursorId)
                 .orderByDesc(QuestionEntity::getId)
                 .last(String.format("LIMIT %d", size))
+                .list()
+                .stream()
+                .map(e -> {
+                    UserBriefDTO userBrief = userService.getBriefById(e.getCreator());
+                    QuestionDTO answerDTO = converter.toDto(e);
+                    answerDTO.setCreator(userBrief);
+                    return answerDTO;
+                }).collect(Collectors.toList());
+        return PageDTO.<QuestionDTO>builder()
+                .records(records)
+                .pageSize(size)
+                .build();
+    }
+
+    public PageDTO<QuestionDTO> pageByCollection(Long userId, Long cursorId, int size) {
+        List<Long> questionIds = collectionRelationService.page(userId, cursorId, size);
+        List<QuestionDTO> records = this.lambdaQuery()
+                .in(QuestionEntity::getId, questionIds)
                 .list()
                 .stream()
                 .map(e -> {

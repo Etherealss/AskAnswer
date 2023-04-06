@@ -14,7 +14,6 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @TableName(value = "notification")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NotificationEntity extends IdentifiedEntity {
