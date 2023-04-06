@@ -9,12 +9,12 @@ app:
   user:
     avatar:
       oss:
-        dir: avatars/
-        default-avatar-key: avatars/default-boy.png
+        dir: askanswer/avatars/
+        default-avatar-key: askanswer/avatars/default-boy.png
         cache-key: ${spring.application.name}:cache:token:str:default-avatars
     review:
       oss:
-        dir: review/
+        dir: askanswer/review/
   token:
     user:
       expireMs: 864000000 # 测试10天 60 * 60 * 24 * 1000
@@ -22,10 +22,11 @@ app:
       cacheKey: ${spring.application.name}:cache:token:str
   oss:
     endpoint: http://oss-cn-guangzhou.aliyuncs.com
-    bucket-name: nowander
-    access-key-id: ENC(p9DuVur6ZmH0EG9AvoYcgmjz5WMaQyFKX573u7BA/gZsoRvX5WBAk0KyAtAFzwO9t6jgTi44gPND63cFWlQvWg==)
-    access-key-secret: ENC(MZnlnvTPUSQt/UbqosXXQVzYBKNaSKhS1Lo93MLnvD8RDrDW63wEbZ9QW9NuEn797ygLz5ncQ0fMXdhtw4jJSw==)
-
+    bucket-name: qinan-sources
+    access-key-id: ENC(rdN+I1YG2l9La8AvLivS2MVMncdLOlqhOOvv5k48KZ9WVPqwC6I6ZKZEEm/IGZAugSoe9gr1EwTnxpXv55QW4Q==)
+    access-key-secret: ENC(ziXu2Lg2HVOpto4LN/5tsdcGJk5TYwEjpWjPCfLC2t9Fs/HxsZoaCV25fjBoN2NaZaFmgiUKbLXOYXEKaOyLzw==)
+#    access-key-id: ENC(p9DuVur6ZmH0EG9AvoYcgmjz5WMaQyFKX573u7BA/gZsoRvX5WBAk0KyAtAFzwO9t6jgTi44gPND63cFWlQvWg==)
+#    access-key-secret: ENC(MZnlnvTPUSQt/UbqosXXQVzYBKNaSKhS1Lo93MLnvD8RDrDW63wEbZ9QW9NuEn797ygLz5ncQ0fMXdhtw4jJSw==)
 spring:
   # 项目配置
   application:
