@@ -9,13 +9,15 @@ import cn.hwb.askanswer.answer.infrastructure.pojo.request.UpdateAnswerRequest;
 import cn.hwb.askanswer.answer.mapper.AnswerMapper;
 import cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateCommentRequest;
 import cn.hwb.askanswer.comment.service.comment.CommentService;
+import cn.hwb.askanswer.common.base.enums.AgeBracketEnum;
 import cn.hwb.askanswer.common.base.enums.NotificationType;
 import cn.hwb.askanswer.common.base.enums.ResultCode;
 import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
-import cn.hwb.askanswer.common.base.pojo.event.NewAnswerEvent;
+import cn.hwb.askanswer.common.base.pojo.event.AnswerAgeLimitEvent;
+import cn.hwb.askanswer.common.base.pojo.event.AnswerPublishedEvent;
 import cn.hwb.askanswer.common.base.pojo.event.QuestionCreatorValidateEvent;
 import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
 import cn.hwb.askanswer.like.service.LikeRelationService;
@@ -23,8 +25,6 @@ import cn.hwb.askanswer.like.service.LikeService;
 import cn.hwb.askanswer.notification.service.NotificationService;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
-import cn.hwb.common.security.agelimit.AgeLimitVerifier;
-import cn.hwb.common.security.auth.exception.AgeLimitedException;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +49,6 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
     private final AnswerMapper questionMapper;
     private final UserService userService;
     private final ApplicationEventPublisher eventPublisher;
-    private final AgeLimitVerifier ageLimitVerifier;
     private final LikeRelationService likeRelationService;
     private final LikeService likeService;
     private final NotificationService notificationService;
@@ -62,18 +61,15 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
      * @param req
      * @return
      */
-    public Long publish(Long questionId, Long userId, CreateAnswerRequest req) {
+    public Long publish(Long questionId, Long userId, AgeBracketEnum ageBracket, CreateAnswerRequest req) {
         // 验证年龄段是否可以回答问题
-        boolean verify = ageLimitVerifier.verify(questionId);
-        if (!verify) {
-            throw new AgeLimitedException("当前用户年龄段受限");
-        }
+        eventPublisher.publishEvent(new AnswerAgeLimitEvent(questionId, userId, ageBracket));
         // 保存回答
         AnswerEntity answerEntity = converter.toEntity(req);
         answerEntity.setQuestionId(questionId);
         this.save(answerEntity);
         Long answerId = answerEntity.getId();
-        eventPublisher.publishEvent(new NewAnswerEvent(questionId, userId));
+        eventPublisher.publishEvent(new AnswerPublishedEvent(questionId, userId));
         return answerId;
     }
 

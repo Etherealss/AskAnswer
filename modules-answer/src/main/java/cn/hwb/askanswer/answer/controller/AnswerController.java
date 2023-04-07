@@ -5,6 +5,7 @@ import cn.hwb.askanswer.answer.infrastructure.pojo.request.CreateAnswerRequest;
 import cn.hwb.askanswer.answer.infrastructure.pojo.request.UpdateAnswerAcceptRequest;
 import cn.hwb.askanswer.answer.infrastructure.pojo.request.UpdateAnswerRequest;
 import cn.hwb.askanswer.answer.service.answer.AnswerService;
+import cn.hwb.askanswer.common.base.enums.AgeBracketEnum;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
 import cn.hwb.askanswer.common.base.validation.entity.EntityExist;
 import cn.hwb.askanswer.common.base.web.ResponseAdvice;
@@ -34,7 +35,8 @@ public class AnswerController {
     public Long publish(@RequestBody @Validated CreateAnswerRequest req,
                         @PathVariable @EntityExist(QUESTION) Long questionId) {
         Long answerCreator = UserSecurityContextHolder.require().getUserId();
-        return answerService.publish(questionId, answerCreator, req);
+        AgeBracketEnum ageBracket = UserSecurityContextHolder.require().getAgeBracket();
+        return answerService.publish(questionId, answerCreator, ageBracket, req);
     }
 
     @PutMapping("/answers/{answersId}")
