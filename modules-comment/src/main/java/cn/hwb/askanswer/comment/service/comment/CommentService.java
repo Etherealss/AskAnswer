@@ -178,7 +178,6 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
             records = this.lambdaQuery()
                     .in(CommentEntity::getId, commentIds)
                     .orderByDesc(CommentEntity::getId)
-                    .last(String.format("LIMIT %d", size))
                     .list()
                     .stream()
                     .map(converter::toDto)
