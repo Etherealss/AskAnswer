@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateUserSimpleInfoRequest {
+public class UpdateUserInfoRequest {
     @Size(min = 0, max = 100)
     @XssEscape
     String signature;

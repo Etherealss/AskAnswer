@@ -31,11 +31,11 @@ public class UserTokenController {
     @GetMapping("/{token}")
     @AnonymousAccess
     public Boolean verifyToken(@PathVariable String token) {
-        return userAuthService.verifyToken(token);
+        return userAuthService.checkLogin(token);
     }
 
     @DeleteMapping("/{token}")
     public void logout(@PathVariable String token) {
-        userAuthService.invalidateToken(token);
+        userAuthService.logout(token);
     }
 }

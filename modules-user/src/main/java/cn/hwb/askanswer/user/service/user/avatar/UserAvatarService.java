@@ -31,7 +31,18 @@ public class UserAvatarService {
     private final UserAvatarProperties userAvatarProperties;
     private final FileService fileService;
 
+    /**
+     * 按日期分文件夹
+     * @return
+     */
+    private String getSaveDir() {
+        return userAvatarProperties.getDir() + "/" + DATE_FORMAT.format(new Date());
+    }
 
+    /**
+     * 获取默认头像文件的URL
+     * @return
+     */
     @Cacheable("${app.user.avatar.oss.cache-key}")
     public String getDefaultAvatar() {
         return fileService.getFileUrl(userAvatarProperties.getDefaultAvatarKey());
@@ -40,9 +51,9 @@ public class UserAvatarService {
 
     /**
      * 上传头像
-     * @param avatarFile
+     * @param avatarFile 头像文件流
      * @param userId
-     * @return 头像保存路径，同时也是访问文件的url
+     * @return 访问头像图片的url
      */
     public FileUploadDTO uploadAvatar(MultipartFile avatarFile, Long userId) {
         ImgFileUtil.verifyImgFile(avatarFile);
@@ -56,9 +67,5 @@ public class UserAvatarService {
             log.error("用户头像上传失败：userId：{}，fileName：{}", userId, fileName, e);
             throw new RuntimeException(e);
         }
-    }
-
-    private String getSaveDir() {
-        return userAvatarProperties.getDir() + "/" + DATE_FORMAT.format(new Date());
     }
 }

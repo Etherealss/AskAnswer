@@ -13,7 +13,7 @@ import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserAuthDTO;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.infrastructure.pojo.entity.UserEntity;
 import cn.hwb.askanswer.user.infrastructure.pojo.request.CreateUserRequest;
-import cn.hwb.askanswer.user.infrastructure.pojo.request.UpdateUserSimpleInfoRequest;
+import cn.hwb.askanswer.user.infrastructure.pojo.request.UpdateUserInfoRequest;
 import cn.hwb.askanswer.user.mapper.UserMapper;
 import cn.hwb.askanswer.user.service.user.avatar.UserAvatarService;
 import cn.hwb.askanswer.user.service.user.review.UserReviewService;
@@ -43,7 +43,13 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
     private final UserReviewService userReviewService;
     private final PasswordEncryptor passwordEncryptor;
 
+    /**
+     * 注册用户
+     * @param request
+     * @return
+     */
     public Long createUser(CreateUserRequest request) {
+        // 用户名是否重复
         if (this.checkUsernameExists(request.getUsername())) {
             throw new ExistException(UserEntity.class, request.getUsername());
         }
@@ -52,11 +58,17 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
                 .setRoles(new ArrayList<>(0))
                 .setIsReviewed(false)
                 .setReviewImg("");
+        // 密码加密
         userEntity.setPassword(passwordEncryptor.encode(userEntity.getPassword()));
         this.save(userEntity);
         return userEntity.getId();
     }
 
+    /**
+     * 获取用户基本信息
+     * @param userId
+     * @return
+     */
     public UserBriefDTO getBriefById(Long userId) {
         UserEntity user = lambdaQuery()
                 .eq(UserEntity::getId, userId)
@@ -65,6 +77,11 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
         return userConverter.toBriefDTO(user);
     }
 
+    /**
+     * 批量获取用户信息
+     * @param userIds
+     * @return
+     */
     public List<UserBriefDTO> getBatchBriefsByIds(Collection<Long> userIds) {
         List<UserEntity> users = userMapper.selectBatchIds(userIds);
         return users.stream()
@@ -72,11 +89,21 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * 用户名是否重复
+     * @param username
+     * @return
+     */
     public boolean checkUsernameExists(String username) {
         return lambdaQuery().eq(UserEntity::getUsername, username).count() > 0;
     }
 
-    public void update(Long userId, UpdateUserSimpleInfoRequest req) {
+    /**
+     * 更新用户信息
+     * @param userId
+     * @param req
+     */
+    public void update(Long userId, UpdateUserInfoRequest req) {
         UserEntity user = lambdaQuery()
                 .eq(UserEntity::getId, userId)
                 .oneOpt()
@@ -98,22 +125,37 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
         this.saveOrUpdate(update);
     }
 
+    /**
+     * 更新用户头像
+     * @param userId
+     * @param file
+     * @return
+     */
     public String updateAvatar(Long userId, MultipartFile file) {
+        // 上传新的头像文件
         FileUploadDTO fileUploadDTO = userAvatarService.uploadAvatar(file, userId);
+        // 保存新头像的url
         String url = fileUploadDTO.getUrl();
         boolean update = this.lambdaUpdate()
                 .eq(UserEntity::getId, userId)
                 .set(UserEntity::getAvatar, url)
                 .update();
         if (!update) {
-            // 有Token校验在前，此处一般不会NotFound
+            // 有Token校验在前，此处一般不会NotFound，但为了健壮性还是要检查一下
             throw new NotFoundException(UserEntity.class, userId.toString());
         }
         return url;
     }
 
+    /**
+     * 更新用户审核图片
+     * @param userId
+     * @param file
+     */
     public void updateReviewImg(Long userId, MultipartFile file) {
+        // 上传审核图片
         FileUploadDTO fileUploadDTO = userReviewService.uploadAvatar(userId, file);
+        // 更新审核图片的url
         String reviewImgUrl = fileUploadDTO.getUrl();
         boolean update = this.lambdaUpdate()
                 .eq(UserEntity::getId, userId)
@@ -124,6 +166,10 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
         }
     }
 
+    /**
+     * 审核通过，更新用户审核状态
+     * @param userId
+     */
     public void reviewPass(Long userId) {
         boolean update = this.lambdaUpdate()
                 .eq(UserEntity::getId, userId)
@@ -134,10 +180,18 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
         }
     }
 
+    /**
+     * 审核不通过，更新用户审核状态
+     * @param userId
+     */
     public void reviewFail(Long userId) {
         userMapper.deleteById(userId);
     }
 
+    /**
+     * 获取用户审核图片url
+     * @param userId
+     */
     public String getReviewImg(Long userId) {
         UserEntity entity = this.lambdaQuery()
                 .eq(UserEntity::getId, userId)
@@ -147,6 +201,10 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
         return entity.getReviewImg();
     }
 
+    /**
+     * 获取用户信息，用于审核
+     * @param userId
+     */
     public UserAuthDTO get4Review(Long userId) {
         UserEntity entity = this.lambdaQuery()
                 .eq(UserEntity::getId, userId)
@@ -155,6 +213,11 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
         return userConverter.toAuthDTO(entity);
     }
 
+    /**
+     * 分页获取用户信息，用于审核
+     * @param currentPage
+     * @param size
+     */
     public PageDTO<UserAuthDTO> page4Review(int currentPage, int size) {
         Page<UserEntity> page = lambdaQuery()
                 .eq(UserEntity::getIsReviewed, false)

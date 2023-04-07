@@ -1,7 +1,7 @@
 package cn.hwb.askanswer.user.controller.user;
 
 import cn.hwb.askanswer.user.infrastructure.pojo.request.CreateUserRequest;
-import cn.hwb.askanswer.user.infrastructure.pojo.request.UpdateUserSimpleInfoRequest;
+import cn.hwb.askanswer.user.infrastructure.pojo.request.UpdateUserInfoRequest;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
 import cn.hwb.askanswer.common.base.web.ResponseAdvice;
@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @PutMapping("/users")
-    public void updateById(@RequestBody @Validated UpdateUserSimpleInfoRequest req) {
+    public void updateById(@RequestBody @Validated UpdateUserInfoRequest req) {
         userService.update(UserSecurityContextHolder.require().getUserId(), req);
     }
 }

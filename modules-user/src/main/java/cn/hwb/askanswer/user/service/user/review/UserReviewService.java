@@ -30,6 +30,10 @@ public class UserReviewService {
     private final UserReviewProperties userAvatarProperties;
     private final FileService fileService;
 
+    private String getSaveDir() {
+        return userAvatarProperties.getDir() + "/" + DATE_FORMAT.format(new Date());
+    }
+
     /**
      * 上传审核图片
      * @param userId
@@ -50,7 +54,4 @@ public class UserReviewService {
         }
     }
 
-    private String getSaveDir() {
-        return userAvatarProperties.getDir() + "/" + DATE_FORMAT.format(new Date());
-    }
 }
