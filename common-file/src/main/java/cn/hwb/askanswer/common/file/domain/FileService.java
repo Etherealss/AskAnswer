@@ -27,7 +27,9 @@ public class FileService {
 
     /**
      * 上传文件
-     * @param avatarFile
+     * @param avatarFile HTTP 文件流
+     * @param fileDir 要保存的文件夹
+     * @param fileName 文件名
      * @return
      * @throws IOException
      */
@@ -54,6 +56,11 @@ public class FileService {
         return fileUploadDTO;
     }
 
+    /**
+     * 获取OSS的文件访问URL
+     * @param fileKey 文件在OSS上的存储位置
+     * @return 文件访问URL
+     */
     public String getFileUrl(String fileKey) {
         return ossFileService.getUrl(fileKey);
     }

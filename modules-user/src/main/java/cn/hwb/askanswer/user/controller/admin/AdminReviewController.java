@@ -5,7 +5,7 @@ import cn.hwb.askanswer.common.base.web.ResponseAdvice;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserAuthDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
 import cn.hwb.common.security.auth.annotation.RequiredRoles;
-import cn.hwb.common.security.enums.RoleConstant;
+import cn.hwb.common.security.auth.enums.AuthConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -22,19 +22,19 @@ public class AdminReviewController {
 
     private final UserService userService;
 
-    @RequiredRoles(RoleConstant.ADMIN)
+    @RequiredRoles(AuthConstants.ADMIN)
     @PutMapping("/users/{userId}")
     public void reviewPass(@PathVariable Long userId) {
         userService.reviewPass(userId);
     }
 
-    @RequiredRoles(RoleConstant.ADMIN)
+    @RequiredRoles(AuthConstants.ADMIN)
     @DeleteMapping("/users/{userId}")
     public void reviewFail(@PathVariable Long userId) {
         userService.reviewFail(userId);
     }
 
-    @RequiredRoles(RoleConstant.ADMIN)
+    @RequiredRoles(AuthConstants.ADMIN)
     @GetMapping("/pages/users")
     public PageDTO<UserAuthDTO> pageReviewImg(
             @RequestParam(value = "size", defaultValue = "10") int size,
@@ -42,7 +42,7 @@ public class AdminReviewController {
        return userService.page4Review(currentPage, size);
     }
 
-    @RequiredRoles(RoleConstant.ADMIN)
+    @RequiredRoles(AuthConstants.ADMIN)
     @GetMapping("/users/{userId}")
     public UserAuthDTO getReviewImg(@PathVariable Long userId) {
         return userService.get4Review(userId);

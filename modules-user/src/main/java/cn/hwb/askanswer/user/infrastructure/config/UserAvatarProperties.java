@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.validation.constraints.NotBlank;
 
 /**
+ * 用户头像文件配置
  * @author hwb
  */
 @Data
