@@ -106,10 +106,13 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
         // 获取回答信息，以检查回答是否存在以及回答的作者的信息是否匹配
         AnswerEntity answer = this.lambdaQuery()
                 .eq(AnswerEntity::getId, answerId)
-                .select(AnswerEntity::getQuestionId, AnswerEntity::getCreator)
+                .select(AnswerEntity::getQuestionId, AnswerEntity::getCreator, AnswerEntity::getTitle, AnswerEntity::getIsAccepted)
                 .oneOpt()
                 .orElseThrow(() -> new NotFoundException(AnswerEntity.class, questionId.toString()));
         preCheck(null, answerId, null, answer);
+        if (answer.getIsAccepted()) {
+            throw new BadRequestException(ResultCode.ANSWER_ALREADY_ACCEPTED, "回答" + answerId + "已被采纳");
+        }
         answer.setId(answerId);
         this.lambdaUpdate()
                 .eq(AnswerEntity::getId, answerId)
