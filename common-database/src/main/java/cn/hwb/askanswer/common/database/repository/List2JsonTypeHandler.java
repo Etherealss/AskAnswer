@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 可以用于将 集合 自动转为 JSON 格式存在数据库中
+ * 可以用于将List自动转为 JSON 格式存在数据库中
  * 使用时直接配合MybatisPlus
  * @author hwb
  */

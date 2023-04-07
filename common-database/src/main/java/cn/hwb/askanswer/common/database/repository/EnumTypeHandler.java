@@ -12,10 +12,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * 将枚举转为int存储到数据库
  * @author hwb
  */
 @Slf4j
 public class EnumTypeHandler<T extends BaseEnum> extends BaseTypeHandler<BaseEnum> {
+    /**
+     * 枚举的类型
+     */
     Class<T> classType;
 
     // 必须要有，否则启动报错NoSuchMethodException
@@ -51,6 +55,11 @@ public class EnumTypeHandler<T extends BaseEnum> extends BaseTypeHandler<BaseEnu
         return getBaseEnum(cs.getInt(columnIndex));
     }
 
+    /**
+     * 通过 int code 获取枚举对象，见 {@link BaseEnum#fromCode(Class, int)}
+     * @param columnValue
+     * @return
+     */
     private T getBaseEnum(int columnValue) {
         return BaseEnum.fromCode(classType, columnValue);
     }

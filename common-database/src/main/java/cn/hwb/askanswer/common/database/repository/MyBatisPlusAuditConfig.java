@@ -9,8 +9,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class MyBatisPlusAuditConfig {
     /**
-     * 审计数据插件
-     *
+     * 审计数据插件配置
      * @return AuditMetaObjectHandler
      */
     @Bean
