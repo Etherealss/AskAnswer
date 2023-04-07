@@ -15,6 +15,7 @@ import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
+import cn.hwb.askanswer.common.base.pojo.event.NewAnswerEvent;
 import cn.hwb.askanswer.common.base.pojo.event.QuestionCreatorValidateEvent;
 import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
 import cn.hwb.askanswer.like.service.LikeRelationService;
@@ -54,16 +55,18 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
     private final NotificationService notificationService;
     private final CommentService commentService;
 
-    public Long publish(Long questionId, CreateAnswerRequest req) {
+    public Long publish(Long questionId, Long userId, CreateAnswerRequest req) {
+        // 验证年龄段是否可以回答问题
         boolean verify = ageLimitVerifier.verify(questionId);
         if (!verify) {
             throw new AgeLimitedException("当前用户年龄段受限");
         }
+        // 保存回答
         AnswerEntity answerEntity = converter.toEntity(req);
         answerEntity.setQuestionId(questionId);
         this.save(answerEntity);
         Long answerId = answerEntity.getId();
-
+        eventPublisher.publishEvent(new NewAnswerEvent(questionId, userId));
         return answerId;
     }
 
@@ -76,6 +79,13 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
                 .update(updateEntity);
     }
 
+    /**
+     * 采纳问题
+     * @param questionId
+     * @param answerId
+     * @param questionCreator
+     * @param req
+     */
     public void update(Long questionId, Long answerId, Long questionCreator,
                        UpdateAnswerAcceptRequest req) {
         eventPublisher.publishEvent(
@@ -122,18 +132,22 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
     }
 
     private void preCheck(Long questionId, Long answerId, Long answerCreator) {
+        // 检查questionId对应的问题是否存在
         AnswerEntity entity = this.lambdaQuery()
                 .eq(AnswerEntity::getId, answerId)
                 .select(AnswerEntity::getQuestionId, AnswerEntity::getCreator)
                 .oneOpt()
+                // 不存在就抛异常
                 .orElseThrow(() -> new NotFoundException(AnswerEntity.class, questionId.toString()));
         preCheck(questionId, answerId, answerCreator, entity);
     }
 
     private void preCheck(Long questionId, Long answerId, Long answerCreator, AnswerEntity entity) {
+        // 验证作者
         if (answerCreator != null && !answerCreator.equals(entity.getCreator())) {
             throw new NotCreatorException(answerCreator, answerId);
         }
+        // 验证问题与回答是否匹配。如果不匹配，说明前端参数传输错误，是一个bug，需要抛出异常。
         if (questionId != null && !questionId.equals(entity.getQuestionId())) {
             String format = String.format("'%s'回答的问题并非'%s'",
                     answerId.toString(), questionId.toString());
