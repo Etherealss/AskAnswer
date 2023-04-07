@@ -8,5 +8,5 @@ public class AuthConstants {
     public static final String ALL_PERMISSION = "*:*:*";
 
     /** 管理员角色权限标识 */
-    public static final String SUPER_ADMIN = "admin";
+    public static final String ADMIN = "admin";
 }

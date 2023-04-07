@@ -2,6 +2,7 @@ package cn.hwb.common.security.auth.service;
 
 import cn.hwb.common.security.auth.annotation.AnonymousAccess;
 import cn.hwb.common.security.auth.exception.TokenException;
+import cn.hwb.common.security.auth.interceptor.HeaderInterceptor;
 import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,11 @@ public class UserTokenAuthHandler implements IPreAuthHandler {
         return method.getAnnotation(AnonymousAccess.class) == null;
     }
 
+    /**
+     * {@link HeaderInterceptor} 会获取Token对象并保存到 {@link UserSecurityContextHolder} 中
+     * 此处从 {@link UserSecurityContextHolder#require()} 获取对象
+     * @param method 用于获取注解
+     */
     @Override
     public void doAuth(Method method) {
         try {

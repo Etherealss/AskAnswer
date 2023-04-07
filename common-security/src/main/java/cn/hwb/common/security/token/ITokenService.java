@@ -12,8 +12,6 @@ public interface ITokenService<T extends TokenCertificate> {
 
     void completeTokenAndSave(@NonNull TokenCertificate credential);
 
-    // TODO updateUserTokenCertificate 在用户权限更新时修改token权限缓存
-
     @NonNull
     T assertToken(String token) throws TokenException;
 

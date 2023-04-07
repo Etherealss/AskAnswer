@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * 获取 Token 并将相关信息存入 SecurityContextHolder 中
  * @author hwb
  */
 @Slf4j
@@ -35,6 +34,10 @@ public class HeaderInterceptor implements ConfigHandlerInterceptor {
         return true;
     }
 
+    /**
+     * 获取HTTP Header中的Token，并将相关信息存入 SecurityContextHolder 中
+     * @param request
+     */
     private void setUserToken(HttpServletRequest request) {
         String userToken = request.getHeader(userCertificateConfig.getHeaderName());
         if (StringUtils.hasText(userToken)) {
@@ -53,6 +56,7 @@ public class HeaderInterceptor implements ConfigHandlerInterceptor {
 
     @Override
     public int getOrder() {
+        // 将次序提前
         return -10;
     }
 }

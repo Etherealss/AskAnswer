@@ -36,12 +36,12 @@ public class LogicAuthService {
 
     /**
      * 验证用户是否含有指定角色，必须全部拥有
-     * @param roles 角色标识数组
+     * @param roles 要求
      */
     public void checkRoleAnd(String... roles) {
-        List<String> roleList = getRoleList();
+        List<String> curUserRoles = getCurUserRoles();
         for (String role : roles) {
-            if (!hasRole(roleList, role)) {
+            if (!hasRole(curUserRoles, role)) {
                 throw new NotRoleException(role);
             }
         }
@@ -52,7 +52,7 @@ public class LogicAuthService {
      * @param roles 角色标识数组
      */
     public void checkRoleOr(String... roles) {
-        List<String> roleList = getRoleList();
+        List<String> roleList = getCurUserRoles();
         for (String role : roles) {
             if (hasRole(roleList, role)) {
                 return;
@@ -68,21 +68,28 @@ public class LogicAuthService {
      * 获取当前账号的角色列表
      * @return 角色列表
      */
-    public List<String> getRoleList() {
+    public List<String> getCurUserRoles() {
         UserTokenCertificate loginUser = UserSecurityContextHolder.require();
         return loginUser.getRoles();
     }
 
     /**
      * 判断是否包含角色
-     * @param roles 角色列表
-     * @param role 角色
+     * @param curUserRoles 当前用户拥有的身份
+     * @param targetRole 需要验证的身份
      * @return 用户是否具备某角色权限
      */
-    public boolean hasRole(Collection<String> roles, String role) {
-        return roles.stream()
-                .filter(StringUtils::hasText)
-                .anyMatch(x -> AuthConstants.SUPER_ADMIN.contains(x) ||
-                        PatternMatchUtils.simpleMatch(x, role));
+    public boolean hasRole(Collection<String> curUserRoles, String targetRole) {
+        for (String curUserRole : curUserRoles) {
+            if (StringUtils.hasText(curUserRole)) {
+                // 使用 Spring 提供的 PatternMatchUtils 进行匹配
+                if (AuthConstants.ADMIN.equals(curUserRole) ||
+                        PatternMatchUtils.simpleMatch(curUserRole, targetRole)) {
+                    // 任何一个身份匹配到就返回true
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

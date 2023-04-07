@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 /**
  * 角色认证：必须具有指定角色标识才能进入该方法
  * 
- * @author ruoyi
+ * @author hwb
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.METHOD, ElementType.TYPE })
@@ -22,7 +22,7 @@ public @interface RequiredRoles {
     String[] value() default {};
 
     /**
-     * 验证逻辑：AND | OR，默认AND
+     * 验证逻辑：AND是所列的角色都要有；OR是只需要满足其中一个
      */
     Logical logical() default Logical.AND;
 }

@@ -15,10 +15,13 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public abstract class TokenCertificate {
 
+    /**
+     * 不重复的字符串，UUID生成
+     */
     String token;
 
     /**
-     * token 过期时间
+     * token 过期的日期
      */
     Date expiryDate;
 }

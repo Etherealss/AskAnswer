@@ -15,6 +15,8 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 /**
+ * 前置检验的AOP
+ * 具体的检验逻辑见 {@link IPreAuthHandler} 接口实现类
  * @author hwb
  */
 @Aspect

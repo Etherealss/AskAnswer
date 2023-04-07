@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
 import java.lang.reflect.Field;
 
 /**
- * 用法见 {@link XssEscape}
  * @author hwb
  */
 @Aspect
@@ -23,6 +22,7 @@ public class XssEscapeAspect {
     /**
      * 想要修改入参的值，必须使用AOP而不能使用SpringValidation，后者只有检查能力，没有修改能力
      * 但AOP可以获取方法参数并通过反射赋值
+     * XSS防御用法见 {@link XssEscape}
      * @param joinPoint
      * @throws Exception
      */

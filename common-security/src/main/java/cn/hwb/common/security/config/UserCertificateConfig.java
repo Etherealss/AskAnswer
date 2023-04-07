@@ -20,12 +20,21 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 public class UserCertificateConfig {
+    /**
+     * token放在header中的key值
+     */
     @NotEmpty
     private String headerName;
 
+    /**
+     * redis 存储的 key（其实是一个前缀）
+     */
     @NotEmpty
     private String cacheKey;
 
+    /**
+     * redis 存储的过期时间（单位：ms）
+     */
     @NotNull
     private Long expireMs;
 }

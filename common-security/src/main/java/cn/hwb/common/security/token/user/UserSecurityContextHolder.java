@@ -16,7 +16,13 @@ import java.util.Objects;
  * @author hwb
  */
 public class UserSecurityContextHolder {
+    /**
+     * 存储当前请求的用户的UserTokenCertificate对象
+     */
     private static final ThreadLocal<UserTokenCertificate> USER_CREDENTIALS = new InheritableThreadLocal<>();
+    /**
+     * Token配置信息
+     */
     private static final UserCertificateConfig TOKEN_CONFIG = SpringUtil.getBean(UserCertificateConfig.class);
 
     public static void set(UserTokenCertificate userCredential) {
@@ -29,13 +35,20 @@ public class UserSecurityContextHolder {
         USER_CREDENTIALS.set(userCredential);
     }
 
+    /**
+     * 尝试获取token
+     * @return
+     */
     @Nullable
     public static UserTokenCertificate get() {
         return USER_CREDENTIALS.get();
     }
 
+    /**
+     * 要求必须要有Token，不存在则保存
+     */
     @NonNull
-    public static UserTokenCertificate require() {
+    public static UserTokenCertificate require() throws TokenException{
         UserTokenCertificate userCredential = USER_CREDENTIALS.get();
         if (userCredential == null) {
             String token = ServletUtil.getRequest().getHeader(TOKEN_CONFIG.getHeaderName());
@@ -51,6 +64,4 @@ public class UserSecurityContextHolder {
     public static void remove() {
         USER_CREDENTIALS.remove();
     }
-
-
 }
