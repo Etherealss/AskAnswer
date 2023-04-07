@@ -3,10 +3,7 @@ package cn.hwb.askanswer.comment.controller;
 import cn.hwb.askanswer.comment.infrastructure.pojo.dto.CommentDTO;
 import cn.hwb.askanswer.comment.service.comment.CommentService;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
-import cn.hwb.askanswer.common.base.validation.entity.EntityExist;
 import cn.hwb.askanswer.common.base.web.ResponseAdvice;
-import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
-import cn.hwb.askanswer.like.service.LikeService;
 import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,15 +18,12 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @ResponseAdvice
 public class CommentLikeController {
-    private static final String DEFAULT = "commentEntityValidator";
-
-    private final LikeService likeService;
     private final CommentService commentService;
 
     @PostMapping("/comment/{commentId}/likes/relations")
-    public void addLike(@PathVariable @EntityExist(DEFAULT) Long commentId) {
+    public void addLike(@PathVariable Long commentId) {
         Long userId = UserSecurityContextHolder.require().getUserId();
-        likeService.like(userId, commentId, LikeTargetType.COMMENT);
+        commentService.like(userId, commentId);
     }
 
     @GetMapping("/pages/comments/likes/relations")
