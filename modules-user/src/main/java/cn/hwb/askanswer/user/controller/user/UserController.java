@@ -50,6 +50,12 @@ public class UserController {
         return userService.getBriefById(userId);
     }
 
+    @GetMapping("/users")
+    public UserBriefDTO findCurUser() {
+        Long userId = UserSecurityContextHolder.require().getUserId();
+        return userService.getBriefById(userId);
+    }
+
     @GetMapping("/list/users/ids")
     @AnonymousAccess
     public List<UserBriefDTO> findBatchById(@RequestParam(value = "ids", defaultValue = "") List<Long> ids) {
