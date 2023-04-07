@@ -265,7 +265,7 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
                 .select(AnswerEntity::getCreator, AnswerEntity::getTitle)
                 .oneOpt()
                 .orElseThrow(() -> new NotFoundException(AnswerEntity.class, answerId.toString()));
-        Long commentId = commentService.publish(answerId, req);
+        Long commentId = commentService.publishComment(answerId, req);
         // 回答被评论通知
         notificationService.publish(
                 NotificationType.ANSWER_NEW_COMMENT,
