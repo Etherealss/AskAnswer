@@ -13,8 +13,7 @@ import java.util.Objects;
 
 /**
  * 暂存当前线程中的用户权限信息
- * @author wtk
- * @date 2022-08-30
+ * @author hwb
  */
 public class UserSecurityContextHolder {
     private static final ThreadLocal<UserTokenCertificate> USER_CREDENTIALS = new InheritableThreadLocal<>();

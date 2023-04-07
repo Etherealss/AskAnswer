@@ -9,8 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.validation.constraints.NotBlank;
 
 /**
- * @author wtk
- * @date 2023-03-22
+ * @author hwb
  */
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)

@@ -5,9 +5,8 @@ import cn.hwb.askanswer.common.base.enums.ResultCode;
 import cn.hwb.askanswer.common.base.exception.BadRequestException;
 
 /**
- * @author wtk
- * @description
- * @date 2021-08-13
+ * 参数缺失
+ * @author hwb
  */
 public class ParamMissingException extends BadRequestException {
     public ParamMissingException() {

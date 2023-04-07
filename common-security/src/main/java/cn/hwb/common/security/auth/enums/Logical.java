@@ -2,7 +2,7 @@ package cn.hwb.common.security.auth.enums;
 
 /**
  * 权限校验时采用的模式
- * @author wtk
+ * @author hwb
  */
 public enum Logical {
     /**

@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 /**
+ * 检查List里的String元素
  * 允许List为空或字符串为空，但只要提供了字符串，就需要满足指定格式
- * @author wtk
- * @date 2022-08-14
+ * @author hwb
  */
 public class ListStringValidator implements ConstraintValidator<ListStringValidation, List<String>> {
     private String regexp;

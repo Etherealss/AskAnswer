@@ -9,8 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
- * @author wtk
- * @date 2023-03-25
+ * @author hwb
  */
 @Component
 @RequiredArgsConstructor
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Component;
 public class AnswerEntityValidator implements EntityValidator {
     private final AnswerService answerService;
     @Override
-    public void validate(Long id) {
+    public void validate(Long id) throws NotFoundException {
         Integer count = answerService.lambdaQuery()
                 .eq(AnswerEntity::getId, id)
                 .count();

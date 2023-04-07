@@ -10,8 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * @author wang tengkun
- * @date 2023/4/4
+ * @author hwb
  */
 @Slf4j
 @RestController

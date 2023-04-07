@@ -6,8 +6,7 @@ import lombok.ToString;
 
 /**
  * 问题被点赞的事件
- * @author wang tengkun
- * @date 2023/4/6
+ * @author hwb
  */
 @Getter
 @ToString(callSuper = true)

@@ -4,8 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * @author wtk
- * @date 2023-03-22
+ * @author hwb
  */
 @Configuration
 public class MyBatisPlusAuditConfig {

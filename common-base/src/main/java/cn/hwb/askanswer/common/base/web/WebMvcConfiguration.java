@@ -20,8 +20,7 @@ import java.util.List;
 
 /**
  * SpringMVC自定义配置，添加一些自定义功能
- * @author wtk
- * @date 2022-01-26
+ * @author hwb
  */
 @Slf4j
 @Configuration

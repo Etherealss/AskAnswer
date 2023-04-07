@@ -9,8 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
- * @author wtk
- * @date 2023-03-25
+ * @author hwb
  */
 @Component
 @RequiredArgsConstructor
@@ -19,7 +18,7 @@ public class CommentEntityValidator implements EntityValidator {
     private final CommentService commentService;
 
     @Override
-    public void validate(Long id) {
+    public void validate(Long id) throws NotFoundException {
         boolean exist = commentService.lambdaQuery()
                 .eq(CommentEntity::getId, id)
                 .count() > 0;

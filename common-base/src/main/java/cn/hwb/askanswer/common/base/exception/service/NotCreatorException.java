@@ -5,8 +5,7 @@ import cn.hwb.askanswer.common.base.enums.ResultCode;
 import cn.hwb.askanswer.common.base.exception.BadRequestException;
 
 /**
- * @author wtk
- * @date 2022-02-04
+ * @author hwb
  */
 public class NotCreatorException extends BadRequestException {
     public NotCreatorException() {

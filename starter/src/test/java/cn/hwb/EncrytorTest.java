@@ -5,8 +5,7 @@ import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
 import org.jasypt.iv.RandomIvGenerator;
 
 /**
- * @author wtk
- * @date 2023-03-21
+ * @author hwb
  */
 @Slf4j
 public class EncrytorTest {

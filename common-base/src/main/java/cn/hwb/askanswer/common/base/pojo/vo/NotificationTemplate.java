@@ -11,8 +11,7 @@ import lombok.experimental.FieldDefaults;
  * - 用户 张三 赞了你的：如何学好数学
  * userId、targetId用于超链接，文字模板由前端设置，后端仅存储关键信息
  *
- * @author wang tengkun
- * @date 2023/4/6
+ * @author hwb
  */
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)

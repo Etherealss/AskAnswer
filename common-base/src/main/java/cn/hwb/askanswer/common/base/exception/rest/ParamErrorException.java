@@ -5,9 +5,10 @@ import cn.hwb.askanswer.common.base.enums.ResultCode;
 import cn.hwb.askanswer.common.base.exception.BadRequestException;
 
 /**
- * @author wtk
+ * 参数错误
+ * @author hwb
  * @description
- * @date 2021-08-13
+ 
  */
 public class ParamErrorException extends BadRequestException {
     public ParamErrorException() {

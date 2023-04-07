@@ -9,8 +9,8 @@ import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
 /**
- * @author wang tengkun
- * @date 2022/2/23
+ * 带ID的基础实体类
+ * @author hwb
  */
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)

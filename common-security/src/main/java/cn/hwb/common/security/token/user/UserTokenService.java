@@ -10,8 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 /**
- * @author wtk
- * @date 2023-03-20
+ * @author hwb
  */
 @SuppressWarnings("unchecked")
 @Component

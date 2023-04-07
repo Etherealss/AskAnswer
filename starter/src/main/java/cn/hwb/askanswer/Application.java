@@ -7,8 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 
 /**
- * @author wtk
- * @date 2023-03-21
+ * @author hwb
  */
 // 指定要扫描的Mapper类的包的路径，需要加上Mapper注解，否则会把访问到的接口都当成Mapper类
 @MapperScan(value = "cn.hwb", annotationClass = Mapper.class)

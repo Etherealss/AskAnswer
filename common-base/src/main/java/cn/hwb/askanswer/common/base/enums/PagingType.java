@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * @author wtk
- * @date 2023-03-25
+ * 分页方式
+ * @author hwb
  */
 @Getter
 @AllArgsConstructor

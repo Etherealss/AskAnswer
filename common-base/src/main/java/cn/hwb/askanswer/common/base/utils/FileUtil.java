@@ -5,8 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import java.util.*;
 
 /**
- * @author wtk
- * @date 2022-04-30
+ * @author hwb
  */
 public class FileUtil {
     private static final Set<String> IMAGE_EXT;

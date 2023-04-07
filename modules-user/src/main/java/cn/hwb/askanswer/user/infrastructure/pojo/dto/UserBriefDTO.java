@@ -1,6 +1,5 @@
 package cn.hwb.askanswer.user.infrastructure.pojo.dto;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
@@ -8,8 +7,7 @@ import lombok.experimental.FieldDefaults;
 import java.util.Date;
 
 /**
- * @author wtk
- * @date 2023-03-22
+ * @author hwb
  */
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)

@@ -26,10 +26,8 @@ import javax.validation.ConstraintViolationException;
 import java.nio.file.AccessDeniedException;
 
 /**
- * @author wtk
- * @version 2.0 将多个异常合并
- * @description 全局异常处理
- * @date 2021-08-13
+ * 全局异常处理器
+ * @author hwb
  */
 @Slf4j
 @RestControllerAdvice

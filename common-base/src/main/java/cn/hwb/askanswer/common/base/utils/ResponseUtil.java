@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * @author wtk
+ * @author hwb
  * @description 向前端发送响应数据
  */
 public class ResponseUtil {

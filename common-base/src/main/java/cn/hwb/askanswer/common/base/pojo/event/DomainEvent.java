@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
- * @author wtk
+ * @author hwb
  */
 @Getter
 public abstract class DomainEvent extends ApplicationEvent {

@@ -13,8 +13,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author wtk
- * @date 2022-02-21
+ * 带审计字段的基础实体类
+ * @author hwb
  */
 @Data
 @FieldDefaults(level = AccessLevel.PROTECTED)

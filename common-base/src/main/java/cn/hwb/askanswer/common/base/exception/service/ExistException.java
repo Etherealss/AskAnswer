@@ -5,9 +5,8 @@ import cn.hwb.askanswer.common.base.enums.ResultCode;
 import cn.hwb.askanswer.common.base.exception.BadRequestException;
 
 /**
- * @author wtk
- * @description
- * @date 2021-08-12
+ * 目标已存在
+ * @author hwb
  */
 public class ExistException extends BadRequestException {
     public ExistException(Class<?> clazz) {

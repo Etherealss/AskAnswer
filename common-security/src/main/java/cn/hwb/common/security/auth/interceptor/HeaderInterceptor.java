@@ -16,8 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /**
  * 获取 Token 并将相关信息存入 SecurityContextHolder 中
- * @author wtk
- * @date 2022-08-30
+ * @author hwb
  */
 @Slf4j
 @Component

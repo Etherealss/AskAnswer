@@ -9,8 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.PostConstruct;
 
 /**
- * @author wang tengkun
- * @date 2023/4/4
+ * @author hwb
  */
 @AllArgsConstructor
 @Configuration

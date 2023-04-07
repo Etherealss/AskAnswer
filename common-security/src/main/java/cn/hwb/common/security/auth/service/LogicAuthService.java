@@ -16,8 +16,7 @@ import java.util.List;
 
 /**
  * 逻辑校验是否包含必要的权限、角色
- * @author wtk
- * @date 2022-08-30
+ * @author hwb
  */
 @Component
 @Slf4j

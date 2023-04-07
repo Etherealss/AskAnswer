@@ -5,9 +5,9 @@ import cn.hwb.askanswer.common.base.enums.ResultCode;
 import cn.hwb.askanswer.common.base.exception.service.AuthenticationException;
 
 /**
- * @author wtk
+ * @author hwb
  * @description token异常
- * @date 2021-10-05
+ 
  */
 public class TokenException extends AuthenticationException {
     public TokenException(ResultCode resultCode) {

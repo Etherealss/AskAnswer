@@ -12,8 +12,7 @@ import java.lang.reflect.Field;
 
 /**
  * 用法见 {@link XssEscape}
- * @author wtk
- * @date 2023-03-23
+ * @author hwb
  */
 @Aspect
 @Component

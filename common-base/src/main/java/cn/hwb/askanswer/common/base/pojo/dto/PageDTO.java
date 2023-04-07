@@ -8,8 +8,8 @@ import lombok.experimental.FieldDefaults;
 import java.util.List;
 
 /**
- * @author wtk
- * @date 2022-08-14
+ * 分页对象
+ * @author hwb
  */
 @Data
 @FieldDefaults(level = AccessLevel.PROTECTED)

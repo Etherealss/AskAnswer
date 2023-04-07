@@ -9,8 +9,8 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * @author wtk
- * @date 2023-03-22
+ * 密码加密
+ * @author hwb
  */
 @Component
 @Slf4j
@@ -30,14 +30,13 @@ public class PasswordEncryptor {
      * 加盐哈希算法
      * @param password 明文密码
      * @return 加密后的密码
-     * @throws NoSuchAlgorithmException
      */
     public String encode(String password) {
         // 进行SHA-256哈希
         byte[] encrypted = messageDigest.digest(password.getBytes(StandardCharsets.UTF_8));
+        // 转成十六进制的字符串
         BigInteger bigInt = new BigInteger(1, encrypted);
         String encode = bigInt.toString(16);
-        log.debug("原始密码：{}，加密密文：{}", password, encode);
         return encode;
     }
 
@@ -46,7 +45,6 @@ public class PasswordEncryptor {
      * @param checkPassword 原始密码
      * @param realPassword 密文
      * @return true：密码正确；false：密码错误
-     * @throws NoSuchAlgorithmException
      */
     public boolean match(String checkPassword, String realPassword) {
         String encodedPassword = this.encode(checkPassword);

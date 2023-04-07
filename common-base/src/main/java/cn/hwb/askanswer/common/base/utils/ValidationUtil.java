@@ -3,8 +3,7 @@ package cn.hwb.askanswer.common.base.utils;
 import javax.validation.ConstraintValidatorContext;
 
 /**
- * @author wtk
- * @date 2023-03-24
+ * @author hwb
  */
 public class ValidationUtil {
 

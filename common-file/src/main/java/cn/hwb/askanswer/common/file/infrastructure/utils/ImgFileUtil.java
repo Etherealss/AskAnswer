@@ -7,8 +7,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
- * @author wtk
- * @date 2023-04-04
+ * @author hwb
  */
 public class ImgFileUtil {
 

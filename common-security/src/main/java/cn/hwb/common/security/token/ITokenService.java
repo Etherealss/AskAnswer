@@ -6,8 +6,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 /**
- * @author wtk
- * @date 2022-08-30
+ * @author hwb
  */
 public interface ITokenService<T extends TokenCertificate> {
 

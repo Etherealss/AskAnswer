@@ -19,8 +19,7 @@ import org.springframework.data.redis.serializer.*;
 import java.time.Duration;
 
 /**
- * @author wtk
- * @date 2021-10-28
+ * @author hwb
  */
 @Configuration
 @EnableCaching

@@ -6,8 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
 /**
- * @author wtk
- * @date 2023-03-22
+ * @author hwb
  */
 @Mapper
 @Repository

@@ -8,9 +8,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * @author wtk
- * @date 2022-08-14
- * @see ListStringValidator
+ * @author hwb
+ 
+ * @see ListStringValidator 检查List里的String元素
  */
 @Target({ElementType.FIELD, ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)

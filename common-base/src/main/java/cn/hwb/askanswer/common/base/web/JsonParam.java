@@ -5,8 +5,7 @@ import org.springframework.core.annotation.AliasFor;
 import java.lang.annotation.*;
 
 /**
- * @author wtk
- * @date 2022-01-27
+ * @author hwb
  */
 @Target({ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)

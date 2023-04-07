@@ -8,8 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author wtk
- * @date 2022-08-30
+ * @author hwb
  */
 public class ServletUtil {
 

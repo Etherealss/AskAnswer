@@ -12,8 +12,7 @@ import javax.validation.constraints.NotNull;
 /**
  * 1. 与用户鉴权相关的配置
  * 2. 各个服务验证 userToken 时，对结果的缓存的相关配置。缓存时长由 Credential 决定
- * @author wtk
- * @date 2022-10-08
+ * @author hwb
  */
 @Configuration
 @ConfigurationProperties("app.token.user")

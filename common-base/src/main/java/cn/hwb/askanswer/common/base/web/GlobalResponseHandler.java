@@ -11,13 +11,11 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 /**
- * 方法返回 Msg 实例时，照常返回
- * 方法返回为空时，返回 Msg.ok()
- * 方法返回对象时，包装在 Msg 中返回
+ * 方法返回 Result 实例时，照常返回
+ * 方法返回为空时，返回 Result.ok()
+ * 方法返回对象时，包装在 Result 中返回
  * https://javadaily.cn/post/2022012758/2fed6f3dba49/
  * @see WebMvcConfiguration#configureMessageConverters(java.util.List) 解决返回String bug
- * @author wtk
- * @date 2022/2/21
  */
 @Slf4j
 @RestControllerAdvice

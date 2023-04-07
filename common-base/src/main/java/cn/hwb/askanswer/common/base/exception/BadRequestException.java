@@ -4,8 +4,7 @@ import cn.hwb.askanswer.common.base.enums.ResultCode;
 import org.springframework.http.HttpStatus;
 
 /**
- * @author wtk
- * @date 2023-03-25
+ * @author hwb
  */
 public class BadRequestException extends BaseException {
     public BadRequestException(int code, HttpStatus httpStatus) {

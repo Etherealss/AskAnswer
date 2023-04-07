@@ -9,8 +9,7 @@ import cn.hwb.askanswer.user.infrastructure.pojo.entity.UserEntity;
 import org.mapstruct.Mapper;
 
 /**
- * @author wtk
- * @date 2023-03-22
+ * @author hwb
  */
 @Mapper(componentModel = MapperComponentModel.SPRING)
 public interface UserConverter {

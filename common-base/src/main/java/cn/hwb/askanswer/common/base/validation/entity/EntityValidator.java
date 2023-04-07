@@ -1,9 +1,11 @@
 package cn.hwb.askanswer.common.base.validation.entity;
 
+import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
+
 /**
- * @author wtk
- * @date 2023-03-24
+ * 检查实体是否存在的接口
+ * @author hwb
  */
 public interface EntityValidator {
-    void validate(Long id);
+    void validate(Long id) throws NotFoundException;
 }

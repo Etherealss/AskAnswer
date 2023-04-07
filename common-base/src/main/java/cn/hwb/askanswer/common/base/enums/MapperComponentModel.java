@@ -1,8 +1,7 @@
 package cn.hwb.askanswer.common.base.enums;
 
 /**
- * @author wtk
- * @date 2023/2/17
+ * @author hwb
  */
 public class MapperComponentModel {
     public static final String SPRING = "spring";

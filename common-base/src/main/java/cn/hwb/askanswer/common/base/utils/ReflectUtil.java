@@ -8,8 +8,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 /**
- * @author wang tengkun
- * @date 2022/2/23
+ * @author hwb
  */
 public class ReflectUtil {
 

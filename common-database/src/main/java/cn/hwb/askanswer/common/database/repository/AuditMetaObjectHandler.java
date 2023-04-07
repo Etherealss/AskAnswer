@@ -9,8 +9,7 @@ import org.apache.ibatis.reflection.MetaObject;
 import java.util.Date;
 
 /**
- * @author wtk
- * @date 2022-02-03
+ * @author hwb
  */
 public class AuditMetaObjectHandler implements MetaObjectHandler {
 

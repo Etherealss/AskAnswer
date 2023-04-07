@@ -4,8 +4,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * @author wang tengkun
- * @date 2023/4/4
+ * @author hwb
  */
 @SpringBootApplication
 public class TestRunner {

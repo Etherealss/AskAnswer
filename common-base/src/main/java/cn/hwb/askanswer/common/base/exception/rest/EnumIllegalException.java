@@ -4,8 +4,7 @@ package cn.hwb.askanswer.common.base.exception.rest;
 import cn.hwb.askanswer.common.base.enums.BaseEnum;
 
 /**
- * @author wtk
- * @date 2022-04-24
+ * @author hwb
  */
 public class EnumIllegalException extends ParamErrorException {
 

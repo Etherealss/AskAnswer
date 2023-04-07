@@ -16,8 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotBlank;
 
 /**
- * @author wang tengkun
- * @date 2023/4/4
+ * @author hwb
  */
 @Configuration
 @ConfigurationProperties("app.oss")

@@ -6,8 +6,7 @@ import org.springframework.stereotype.Repository;
 import cn.hwb.askanswer.comment.infrastructure.pojo.entity.CommentEntity;
 
 /**
- * @author wtk
- * @date 2023-03-23
+ * @author hwb
  */
 @Mapper
 @Repository

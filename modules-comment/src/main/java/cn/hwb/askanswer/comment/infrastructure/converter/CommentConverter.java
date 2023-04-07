@@ -8,8 +8,7 @@ import cn.hwb.askanswer.comment.infrastructure.pojo.entity.CommentEntity;
 import cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateCommentRequest;
 
 /**
- * @author wtk
- * @date 2023-03-23
+ * @author hwb
  */
 @Mapper(componentModel = MapperComponentModel.SPRING)
 public interface CommentConverter {

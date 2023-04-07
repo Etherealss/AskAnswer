@@ -4,8 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * @author wang tengkun
- * @date 2023/4/6
+ * 通知类型常亮类
+ * @author hwb
  */
 @Getter
 @AllArgsConstructor

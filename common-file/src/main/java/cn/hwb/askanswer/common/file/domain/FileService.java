@@ -12,8 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
 /**
- * @author wtk
- * @date 2022-09-04
+ * @author hwb
  */
 @Service
 @Slf4j

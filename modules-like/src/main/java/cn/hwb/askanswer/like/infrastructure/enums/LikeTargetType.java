@@ -5,8 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * @author wang tengkun
- * @date 2023/4/6
+ * @author hwb
  */
 @AllArgsConstructor
 @Getter

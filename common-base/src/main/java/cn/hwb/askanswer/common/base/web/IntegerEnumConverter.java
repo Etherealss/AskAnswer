@@ -8,8 +8,7 @@ import org.springframework.stereotype.Component;
 
 /**
  * 将Controller中的将参数转为对应的BaseEnum
- * @author wtk
- * @date 2022-04-24
+ * @author hwb
  */
 @Component
 public class IntegerEnumConverter implements ConverterFactory<Integer, BaseEnum> {

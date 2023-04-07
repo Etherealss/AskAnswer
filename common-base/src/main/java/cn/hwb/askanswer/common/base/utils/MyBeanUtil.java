@@ -6,8 +6,7 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;
 
 /**
- * @author wang tengkun
- * @date 2022/2/23
+ * @author hwb
  */
 public class MyBeanUtil extends BeanUtils {
 

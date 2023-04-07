@@ -9,15 +9,14 @@ import lombok.ToString;
 import java.io.Serializable;
 
 /**
- * @author wtk
- * @description 统一的接口信息包，用于前后端交互
- * @date 2021-08-12
+ * 统一的接口信息包，用于前后端交互
+ * @author hwb
  */
 @Getter
 @Setter
 @ToString
 public class Result<T> implements Serializable {
-    /** 响应是否充公 */
+    /** 响应是否成功 */
     private boolean success;
     /** 结果码，用于判断响应情况 */
     private int code;

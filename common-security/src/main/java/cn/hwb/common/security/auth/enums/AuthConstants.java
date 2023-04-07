@@ -1,8 +1,7 @@
 package cn.hwb.common.security.auth.enums;
 
 /**
- * @author wtk
- * @date 2022-08-30
+ * @author hwb
  */
 public class AuthConstants {
     /** 所有权限标识 */

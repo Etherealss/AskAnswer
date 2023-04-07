@@ -4,8 +4,8 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 /**
- * @author wtk
- * @date 2023-03-20
+ * 前后端交互的状态码
+ * @author hwb
  */
 @Getter
 public enum ResultCode {

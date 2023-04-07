@@ -6,8 +6,7 @@ import java.lang.reflect.Method;
 
 /**
  * 可以通过重写该接口修改验证方案
- * @author wtk
- * @date 2022-10-07
+ * @author hwb
  */
 public interface IPreAuthHandler {
 

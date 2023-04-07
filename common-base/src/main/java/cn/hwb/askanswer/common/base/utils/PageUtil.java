@@ -3,8 +3,7 @@ package cn.hwb.askanswer.common.base.utils;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
 /**
- * @author wtk
- * @date 2022-02-05
+ * @author hwb
  */
 public class PageUtil {
 

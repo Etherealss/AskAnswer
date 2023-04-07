@@ -8,9 +8,9 @@ import lombok.Setter;
 import org.springframework.http.HttpStatus;
 
 /**
- * @author wtk
+ * @author hwb
  * @description 自定义 服务异常
- * @date 2021-08-12
+ 
  */
 @Setter
 @Getter

@@ -6,8 +6,8 @@ import cn.hwb.askanswer.common.base.exception.BaseException;
 import org.springframework.http.HttpStatus;
 
 /**
- * @author wtk
- * @date 2022-08-30
+ * 权限异常
+ * @author hwb
  */
 public class AuthenticationException extends BaseException {
     public AuthenticationException(ResultCode resultCode) {

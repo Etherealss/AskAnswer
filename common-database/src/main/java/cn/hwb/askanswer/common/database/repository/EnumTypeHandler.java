@@ -12,8 +12,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
- * @author wang tengkun
- * @date 2022/4/26
+ * @author hwb
  */
 @Slf4j
 public class EnumTypeHandler<T extends BaseEnum> extends BaseTypeHandler<BaseEnum> {

@@ -6,9 +6,9 @@ import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import lombok.Getter;
 
 /**
- * @author wtk
+ * @author hwb
  * @description
- * @date 2021-08-12
+
  */
 @Getter
 public class NotFoundException extends BadRequestException {

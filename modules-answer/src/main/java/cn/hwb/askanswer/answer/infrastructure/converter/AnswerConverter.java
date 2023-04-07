@@ -10,8 +10,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 /**
- * @author wtk
- * @date 2023-03-23
+ * @author hwb
  */
 @Mapper(componentModel = MapperComponentModel.SPRING)
 public interface AnswerConverter {

@@ -5,8 +5,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
- * @author wtk
- * @date 2022-04-21
+ * 枚举类接口
+ * @author hwb
  */
 public interface BaseEnum {
     /**

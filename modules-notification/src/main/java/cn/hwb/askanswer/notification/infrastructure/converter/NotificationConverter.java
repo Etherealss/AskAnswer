@@ -7,8 +7,7 @@ import cn.hwb.askanswer.notification.infrastructure.pojo.resp.NotificationResp;
 import org.mapstruct.Mapper;
 
 /**
- * @author wang tengkun
- * @date 2023/4/6
+ * @author hwb
  */
 @Mapper(componentModel = MapperComponentModel.SPRING)
 public interface NotificationConverter {
