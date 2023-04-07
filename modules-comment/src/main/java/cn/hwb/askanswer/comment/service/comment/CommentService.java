@@ -13,6 +13,7 @@ import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
 import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
 import cn.hwb.askanswer.like.service.LikeRelationService;
+import cn.hwb.askanswer.like.service.LikeService;
 import cn.hwb.askanswer.notification.service.NotificationService;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserPageDTO;
@@ -45,6 +46,7 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
     private final CommentMapper questionMapper;
     private final UserService userService;
     private final LikeRelationService likeRelationService;
+    private final LikeService likeService;
     private final NotificationService notificationService;
 
     /**
@@ -70,10 +72,11 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
     public Long publishReply(Long targetId, CreateReplyRequest req) {
         // 检查被回复的评论是否存在
         CommentEntity targetComment = this.lambdaQuery()
-                .eq(CommentEntity::getTargetId, targetId)
-                .select(CommentEntity::getId, CommentEntity::getCreator)
+                .eq(CommentEntity::getId, targetId)
+                .select(CommentEntity::getCreator)
                 .oneOpt()
                 .orElseThrow(() -> new NotFoundException(CommentEntity.class, targetId.toString()));
+        targetComment.setId(targetId);
         CommentEntity commentEntity = converter.toEntity(req);
         commentEntity.setTargetId(targetId);
         this.save(commentEntity);
@@ -85,7 +88,7 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
     private void sendNotification(CommentEntity commentEntity) {
         // 向被评论的用户发送通知
         notificationService.publish(
-                NotificationType.COMMENT_NEW_LIKE,
+                NotificationType.COMMENT_NEW_REPLY,
                 commentEntity,
                 "评论"
         );
@@ -206,5 +209,22 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
                 .collect(Collectors.toMap(UserBriefDTO::getId, Function.identity()));
         page.setUserMap(userMap);
         return page;
+    }
+
+    public void like(Long userId, Long commentId) {
+        // 检查评论是否存在，并获取通知信息
+        CommentEntity commentEntity = this.lambdaQuery()
+                .eq(CommentEntity::getId, commentId)
+                .select(CommentEntity::getCreator)
+                .oneOpt()
+                .orElseThrow(() -> new NotFoundException(CommentEntity.class, commentId.toString()));
+        commentEntity.setId(commentId);
+        likeService.like(userId, commentId, LikeTargetType.COMMENT);
+        // 向被点赞的用户发送通知
+        notificationService.publish(
+                NotificationType.COMMENT_NEW_LIKE,
+                commentEntity,
+                "评论"
+        );
     }
 }
