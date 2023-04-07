@@ -110,6 +110,7 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
                 .oneOpt()
                 .orElseThrow(() -> new NotFoundException(AnswerEntity.class, questionId.toString()));
         preCheck(null, answerId, null, answer);
+        answer.setId(answerId);
         this.lambdaUpdate()
                 .eq(AnswerEntity::getId, answerId)
                 .eq(AnswerEntity::getQuestionId, questionId)
@@ -232,6 +233,7 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
                 .select(AnswerEntity::getCreator, AnswerEntity::getTitle)
                 .oneOpt()
                 .orElseThrow(() -> new NotFoundException(AnswerEntity.class, answerId.toString()));
+        answer.setId(answerId);
         // 问题存在，点赞
         likeService.like(likeUserId, answerId, LikeTargetType.ANSWER);
         // 向被点赞的回答作者发送通知
@@ -261,6 +263,7 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
                 .select(AnswerEntity::getCreator, AnswerEntity::getTitle)
                 .oneOpt()
                 .orElseThrow(() -> new NotFoundException(AnswerEntity.class, answerId.toString()));
+        answer.setId(answerId);
         Long commentId = commentService.publishComment(answerId, req);
         // 回答被评论通知
         notificationService.publish(

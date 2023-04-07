@@ -144,6 +144,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
                 .select(QuestionEntity::getTitle, QuestionEntity::getCreator)
                 .oneOpt()
                 .orElseThrow(() -> new NotFoundException(QuestionEntity.class, questionId.toString()));
+        question.setId(questionId);
         // 向被回答问题的作者发送通知
         notificationService.publish(
                 NotificationType.QUESTION_NEW_ANSWER,
@@ -164,6 +165,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
                 .select(QuestionEntity::getCreator, QuestionEntity::getTitle)
                 .oneOpt()
                 .orElseThrow(() -> new NotFoundException(QuestionEntity.class, questionId.toString()));
+        question.setId(questionId);
         collectionService.addCollection(userId, questionId);
         notificationService.publish(
                 NotificationType.QUESTION_COLLECTED,

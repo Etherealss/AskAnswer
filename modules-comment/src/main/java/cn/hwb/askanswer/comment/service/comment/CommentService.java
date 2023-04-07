@@ -71,6 +71,7 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
         // 检查被回复的评论是否存在
         CommentEntity targetComment = this.lambdaQuery()
                 .eq(CommentEntity::getTargetId, targetId)
+                .select(CommentEntity::getId, CommentEntity::getCreator)
                 .oneOpt()
                 .orElseThrow(() -> new NotFoundException(CommentEntity.class, targetId.toString()));
         CommentEntity commentEntity = converter.toEntity(req);

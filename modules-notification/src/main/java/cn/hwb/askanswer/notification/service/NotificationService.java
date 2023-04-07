@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -38,6 +39,8 @@ public class NotificationService extends ServiceImpl<NotificationMapper, Notific
      */
     @Transactional(rollbackFor = Exception.class)
     public void publish(String type, IdentifiedEntity target, String targetDesc) {
+        Objects.requireNonNull(target.getId(), "ID不能为空");
+        Objects.requireNonNull(target.getCreator(), "创建者不能为空");
         // 填充通知的相关信息
         UserTokenCertificate tokenCertificate = UserSecurityContextHolder.require();
         NotificationTemplate notificationTemplate = new NotificationTemplate()
