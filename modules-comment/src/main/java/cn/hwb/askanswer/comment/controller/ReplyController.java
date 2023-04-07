@@ -33,7 +33,7 @@ public class ReplyController {
     @EntityExist
     public Long publish(@RequestBody @Validated CreateReplyRequest req,
                         @PathVariable Long commentId) {
-        return commentService.publish(commentId, req);
+        return commentService.publishReply(commentId, req);
     }
 
     @DeleteMapping("/replys/{replyId}")

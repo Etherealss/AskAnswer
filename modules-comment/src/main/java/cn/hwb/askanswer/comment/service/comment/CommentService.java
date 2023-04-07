@@ -11,15 +11,12 @@ import cn.hwb.askanswer.common.base.enums.ResultCode;
 import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
-import cn.hwb.askanswer.common.base.pojo.vo.NotificationTemplate;
-import cn.hwb.askanswer.common.base.utils.IntegerUtil;
 import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
 import cn.hwb.askanswer.like.service.LikeRelationService;
 import cn.hwb.askanswer.notification.service.NotificationService;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserPageDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
-import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -50,7 +47,13 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
     private final LikeRelationService likeRelationService;
     private final NotificationService notificationService;
 
-    public Long publish(Long targetId, CreateCommentRequest req) {
+    /**
+     * 发布评论
+     * @param targetId
+     * @param req
+     * @return
+     */
+    public Long publishComment(Long targetId, CreateCommentRequest req) {
         CommentEntity commentEntity = converter.toEntity(req);
         commentEntity.setTargetId(targetId);
         commentEntity.setContainerId(targetId);
@@ -58,7 +61,14 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
         return commentEntity.getId();
     }
 
-    public Long publish(Long targetId, CreateReplyRequest req) {
+    /**
+     * 发布回复
+     * @param targetId
+     * @param req
+     * @return
+     */
+    public Long publishReply(Long targetId, CreateReplyRequest req) {
+        // 检查被回复的评论是否存在
         CommentEntity targetComment = this.lambdaQuery()
                 .eq(CommentEntity::getTargetId, targetId)
                 .oneOpt()
@@ -66,40 +76,39 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
         CommentEntity commentEntity = converter.toEntity(req);
         commentEntity.setTargetId(targetId);
         this.save(commentEntity);
+        // 发送"评论被回复"通知
         this.sendNotification(targetComment);
         return commentEntity.getId();
     }
 
-    private void sendNotification(CommentEntity commentBe) {
-        // 填充"新评论"通知的相关信息
-        NotificationTemplate notificationTemplate = new NotificationTemplate()
-                .setTargetId(commentBe.getId())
-                .setTargetDesc("评论")
-                .setUserId(UserSecurityContextHolder.require().getUserId())
-                .setUsername(UserSecurityContextHolder.require().getUsername());
+    private void sendNotification(CommentEntity commentEntity) {
         // 向被评论的用户发送通知
         notificationService.publish(
                 NotificationType.COMMENT_NEW_LIKE,
-                commentBe,
+                commentEntity,
                 "评论"
         );
     }
 
     public void deleteById(Long commentId, Long curUserId) {
-        checkCreator(commentId, curUserId);
+        checkExistAndCreator(commentId, curUserId);
         this.lambdaUpdate()
                 .eq(CommentEntity::getId, commentId)
                 .eq(CommentEntity::getCreator, curUserId)
                 .remove();
     }
 
+    /**
+     * 获取评论
+     * @param targetId 被评论的对象，用于检查
+     * @param commentId 评论ID
+     * @return
+     */
     public CommentDTO findById(Long targetId, Long commentId) {
         CommentEntity entity = this.lambdaQuery()
                 .eq(CommentEntity::getId, commentId)
-                .one();
-        if (entity == null) {
-            throw new NotFoundException(CommentEntity.class, commentId.toString());
-        }
+                .oneOpt()
+                .orElseThrow(() -> new NotFoundException(CommentEntity.class, commentId.toString()));
         if (!entity.getTargetId().equals(targetId)) {
             String format = String.format("'%s'评论的目标并非'%s'",
                     commentId.toString(), targetId.toString());
@@ -108,27 +117,37 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
         return converter.toDto(entity);
     }
 
-    private void checkCreator(Long commentId, Long userId) {
+    private void checkExistAndCreator(Long commentId, Long userId) {
         CommentEntity entity = this.lambdaQuery()
                 .eq(CommentEntity::getId, commentId)
-                .select(CommentEntity::getCreator).one();
-        if (entity == null) {
-            throw new NotFoundException(CommentEntity.class, commentId.toString());
-        }
+                .select(CommentEntity::getCreator)
+                .oneOpt()
+                .orElseThrow(() -> new NotFoundException(CommentEntity.class, commentId.toString()));
         if (!entity.getCreator().equals(userId)) {
             throw new NotCreatorException(userId, commentId);
         }
     }
 
-    public UserPageDTO<CommentDTO> page(int currentPage, int size, Long targetId, boolean subReply) {
+    /**
+     * 分页获取评论
+     * @param currentPage 当前页
+     * @param size 页面显示的评论数
+     * @param targetId 获取评论时，传被评论的对象ID；获取评论的回复时，传评论ID
+     * @param isSubReply 是否获取回复？
+     * 如果为true，则会获得盖楼式的回复（例如评论23回复了评论1，那么会把1和23都查出来）
+     * 如果是false，则会按照评论的发布顺序获取信息（按顺序就是1、2、3……，即使23回复了1也不会被查出来）
+     * @return
+     */
+    public UserPageDTO<CommentDTO> page(int currentPage, int size, Long targetId, boolean isSubReply) {
         LambdaQueryChainWrapper<CommentEntity> lambdaQuery = this.lambdaQuery();
-        if (subReply) {
+        if (isSubReply) {
+            // 获取回复了 targetId 的信息
             lambdaQuery.eq(CommentEntity::getContainerId, targetId);
         } else {
+            // 获取评论了 targetId 的信息
             lambdaQuery.eq(CommentEntity::getTargetId, targetId);
         }
-        IPage<CommentEntity> page = lambdaQuery
-                .page(new Page<>(currentPage, size));
+        IPage<CommentEntity> page = lambdaQuery.page(new Page<>(currentPage, size));
         List<CommentDTO> records = page.getRecords()
                 .stream().map(converter::toDto)
                 .collect(Collectors.toList());
@@ -137,14 +156,7 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
                 .distinct() // 去重
                 .map(userService::getBriefById)
                 .collect(Collectors.toMap(UserBriefDTO::getId, Function.identity()));
-        UserPageDTO<CommentDTO> userPageDTO = new UserPageDTO<>();
-        userPageDTO.setRecords(records);
-        userPageDTO.setPageSize(size);
-        userPageDTO.setCurrentPage(currentPage);
-        userPageDTO.setTotalPage(IntegerUtil.long2Int(page.getPages()));
-        userPageDTO.setTotalSize(IntegerUtil.long2Int(page.getTotal()));
-        userPageDTO.setUserMap(userMap);
-        return userPageDTO;
+        return new UserPageDTO<>(records, page, userMap);
     }
 
     public UserPageDTO<CommentDTO> page(Long cursorId, int size, Long targetId) {

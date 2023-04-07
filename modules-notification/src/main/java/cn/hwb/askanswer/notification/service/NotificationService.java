@@ -30,6 +30,12 @@ public class NotificationService extends ServiceImpl<NotificationMapper, Notific
 
     private final NotificationConverter notificationConverter;
 
+    /**
+     * 根据 IdentifiedEntity 的 id 和 creator 发布通知
+     * @param type
+     * @param target
+     * @param targetDesc
+     */
     @Transactional(rollbackFor = Exception.class)
     public void publish(String type, IdentifiedEntity target, String targetDesc) {
         // 填充通知的相关信息
@@ -48,6 +54,10 @@ public class NotificationService extends ServiceImpl<NotificationMapper, Notific
         );
     }
 
+    /**
+     * 发布通知
+     * @param command
+     */
     @Transactional(rollbackFor = Exception.class)
     public void publish(PublishNotificationRequest command) {
         NotificationEntity entity = notificationConverter.toEntity(command);
