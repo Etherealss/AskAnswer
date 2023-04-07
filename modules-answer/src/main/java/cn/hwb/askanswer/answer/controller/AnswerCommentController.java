@@ -23,6 +23,13 @@ public class AnswerCommentController {
 
     private final AnswerService answerService;
 
+    /**
+     * 对回答进行评论
+     * @param req
+     * @param questionId
+     * @param answerId
+     * @return
+     */
     @PostMapping("/comments")
     @XssEscape
     @EntityExist

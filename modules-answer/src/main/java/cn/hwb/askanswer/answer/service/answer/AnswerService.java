@@ -55,6 +55,13 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
     private final NotificationService notificationService;
     private final CommentService commentService;
 
+    /**
+     * 发布回答
+     * @param questionId
+     * @param userId
+     * @param req
+     * @return
+     */
     public Long publish(Long questionId, Long userId, CreateAnswerRequest req) {
         // 验证年龄段是否可以回答问题
         boolean verify = ageLimitVerifier.verify(questionId);
@@ -70,17 +77,25 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
         return answerId;
     }
 
+    /**
+     * 更新回答
+     * @param questionId
+     * @param answerId
+     * @param answerCreator
+     * @param req
+     */
     public void update(Long questionId, Long answerId, Long answerCreator, UpdateAnswerRequest req) {
         preCheck(questionId, answerId, answerCreator);
         AnswerEntity updateEntity = converter.toEntity(req);
         boolean update = this.lambdaUpdate()
+                // id = answerId；eq就是equals的意思
                 .eq(AnswerEntity::getId, answerId)
                 .eq(AnswerEntity::getQuestionId, questionId)
                 .update(updateEntity);
     }
 
     /**
-     * 采纳问题
+     * 问题作者采纳回答
      * @param questionId
      * @param answerId
      * @param questionCreator
@@ -88,9 +103,11 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
      */
     public void update(Long questionId, Long answerId, Long questionCreator,
                        UpdateAnswerAcceptRequest req) {
+        // 验证当前用户是否为问题作者
         eventPublisher.publishEvent(
                 new QuestionCreatorValidateEvent(questionId, questionCreator)
         );
+        // 获取回答信息，以检查回答是否存在以及回答的作者的信息是否匹配
         AnswerEntity answer = this.lambdaQuery()
                 .eq(AnswerEntity::getId, answerId)
                 .select(AnswerEntity::getQuestionId, AnswerEntity::getCreator)
@@ -100,6 +117,7 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
         this.lambdaUpdate()
                 .eq(AnswerEntity::getId, answerId)
                 .eq(AnswerEntity::getQuestionId, questionId)
+                // 更新采纳状态
                 .set(AnswerEntity::getIsAccepted, req.getIsAccepted())
                 .update();
         if (req.getIsAccepted()) {
@@ -116,6 +134,7 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
         preCheck(null, answerId, userId);
         this.lambdaUpdate()
                 .eq(AnswerEntity::getId, answerId)
+                // 只有作者才可以删除自己的回答
                 .eq(AnswerEntity::getCreator, userId)
                 .remove();
     }
@@ -158,18 +177,24 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
     public PageDTO<AnswerDTO> page(Long cursorId, int size, Long questionId) {
         List<AnswerDTO> records = this.lambdaQuery()
                 .eq(AnswerEntity::getQuestionId, questionId)
+                // 查询比游标 cursorId 更大的 ID   gt 就是 greater than
                 .gt(AnswerEntity::getId, cursorId)
+                // 按 ID 排序(order)
                 .orderByDesc(AnswerEntity::getId)
+                // 限制查询的记录数量，只查前 size 条
                 .last(String.format("LIMIT %d", size))
                 .list()
                 .stream()
+                // 匿名处理
                 .map(this::anonymousHandle)
                 .map(e -> {
+                    // 根据 Long creator 字段获取用户信息，添加到 AnswerDTO 中
                     UserBriefDTO userBrief = userService.getBriefById(e.getCreator());
                     AnswerDTO answerDTO = converter.toDto(e);
                     answerDTO.setCreator(userBrief);
                     return answerDTO;
                 }).collect(Collectors.toList());
+        // 构造分页对象
         return PageDTO.<AnswerDTO>builder()
                 .records(records)
                 .pageSize(size)
@@ -178,16 +203,17 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
 
     public PageDTO<AnswerDTO> pageByLikes(Long userId, Long cursorId, int size) {
         List<Long> answerIds = likeRelationService.page(userId, cursorId, size, LikeTargetType.ANSWER);
+        // 用户没有点赞的回答
         if (CollectionUtils.isEmpty(answerIds)) {
             return PageDTO.<AnswerDTO>builder()
                     .records(Collections.emptyList())
                     .pageSize(size)
                     .build();
         }
+        // 根据用户点赞的回答批量获取回答信息
         List<AnswerDTO> records = this.lambdaQuery()
                 .in(AnswerEntity::getId, answerIds)
                 .orderByDesc(AnswerEntity::getId)
-                .last(String.format("LIMIT %d", size))
                 .list()
                 .stream()
                 .map(this::anonymousHandle)

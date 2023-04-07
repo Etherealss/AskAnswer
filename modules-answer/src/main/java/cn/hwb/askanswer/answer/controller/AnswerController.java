@@ -26,21 +26,22 @@ import org.springframework.web.bind.annotation.*;
 @ResponseAdvice
 public class AnswerController {
 
-    private static final String DEFAULT = "questionEntityValidator";
+    private static final String QUESTION = "questionEntityValidator";
     private final AnswerService answerService;
 
     @PostMapping("/answers")
     @XssEscape
     public Long publish(@RequestBody @Validated CreateAnswerRequest req,
-                        @PathVariable @EntityExist(DEFAULT) Long questionId) {
-        return answerService.publish(questionId, req);
+                        @PathVariable @EntityExist(QUESTION) Long questionId) {
+        Long answerCreator = UserSecurityContextHolder.require().getUserId();
+        return answerService.publish(questionId, answerCreator, req);
     }
 
     @PutMapping("/answers/{answersId}")
     @XssEscape
     @EntityExist
     public void update(@RequestBody @Validated UpdateAnswerRequest req,
-                       @PathVariable @EntityExist(DEFAULT) Long questionId,
+                       @PathVariable @EntityExist(QUESTION) Long questionId,
                        @PathVariable Long answersId) {
         Long answerCreator = UserSecurityContextHolder.require().getUserId();
         answerService.update(questionId, answersId, answerCreator, req);
@@ -50,7 +51,7 @@ public class AnswerController {
     @XssEscape
     @EntityExist
     public void accpetAnswer(@RequestBody @Validated UpdateAnswerAcceptRequest req,
-                             @PathVariable @EntityExist(DEFAULT) Long questionId,
+                             @PathVariable @EntityExist(QUESTION) Long questionId,
                              @PathVariable Long answersId) {
         Long questionCreator = UserSecurityContextHolder.require().getUserId();
         answerService.update(questionId, answersId, questionCreator, req);
@@ -67,7 +68,7 @@ public class AnswerController {
     @AnonymousAccess
     @EntityExist
     public AnswerDTO findById(@PathVariable Long answersId,
-                              @PathVariable @EntityExist(DEFAULT) Long questionId) {
+                              @PathVariable @EntityExist(QUESTION) Long questionId) {
         return answerService.findById(answersId);
     }
 
@@ -77,7 +78,7 @@ public class AnswerController {
     public PageDTO<AnswerDTO> page(
             @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @PathVariable @EntityExist(DEFAULT) Long questionId) {
+            @PathVariable @EntityExist(QUESTION) Long questionId) {
         if (size < 0) {
             log.debug("分页的size不能小于0，size: {}", size);
             size = 10;
