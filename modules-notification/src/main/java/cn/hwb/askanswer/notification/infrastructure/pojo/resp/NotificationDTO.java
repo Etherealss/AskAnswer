@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class NotificationResp {
+public class NotificationDTO {
     Long id;
 
     String type;

@@ -6,7 +6,7 @@ import cn.hwb.askanswer.common.base.pojo.vo.NotificationTemplate;
 import cn.hwb.askanswer.notification.infrastructure.converter.NotificationConverter;
 import cn.hwb.askanswer.notification.infrastructure.pojo.entity.NotificationEntity;
 import cn.hwb.askanswer.notification.infrastructure.pojo.request.PublishNotificationRequest;
-import cn.hwb.askanswer.notification.infrastructure.pojo.resp.NotificationResp;
+import cn.hwb.askanswer.notification.infrastructure.pojo.resp.NotificationDTO;
 import cn.hwb.askanswer.notification.mapper.NotificationMapper;
 import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import cn.hwb.common.security.token.user.UserTokenCertificate;
@@ -81,20 +81,20 @@ public class NotificationService extends ServiceImpl<NotificationMapper, Notific
      * @param size 分页显示的数量
      * @return
      */
-    public PageDTO<NotificationResp> page(Long rcvrId, String type, Long cursorId, int size) {
+    public PageDTO<NotificationDTO> page(Long rcvrId, String type, Long cursorId, int size) {
         LambdaQueryChainWrapper<NotificationEntity> query = this.lambdaQuery()
                 .eq(NotificationEntity::getRcvrId, rcvrId);
         if (type != null) {
             // 按类型查
             query.eq(NotificationEntity::getType, type);
         }
-        List<NotificationResp> records = query
+        List<NotificationDTO> records = query
                 .last(String.format("LIMIT %d", size))
                 .list()
                 .stream()
-                .map(notificationConverter::toResp)
+                .map(notificationConverter::toDTO)
                 .collect(Collectors.toList());
-        return PageDTO.<NotificationResp>builder()
+        return PageDTO.<NotificationDTO>builder()
                 .records(records)
                 .pageSize(size)
                 .build();

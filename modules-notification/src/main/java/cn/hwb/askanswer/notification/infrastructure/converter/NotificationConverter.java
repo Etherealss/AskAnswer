@@ -3,7 +3,7 @@ package cn.hwb.askanswer.notification.infrastructure.converter;
 import cn.hwb.askanswer.common.base.enums.MapperComponentModel;
 import cn.hwb.askanswer.notification.infrastructure.pojo.entity.NotificationEntity;
 import cn.hwb.askanswer.notification.infrastructure.pojo.request.PublishNotificationRequest;
-import cn.hwb.askanswer.notification.infrastructure.pojo.resp.NotificationResp;
+import cn.hwb.askanswer.notification.infrastructure.pojo.resp.NotificationDTO;
 import org.mapstruct.Mapper;
 
 /**
@@ -12,5 +12,5 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = MapperComponentModel.SPRING)
 public interface NotificationConverter {
     NotificationEntity toEntity(PublishNotificationRequest command);
-    NotificationResp toResp(NotificationEntity entity);
+    NotificationDTO toDTO(NotificationEntity entity);
 }
