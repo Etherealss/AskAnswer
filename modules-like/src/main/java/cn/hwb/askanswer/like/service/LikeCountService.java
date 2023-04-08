@@ -21,11 +21,14 @@ public class LikeCountService extends ServiceImpl<LikeCountMapper, LikeCountEnti
 
     @Transactional(rollbackFor = Exception.class)
     public void increase(Long targetId) {
+        // 如果记录不存在，则创建，设置count为1；如果记录已存在，则更新count自增1
+        // 使用 ON DUPLICATE KEY UPDATE 实现"创建或更新"操作
         mapper.incre(targetId, 1);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void decrease(Long targetId) {
+        // count = count-1
         mapper.incre(targetId, -1);
     }
 
