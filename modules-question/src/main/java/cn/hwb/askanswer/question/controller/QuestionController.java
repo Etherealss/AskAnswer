@@ -61,8 +61,8 @@ public class QuestionController {
     public PageDTO<QuestionDTO> page(
             @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
             @RequestParam(value = "size", defaultValue = "10") int size) {
-        if (size < 0) {
-            log.debug("分页的size不能小于0，size: {}", size);
+        if (size < 1) {
+            log.debug("分页的size不能小于1，size: {}", size);
             size = 10;
         }
         return questionService.page(cursor, size);
@@ -72,8 +72,8 @@ public class QuestionController {
     public PageDTO<QuestionDTO> pageCollections(
             @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
             @RequestParam(value = "size", defaultValue = "10") int size) {
-        if (size < 0) {
-            log.debug("分页的size不能小于0，size: {}", size);
+        if (size < 1) {
+            log.debug("分页的size不能小于1，size: {}", size);
             size = 10;
         }
         Long userId = UserSecurityContextHolder.require().getUserId();
