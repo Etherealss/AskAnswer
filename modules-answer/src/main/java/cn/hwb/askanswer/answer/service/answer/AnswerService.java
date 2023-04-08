@@ -32,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -63,6 +64,7 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
      * @param req
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public Long publish(Long questionId, Long userId, AgeBracketEnum ageBracket, CreateAnswerRequest req) {
         // 验证年龄段是否可以回答问题
         eventPublisher.publishEvent(new AnswerAgeLimitEvent(questionId, userId, ageBracket));
@@ -82,6 +84,7 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
      * @param answerCreator
      * @param req
      */
+    @Transactional(rollbackFor = Exception.class)
     public void update(Long questionId, Long answerId, Long answerCreator, UpdateAnswerRequest req) {
         preCheck(questionId, answerId, answerCreator);
         AnswerEntity updateEntity = converter.toEntity(req);
@@ -99,6 +102,7 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
      * @param questionCreator
      * @param req
      */
+    @Transactional(rollbackFor = Exception.class)
     public void update(Long questionId, Long answerId, Long questionCreator,
                        UpdateAnswerAcceptRequest req) {
         // 验证当前用户是否为问题作者
@@ -132,6 +136,7 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
         }
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void deleteById(Long answerId, Long userId) {
         preCheck(null, answerId, userId);
         this.lambdaUpdate()
@@ -272,6 +277,7 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
                 .build();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void answerBeLiked(Long answerId, Long likeUserId) {
         // 先判断问题是否存在
         AnswerEntity answer = this.lambdaQuery()
@@ -302,6 +308,7 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
         return entity;
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public Long publishComment(Long answerId, CreateCommentRequest req) {
         // 判断问题是否存在，并查询问题的作者与标题，用于填充到通知里
         AnswerEntity answer = this.lambdaQuery()

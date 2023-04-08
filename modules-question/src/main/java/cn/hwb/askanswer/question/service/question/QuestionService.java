@@ -20,6 +20,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -42,6 +43,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
     private final CollectionRelationService collectionRelationService;
     private final CollectionService collectionService;
 
+    @Transactional(rollbackFor = Exception.class)
     public Long publish(CreateQuestionRequest req, AgeBracketEnum ageBracket) {
         QuestionEntity questionEntity = converter.toEntity(req);
         questionEntity.setAgeBracket(ageBracket);
@@ -49,6 +51,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
         return questionEntity.getId();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void update(Long questionId, Long authorId, UpdateQuestionRequest req) {
         checkCreator(questionId, authorId);
         QuestionEntity updateEntity = converter.toEntity(req);
@@ -57,6 +60,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
                 .update(updateEntity);
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void deleteById(Long questionId, Long userId) {
         checkCreator(questionId, userId);
         this.lambdaUpdate()
@@ -185,6 +189,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
      * @param questionId 被收藏的问题
      * @param userId 收藏的用户
      */
+    @Transactional(rollbackFor = Exception.class)
     public void addCollection(Long questionId, Long userId) {
         // 判断问题是否存在，并查询作者和标题
         QuestionEntity question = this.lambdaQuery()

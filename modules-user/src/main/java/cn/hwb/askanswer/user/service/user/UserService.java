@@ -22,6 +22,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -48,6 +49,7 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
      * @param request
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public Long createUser(CreateUserRequest request) {
         // 用户名是否重复
         if (this.checkUsernameExists(request.getUsername())) {
@@ -103,6 +105,7 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
      * @param userId
      * @param req
      */
+    @Transactional(rollbackFor = Exception.class)
     public void update(Long userId, UpdateUserInfoRequest req) {
         UserEntity user = lambdaQuery()
                 .eq(UserEntity::getId, userId)
@@ -131,6 +134,7 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
      * @param file
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public String updateAvatar(Long userId, MultipartFile file) {
         // 上传新的头像文件
         FileUploadDTO fileUploadDTO = userAvatarService.uploadAvatar(file, userId);
@@ -152,6 +156,7 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
      * @param userId
      * @param file
      */
+    @Transactional(rollbackFor = Exception.class)
     public void updateReviewImg(Long userId, MultipartFile file) {
         // 上传审核图片
         FileUploadDTO fileUploadDTO = userReviewService.uploadAvatar(userId, file);
@@ -170,6 +175,7 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
      * 审核通过，更新用户审核状态
      * @param userId
      */
+    @Transactional(rollbackFor = Exception.class)
     public void reviewPass(Long userId) {
         boolean update = this.lambdaUpdate()
                 .eq(UserEntity::getId, userId)
@@ -184,6 +190,7 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
      * 审核不通过，更新用户审核状态
      * @param userId
      */
+    @Transactional(rollbackFor = Exception.class)
     public void reviewFail(Long userId) {
         userMapper.deleteById(userId);
     }

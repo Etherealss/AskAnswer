@@ -26,6 +26,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -56,6 +57,7 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
      * @param req
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public Long publishComment(Long targetId, CreateCommentRequest req) {
         CommentEntity commentEntity = converter.toEntity(req);
         commentEntity.setTargetId(targetId);
@@ -70,6 +72,7 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
      * @param req
      * @return
      */
+    @Transactional(rollbackFor = Exception.class)
     public Long publishReply(Long targetId, CreateReplyRequest req) {
         // 检查被回复的评论是否存在
         CommentEntity targetComment = this.lambdaQuery()
@@ -95,6 +98,7 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
         );
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void deleteById(Long commentId, Long curUserId) {
         checkExistAndCreator(commentId, curUserId);
         this.lambdaUpdate()
@@ -227,6 +231,7 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
                 .build();
     }
 
+    @Transactional(rollbackFor = Exception.class)
     public void like(Long userId, Long commentId) {
         // 检查评论是否存在，并获取通知信息
         CommentEntity commentEntity = this.lambdaQuery()
