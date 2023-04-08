@@ -30,7 +30,7 @@ public class CollectionRelationController {
 
     @DeleteMapping("/{targetId}")
     public void removeCollection(@PathVariable Long targetId) {
-        collectionService.removeCollection(
+        collectionService.uncollect(
                 UserSecurityContextHolder.require().getUserId(),
                 targetId
         );

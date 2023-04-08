@@ -19,8 +19,13 @@ import java.util.stream.Collectors;
 @Slf4j
 public class CollectionRelationService extends ServiceImpl<CollectionRelationMapper, CollectionRelationEntity> {
 
+    /**
+     * 创建收藏关系
+     * @param userId
+     * @param targetId
+     */
     @Transactional(rollbackFor = Exception.class)
-    public void addCollection(Long userId, Long targetId) {
+    public void create(Long userId, Long targetId) {
         CollectionRelationEntity entity = new CollectionRelationEntity();
         entity.setCreator(userId);
         entity.setTargetId(targetId);
@@ -35,6 +40,12 @@ public class CollectionRelationService extends ServiceImpl<CollectionRelationMap
                 .remove();
     }
 
+    /**
+     * 判断是否收藏
+     * @param userId
+     * @param targetId
+     * @return
+     */
     public boolean isCollected(Long userId, Long targetId) {
         return this.lambdaQuery()
               .eq(CollectionRelationEntity::getCreator, userId)
@@ -42,6 +53,13 @@ public class CollectionRelationService extends ServiceImpl<CollectionRelationMap
               .count() > 0;
     }
 
+    /**
+     * 游标分页获取用户收藏
+     * @param userId
+     * @param cursorId
+     * @param size
+     * @return
+     */
     public List<Long> page(Long userId, Long cursorId, int size) {
         List<Long> targetIds = this.lambdaQuery()
                 .eq(CollectionRelationEntity::getCreator, userId)

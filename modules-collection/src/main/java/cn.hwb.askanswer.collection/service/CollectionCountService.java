@@ -18,32 +18,18 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class CollectionCountService extends ServiceImpl<CollectionCountMapper, CollectionCountEntity> {
+    private final CollectionCountMapper mapper;
 
     @Transactional(rollbackFor = Exception.class)
     public void increase(Long targetId) {
-        this.incre(targetId, 1);
+        // 如果记录不存在，则创建，设置count为1；如果记录已存在，则更新count自增1
+        // 使用 ON DUPLICATE KEY UPDATE 实现"创建或更新"操作
+        mapper.incre(targetId, 1);
     }
 
     @Transactional(rollbackFor = Exception.class)
     public void decrease(Long targetId) {
-        this.incre(targetId, -1);
-    }
-
-    private void incre(Long targetId, int incre) {
-        Optional<CollectionCountEntity> opt = this.lambdaQuery()
-                .eq(CollectionCountEntity::getId, targetId)
-                .select(CollectionCountEntity::getId, CollectionCountEntity::getCount)
-                .oneOpt();
-        if (opt.isPresent()) {
-            CollectionCountEntity entity = opt.get();
-            entity.setCount(entity.getCount() + incre);
-            this.updateById(entity);
-        } else {
-            CollectionCountEntity entity = new CollectionCountEntity();
-            entity.setId(targetId);
-            entity.setCount(incre);
-            this.save(entity);
-        }
+        mapper.incre(targetId, -1);
     }
 
     public int get(Long targetId) {

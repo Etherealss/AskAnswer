@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hwb.askanswer.collection.mapper.CollectionCountMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="cn.hwb.askanswer.collection.infrastructure.pojo.entity.CollectionCountEntity">
+        <id column="id" property="id"/>
+        <result column="count" property="count"/>
+        <result column="modify_time" property="modifyTime"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <update id="incre">
+        INSERT INTO `collection_count` (`id`, `count`, `modify_time`, `create_time`, `creator`)
+        VALUES (#{targetId}, #{increment}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0)
+        ON DUPLICATE KEY UPDATE `count` = `count` + #{increment}
+    </update>
+</mapper>
