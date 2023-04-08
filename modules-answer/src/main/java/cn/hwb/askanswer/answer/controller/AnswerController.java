@@ -81,10 +81,10 @@ public class AnswerController {
             @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @PathVariable @EntityExist(QUESTION) Long questionId) {
-        if (size < 0) {
-            log.debug("分页的size不能小于0，size: {}", size);
+        if (size < 1) {
+            log.debug("分页的size不能小于1，size: {}", size);
             size = 10;
         }
-        return answerService.page(cursor, size, questionId);
+        return answerService.pageByQuestion(cursor, size, questionId);
     }
 }

@@ -25,10 +25,12 @@ import cn.hwb.askanswer.like.service.LikeService;
 import cn.hwb.askanswer.notification.service.NotificationService;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -174,10 +176,46 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
         }
     }
 
-    public PageDTO<AnswerDTO> page(Long cursorId, int size, Long questionId) {
-        List<AnswerDTO> records = this.lambdaQuery()
-                .eq(AnswerEntity::getQuestionId, questionId)
-                // 查询比游标 cursorId 更大的 ID   gt 就是 greater than
+    /**
+     * 分页获取问题的回答
+     * @param cursorId 游标ID
+     * @param size 页面显示的回答数
+     * @param questionId 回答的问题的ID
+     * @return
+     */
+    public PageDTO<AnswerDTO> pageByQuestion(Long cursorId, int size, Long questionId) {
+        return this.page(cursorId, size, questionId, null);
+    }
+
+    /**
+     * 分页获取用户的回答，不局限于某个问题之下
+     * @param cursorId 游标ID
+     * @param size 页面显示的回答数
+     * @param userId 用户ID
+     * @return
+     */
+    public PageDTO<AnswerDTO> pageByUser(Long cursorId, int size, Long userId) {
+        return this.page(cursorId, size, null, userId);
+    }
+
+    /**
+     * 分页获取回答
+     * @param cursorId 游标ID
+     * @param size 页面显示的回答数
+     * @param questionId 回答的问题的ID。允许为空
+     * @param creatorId 回答作者ID。允许为空
+     * @return
+     */
+    private PageDTO<AnswerDTO> page(Long cursorId, int size, @Nullable Long questionId, @Nullable Long creatorId) {
+        LambdaQueryChainWrapper<AnswerEntity> wrapper = this.lambdaQuery();
+        if (questionId != null) {
+            wrapper.eq(AnswerEntity::getQuestionId, questionId);
+        }
+        if (creatorId != null) {
+            wrapper.eq(AnswerEntity::getCreator, creatorId);
+        }
+        List<AnswerDTO> records = wrapper
+                // 查询比游标 cursorId 更大的 ID
                 .gt(AnswerEntity::getId, cursorId)
                 // 按 ID 排序(order)
                 .orderByDesc(AnswerEntity::getId)
@@ -187,18 +225,26 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
                 .stream()
                 // 匿名处理
                 .map(this::anonymousHandle)
-                .map(e -> {
-                    // 根据 Long creator 字段获取用户信息，添加到 AnswerDTO 中
-                    UserBriefDTO userBrief = userService.getBriefById(e.getCreator());
-                    AnswerDTO answerDTO = converter.toDto(e);
-                    answerDTO.setCreator(userBrief);
-                    return answerDTO;
-                }).collect(Collectors.toList());
+                // 根据 Long creator 字段获取用户信息，添加到 AnswerDTO 中
+                .map(this::addUserAndToAnswerDTO)
+                .collect(Collectors.toList());
         // 构造分页对象
         return PageDTO.<AnswerDTO>builder()
                 .records(records)
                 .pageSize(size)
                 .build();
+    }
+
+    /**
+     * 根据 Long creator 字段获取用户信息，添加到 AnswerDTO 中
+     * @param e
+     * @return
+     */
+    private AnswerDTO addUserAndToAnswerDTO(AnswerEntity e) {
+        UserBriefDTO userBrief = userService.getBriefById(e.getCreator());
+        AnswerDTO answerDTO = converter.toDto(e);
+        answerDTO.setCreator(userBrief);
+        return answerDTO;
     }
 
     public PageDTO<AnswerDTO> pageByLikes(Long userId, Long cursorId, int size) {
@@ -217,12 +263,9 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
                 .list()
                 .stream()
                 .map(this::anonymousHandle)
-                .map(e -> {
-                    UserBriefDTO userBrief = userService.getBriefById(e.getCreator());
-                    AnswerDTO answerDTO = converter.toDto(e);
-                    answerDTO.setCreator(userBrief);
-                    return answerDTO;
-                }).collect(Collectors.toList());
+                // 根据 Long creator 字段获取用户信息，添加到 AnswerDTO 中
+                .map(this::addUserAndToAnswerDTO)
+                .collect(Collectors.toList());
         return PageDTO.<AnswerDTO>builder()
                 .records(records)
                 .pageSize(size)
