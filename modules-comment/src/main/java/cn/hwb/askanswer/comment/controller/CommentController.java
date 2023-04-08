@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @Slf4j
 @RestController
-@RequestMapping("/questions/{questionId}/answers/{answerId}")
+@RequestMapping("/answers/{answerId}")
 @RequiredArgsConstructor
 @ResponseAdvice
 public class CommentController {
