@@ -79,4 +79,18 @@ public class QuestionController {
         Long userId = UserSecurityContextHolder.require().getUserId();
         return questionService.pageByCollection(userId, cursor, size);
     }
+
+
+    @GetMapping("/users/{userId}/pages/questions")
+    @AnonymousAccess
+    public PageDTO<QuestionDTO> pageByUser(
+            @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @PathVariable Long userId) {
+        if (size < 1) {
+            log.debug("分页的size不能小于1，size: {}", size);
+            size = 10;
+        }
+        return questionService.pageByUser(userId, cursor, size);
+    }
 }

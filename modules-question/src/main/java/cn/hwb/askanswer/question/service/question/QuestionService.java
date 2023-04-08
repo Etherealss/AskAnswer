@@ -114,6 +114,33 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
                 .build();
     }
 
+    /**
+     * 获取用户发布过的问题
+     * @param userId
+     * @param cursorId
+     * @param size
+     * @return
+     */
+    public PageDTO<QuestionDTO> pageByUser(Long userId, Long cursorId, int size) {
+        List<QuestionDTO> records = this.lambdaQuery()
+                .eq(QuestionEntity::getCreator, userId)
+                .gt(QuestionEntity::getId, cursorId)
+                .orderByDesc(QuestionEntity::getId)
+                .last(String.format("LIMIT %d", size))
+                .list()
+                .stream()
+                .map(e -> {
+                    UserBriefDTO userBrief = userService.getBriefById(e.getCreator());
+                    QuestionDTO questionDTO = converter.toDto(e);
+                    questionDTO.setCreator(userBrief);
+                    return questionDTO;
+                }).collect(Collectors.toList());
+        return PageDTO.<QuestionDTO>builder()
+                .records(records)
+                .pageSize(size)
+                .build();
+    }
+
     public PageDTO<QuestionDTO> pageByCollection(Long userId, Long cursorId, int size) {
         List<Long> questionIds = collectionRelationService.page(userId, cursorId, size);
         if (CollectionUtils.isEmpty(questionIds)) {
