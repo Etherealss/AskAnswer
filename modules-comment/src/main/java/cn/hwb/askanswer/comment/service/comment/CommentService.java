@@ -11,6 +11,7 @@ import cn.hwb.askanswer.common.base.enums.ResultCode;
 import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import cn.hwb.askanswer.common.base.exception.service.NotCreatorException;
 import cn.hwb.askanswer.common.base.exception.service.NotFoundException;
+import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
 import cn.hwb.askanswer.like.infrastructure.enums.LikeTargetType;
 import cn.hwb.askanswer.like.service.LikeRelationService;
 import cn.hwb.askanswer.like.service.LikeService;
@@ -209,6 +210,21 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
                 .collect(Collectors.toMap(UserBriefDTO::getId, Function.identity()));
         page.setUserMap(userMap);
         return page;
+    }
+
+    public PageDTO<CommentDTO> pageByUser(Long userId, Long cursorId, int size) {
+        List<CommentDTO> records  = this.lambdaQuery()
+                    // 只获取某一个用户的评论
+                    .eq(CommentEntity::getCreator, userId)
+                    .orderByDesc(CommentEntity::getId)
+                    .list()
+                    .stream()
+                    .map(converter::toDto)
+                    .collect(Collectors.toList());
+        return PageDTO.<CommentDTO>builder()
+                .records(records)
+                .pageSize(size)
+                .build();
     }
 
     public void like(Long userId, Long commentId) {

@@ -58,8 +58,8 @@ public class ReplyController {
             @RequestParam(value = "current", defaultValue = "1") int currentPage,
             @RequestParam(value = "subReply", defaultValue = "false") boolean subReply,
             @PathVariable @EntityExist(COMMENT) Long commentId) {
-        if (size < 0) {
-            log.debug("分页的size不能小于0，size: {}", size);
+        if (size < 1) {
+            log.debug("分页的size不能小于1，size: {}", size);
             size = 10;
         }
         return commentService.page(currentPage, size, commentId, subReply);

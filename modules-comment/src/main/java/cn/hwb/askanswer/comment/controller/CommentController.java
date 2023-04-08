@@ -49,8 +49,8 @@ public class CommentController {
             @RequestParam(value = "current", defaultValue = "1") int currentPage,
             @PathVariable @EntityExist(QUESTION) Long questionId,
             @PathVariable @EntityExist(ANSWER) Long answerId) {
-        if (size < 0) {
-            log.debug("分页的size不能小于0，size: {}", size);
+        if (size < 1) {
+            log.debug("分页的size不能小于1，size: {}", size);
             size = 10;
         }
         return commentService.page(currentPage, size, answerId, false);
