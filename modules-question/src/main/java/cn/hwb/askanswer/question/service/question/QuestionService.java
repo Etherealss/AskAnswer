@@ -193,7 +193,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
                 .oneOpt()
                 .orElseThrow(() -> new NotFoundException(QuestionEntity.class, questionId.toString()));
         question.setId(questionId);
-        collectionService.addCollection(userId, questionId);
+        collectionService.collect(userId, questionId);
         notificationService.publish(
                 NotificationType.QUESTION_COLLECTED,
                 question,
