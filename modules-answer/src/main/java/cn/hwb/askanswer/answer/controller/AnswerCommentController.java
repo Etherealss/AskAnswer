@@ -29,7 +29,6 @@ public class AnswerCommentController {
      * @return
      */
     @PostMapping("/comments")
-    @XssEscape
     @EntityExist
     public Long publish(@RequestBody @Validated CreateCommentRequest req,
                         @PathVariable Long answerId) {

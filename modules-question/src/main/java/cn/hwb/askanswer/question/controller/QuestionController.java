@@ -30,14 +30,12 @@ public class QuestionController {
     private final QuestionService questionService;
 
     @PostMapping("/questions")
-    @XssEscape
     public Long publish(@RequestBody @Validated CreateQuestionRequest req) {
         Date birthday = UserSecurityContextHolder.require().getBirthday();
         return questionService.publish(req, AgeBracketEnum.getByBirthday(birthday));
     }
 
     @PutMapping("/questions/{questionId}")
-    @XssEscape
     public void update(@RequestBody @Validated UpdateQuestionRequest req,
                        @PathVariable Long questionId) {
         Long userId = UserSecurityContextHolder.require().getUserId();

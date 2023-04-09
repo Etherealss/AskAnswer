@@ -11,7 +11,6 @@ import cn.hwb.askanswer.common.base.validation.entity.EntityExist;
 import cn.hwb.askanswer.common.base.web.ResponseAdvice;
 import cn.hwb.common.security.auth.annotation.AnonymousAccess;
 import cn.hwb.common.security.token.user.UserSecurityContextHolder;
-import cn.hwb.common.security.xss.XssEscape;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -31,7 +30,6 @@ public class AnswerController {
     private final AnswerService answerService;
 
     @PostMapping("/answers")
-    @XssEscape
     public Long publish(@RequestBody @Validated CreateAnswerRequest req,
                         @PathVariable @EntityExist(QUESTION) Long questionId) {
         Long answerCreator = UserSecurityContextHolder.require().getUserId();
@@ -40,7 +38,6 @@ public class AnswerController {
     }
 
     @PutMapping("/answers/{answersId}")
-    @XssEscape
     @EntityExist
     public void update(@RequestBody @Validated UpdateAnswerRequest req,
                        @PathVariable @EntityExist(QUESTION) Long questionId,
@@ -50,7 +47,6 @@ public class AnswerController {
     }
 
     @PutMapping("/answers/{answersId}/accepted")
-    @XssEscape
     @EntityExist
     public void accpetAnswer(@RequestBody @Validated UpdateAnswerAcceptRequest req,
                              @PathVariable @EntityExist(QUESTION) Long questionId,
@@ -62,8 +58,7 @@ public class AnswerController {
     @DeleteMapping("/answers/{answersId}")
     public void deleteAnswer(@PathVariable Long answersId) {
         Long answerCreator = UserSecurityContextHolder.require().getUserId();
-        answerService.deleteById(answersId,
-                answerCreator);
+        answerService.deleteById(answersId, answerCreator);
     }
 
     @GetMapping("/answers/{answersId}")
