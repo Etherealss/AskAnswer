@@ -23,4 +23,6 @@ public class UserBriefDTO {
     String signature;
 
     Date createTime;
+
+    Integer ageBracket;
 }

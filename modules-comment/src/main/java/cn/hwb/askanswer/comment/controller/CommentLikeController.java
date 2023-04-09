@@ -26,15 +26,15 @@ public class CommentLikeController {
         commentService.like(userId, commentId);
     }
 
-    @GetMapping("/pages/comments/likes/relations")
+    @GetMapping("/users/{userId}/pages/comments/likes/relations")
     public PageDTO<CommentDTO> page(
             @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @PathVariable Long userId) {
         if (size < 1) {
             log.debug("分页的size不能小于1，size: {}", size);
             size = 10;
         }
-        Long userId = UserSecurityContextHolder.require().getUserId();
         return commentService.pageByLike(userId, cursor, size);
     }
 

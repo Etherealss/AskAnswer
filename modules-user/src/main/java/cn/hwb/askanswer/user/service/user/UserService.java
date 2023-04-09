@@ -1,6 +1,7 @@
 package cn.hwb.askanswer.user.service.user;
 
 import cn.hwb.askanswer.common.base.crypt.PasswordEncryptor;
+import cn.hwb.askanswer.common.base.enums.AgeBracketEnum;
 import cn.hwb.askanswer.common.base.enums.ResultCode;
 import cn.hwb.askanswer.common.base.exception.BadRequestException;
 import cn.hwb.askanswer.common.base.exception.rest.ParamMissingException;
@@ -76,7 +77,9 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
                 .eq(UserEntity::getId, userId)
                 .oneOpt()
                 .orElseThrow(() -> new NotFoundException(UserEntity.class, userId.toString()));
-        return userConverter.toBriefDTO(user);
+        UserBriefDTO dto = userConverter.toBriefDTO(user);
+        dto.setAgeBracket(AgeBracketEnum.getByBirthday(dto.getBirthday()).getCode());
+        return dto;
     }
 
     /**
@@ -87,9 +90,14 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
     public List<UserBriefDTO> getBatchBriefsByIds(Collection<Long> userIds) {
         List<UserEntity> users = userMapper.selectBatchIds(userIds);
         return users.stream()
-                .map(userConverter::toBriefDTO)
+                .map(entity -> {
+                    UserBriefDTO dto = userConverter.toBriefDTO(entity);
+                    dto.setAgeBracket(AgeBracketEnum.getByBirthday(dto.getBirthday()).getCode());
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
+
 
     /**
      * 用户名是否重复
@@ -122,7 +130,7 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
         }
         UserEntity update = userConverter.toEntity(req);
         if (StringUtils.hasText(newPassword)) {
-            update.setPassword(newPassword);
+            update.setPassword(passwordEncryptor.encode(newPassword));
         }
         update.setId(userId);
         this.saveOrUpdate(update);

@@ -15,18 +15,16 @@ import org.springframework.web.bind.annotation.*;
  */
 @Slf4j
 @RestController
-@RequestMapping("/questions/{questionId}/answers/{answerId}")
+@RequestMapping("/answers/{answerId}")
 @RequiredArgsConstructor
 @ResponseAdvice
 public class AnswerCommentController {
-    private static final String QUESTION = "questionEntityValidator";
 
     private final AnswerService answerService;
 
     /**
      * 对回答进行评论
      * @param req
-     * @param questionId
      * @param answerId
      * @return
      */
@@ -34,7 +32,6 @@ public class AnswerCommentController {
     @XssEscape
     @EntityExist
     public Long publish(@RequestBody @Validated CreateCommentRequest req,
-                        @PathVariable @EntityExist(QUESTION) Long questionId,
                         @PathVariable Long answerId) {
         return answerService.publishComment(answerId, req);
     }

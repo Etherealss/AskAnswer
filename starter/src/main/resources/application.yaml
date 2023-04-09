@@ -1,7 +1,6 @@
 # 服务配置
 server:
   port: 8086
-
 app:
   security:
     xss:

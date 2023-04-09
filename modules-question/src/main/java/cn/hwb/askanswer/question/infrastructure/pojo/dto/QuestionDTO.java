@@ -23,4 +23,5 @@ public class QuestionDTO {
     String content;
     List<String> tags;
     AgeBracketEnum ageBracket;
+    Integer collectionCount;
 }

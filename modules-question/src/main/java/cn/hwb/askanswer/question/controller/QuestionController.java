@@ -68,18 +68,30 @@ public class QuestionController {
         return questionService.page(cursor, size);
     }
 
-    @GetMapping("/pages/questions/collections/relations")
-    public PageDTO<QuestionDTO> pageCollections(
+    @GetMapping("/users/{userId}/pages/questions/collections/relations")
+    @AnonymousAccess
+    public PageDTO<QuestionDTO> pageUserCollections(
             @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @PathVariable Long userId) {
         if (size < 1) {
             log.debug("分页的size不能小于1，size: {}", size);
             size = 10;
         }
-        Long userId = UserSecurityContextHolder.require().getUserId();
-        return questionService.pageByCollection(userId, cursor, size);
+        return questionService.pageByUserCollection(userId, cursor, size);
     }
 
+    @GetMapping("/pages/questions/collections/count")
+    @AnonymousAccess
+    public PageDTO<QuestionDTO> pageUserCollections(
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @RequestParam(value = "current", defaultValue = "1") int currentPage) {
+        if (size < 1) {
+            log.debug("分页的size不能小于1，size: {}", size);
+            size = 10;
+        }
+        return questionService.pageByCollectionCount(currentPage, size);
+    }
 
     @GetMapping("/users/{userId}/pages/questions")
     @AnonymousAccess

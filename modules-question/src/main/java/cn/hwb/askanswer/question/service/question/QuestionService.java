@@ -1,5 +1,7 @@
 package cn.hwb.askanswer.question.service.question;
 
+import cn.hwb.askanswer.collection.infrastructure.pojo.entity.CollectionCountEntity;
+import cn.hwb.askanswer.collection.service.CollectionCountService;
 import cn.hwb.askanswer.collection.service.CollectionRelationService;
 import cn.hwb.askanswer.collection.service.CollectionService;
 import cn.hwb.askanswer.common.base.enums.AgeBracketEnum;
@@ -16,6 +18,7 @@ import cn.hwb.askanswer.question.infrastructure.pojo.request.UpdateQuestionReque
 import cn.hwb.askanswer.question.mapper.QuestionMapper;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,6 +45,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
     private final UserService userService;
     private final NotificationService notificationService;
     private final CollectionRelationService collectionRelationService;
+    private final CollectionCountService collectionCountService;
     private final CollectionService collectionService;
 
     @Transactional(rollbackFor = Exception.class)
@@ -145,7 +150,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
                 .build();
     }
 
-    public PageDTO<QuestionDTO> pageByCollection(Long userId, Long cursorId, int size) {
+    public PageDTO<QuestionDTO> pageByUserCollection(Long userId, Long cursorId, int size) {
         List<Long> questionIds = collectionRelationService.page(userId, cursorId, size);
         if (CollectionUtils.isEmpty(questionIds)) {
             return PageDTO.<QuestionDTO>builder()
@@ -168,6 +173,38 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
                 .pageSize(size)
                 .build();
     }
+
+    public PageDTO<QuestionDTO> pageByCollectionCount(int curPage, int size) {
+        Page<CollectionCountEntity> page = collectionCountService.pageOrderByCount(curPage, size);
+        List<CollectionCountEntity> records = page.getRecords();
+        if (CollectionUtils.isEmpty(records)) {
+            return PageDTO.<QuestionDTO>builder()
+                    .records(Collections.emptyList())
+                    .pageSize(size)
+                    .build();
+        }
+        List<Long> ids = records.stream()
+                .map(CollectionCountEntity::getId)
+                .collect(Collectors.toList());
+        List<QuestionEntity> list = this.lambdaQuery()
+                .in(QuestionEntity::getId, ids)
+                .list();
+        // 将收藏数添加到 DTO 里，不使用 StreamAPI
+        List<QuestionDTO> dtos = new ArrayList<>(list.size());
+        for (int i = 0; i < list.size(); i++) {
+            QuestionEntity entity = list.get(i);
+            QuestionDTO dto = converter.toDto(entity);
+            dto.setCollectionCount(records.get(i).getCount());
+            UserBriefDTO userBrief = userService.getBriefById(entity.getCreator());
+            dto.setCreator(userBrief);
+            dtos.add(dto);
+        }
+        return PageDTO.<QuestionDTO>builder()
+                .records(dtos)
+                .pageSize(size)
+                .build();
+    }
+
 
     public void afterBeAnswered(Long questionId) {
         QuestionEntity question = this.lambdaQuery()

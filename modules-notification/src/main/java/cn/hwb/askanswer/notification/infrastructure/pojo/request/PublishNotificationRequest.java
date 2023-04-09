@@ -1,5 +1,6 @@
 package cn.hwb.askanswer.notification.infrastructure.pojo.request;
 
+import cn.hwb.askanswer.common.base.pojo.vo.NotificationTemplate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,7 +23,7 @@ public class PublishNotificationRequest {
     String type;
 
     @NotNull
-    Object props;
+    NotificationTemplate props;
 
     @NotNull
     Long rcvrId;

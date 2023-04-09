@@ -5,6 +5,7 @@ import cn.hwb.askanswer.answer.service.answer.AnswerService;
 import cn.hwb.askanswer.common.base.pojo.dto.PageDTO;
 import cn.hwb.askanswer.common.base.validation.entity.EntityExist;
 import cn.hwb.askanswer.common.base.web.ResponseAdvice;
+import cn.hwb.common.security.auth.annotation.AnonymousAccess;
 import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,16 +34,17 @@ public class AnswerLikeController {
         answerService.answerBeLiked(answerId, userId);
     }
 
-    @GetMapping("/pages/answers/likes/relations")
+    @GetMapping("/users/{userId}/pages/answers/likes/relations")
+    @AnonymousAccess
     @EntityExist
     public PageDTO<AnswerDTO> pageByLikes(
             @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
-            @RequestParam(value = "size", defaultValue = "10") int size) {
+            @RequestParam(value = "size", defaultValue = "10") int size,
+            @PathVariable Long userId) {
         if (size < 1) {
             log.debug("分页的size不能小于1，size: {}", size);
             size = 10;
         }
-        Long userId = UserSecurityContextHolder.require().getUserId();
         return answerService.pageByLikes(userId, cursor, size);
     }
 }

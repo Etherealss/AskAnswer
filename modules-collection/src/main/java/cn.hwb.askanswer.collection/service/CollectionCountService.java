@@ -2,6 +2,8 @@ package cn.hwb.askanswer.collection.service;
 
 import cn.hwb.askanswer.collection.infrastructure.pojo.entity.CollectionCountEntity;
 import cn.hwb.askanswer.collection.mapper.CollectionCountMapper;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,5 +39,14 @@ public class CollectionCountService extends ServiceImpl<CollectionCountMapper, C
                 .eq(CollectionCountEntity::getId, targetId)
                 .oneOpt();
         return opt.isPresent() ? opt.get().getCount() : 0;
+    }
+
+    public Page<CollectionCountEntity> pageOrderByCount(int curPage, int size) {
+        Page<CollectionCountEntity> page = new Page<>(curPage, size);
+        page.addOrder(OrderItem.desc("count"), OrderItem.desc("create_time"));
+        page = this.lambdaQuery()
+                .select(CollectionCountEntity::getId, CollectionCountEntity::getCount)
+                .page(page);
+        return page;
     }
 }

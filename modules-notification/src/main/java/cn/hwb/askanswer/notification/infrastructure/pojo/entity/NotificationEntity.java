@@ -15,7 +15,8 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @NoArgsConstructor
-@TableName(value = "notification")
+// 需要加上 autoResultMap = true 才能使用 JacksonTypeHandler 获取数据，否则获取到的为null
+@TableName(value = "notification", autoResultMap = true)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class NotificationEntity extends IdentifiedEntity {
     @TableField("type")
