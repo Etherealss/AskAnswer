@@ -107,7 +107,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
 
     public PageDTO<QuestionDTO> page(Long cursorId, int size) {
         List<QuestionDTO> records = this.lambdaQuery()
-                .gt(QuestionEntity::getId, cursorId)
+                .lt(QuestionEntity::getId, cursorId)
                 .orderByDesc(QuestionEntity::getId)
                 .last(String.format("LIMIT %d", size))
                 .list()
@@ -134,7 +134,7 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
     public PageDTO<QuestionDTO> pageByUser(Long userId, Long cursorId, int size) {
         List<QuestionDTO> records = this.lambdaQuery()
                 .eq(QuestionEntity::getCreator, userId)
-                .gt(QuestionEntity::getId, cursorId)
+                .lt(QuestionEntity::getId, cursorId)
                 .orderByDesc(QuestionEntity::getId)
                 .last(String.format("LIMIT %d", size))
                 .list()

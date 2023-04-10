@@ -63,7 +63,7 @@ public class CollectionRelationService extends ServiceImpl<CollectionRelationMap
     public List<Long> page(Long userId, Long cursorId, int size) {
         List<Long> targetIds = this.lambdaQuery()
                 .eq(CollectionRelationEntity::getCreator, userId)
-                .gt(CollectionRelationEntity::getTargetId, cursorId)
+                .lt(CollectionRelationEntity::getTargetId, cursorId)
                 .orderByDesc(CollectionRelationEntity::getCreateTime)
                 .last(String.format("LIMIT %d", size))
                 .list()

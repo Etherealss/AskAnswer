@@ -27,7 +27,7 @@ public class NotificationController {
     public PageDTO<NotificationDTO> page(
             @RequestParam(value = "type", required = false) String type,
             @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
+            @RequestParam(value = "cursor", defaultValue = "" + Long.MAX_VALUE) Long cursor,
             @RequestParam(value = "unread", defaultValue = "false") Boolean unread) {
         Long userId = UserSecurityContextHolder.require().getUserId();
         return notificationService.page(userId, type, cursor, size);

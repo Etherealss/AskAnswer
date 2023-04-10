@@ -234,9 +234,10 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
      * @param size
      */
     public PageDTO<UserAuthDTO> page4Review(int currentPage, int size) {
+        Page<UserEntity> pageSpec = new Page<>(currentPage, size);
         Page<UserEntity> page = lambdaQuery()
                 .eq(UserEntity::getIsReviewed, false)
-                .page(new Page<>(currentPage, size));
+                .page(pageSpec);
         List<UserAuthDTO> collect = page.getRecords().stream()
                 .map(userConverter::toAuthDTO)
                 .collect(Collectors.toList());

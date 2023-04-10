@@ -29,7 +29,7 @@ public class UserAnswerController {
     @AnonymousAccess
     @EntityExist
     public PageDTO<AnswerDTO> pageByUser(
-            @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
+            @RequestParam(value = "cursor", defaultValue = "" + Long.MAX_VALUE) Long cursor,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @PathVariable Long userId) {
         if (size < 1) {

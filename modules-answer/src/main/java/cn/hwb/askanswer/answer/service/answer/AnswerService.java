@@ -220,15 +220,15 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
         if (creatorId != null) {
             wrapper.eq(AnswerEntity::getCreator, creatorId);
         }
-        List<AnswerDTO> records = wrapper
-                // 查询比游标 cursorId 更大的 ID
-                .gt(AnswerEntity::getId, cursorId)
+        List<AnswerEntity> answerEntities = wrapper
+                // 查询比游标 cursorId 更小的 ID
+                .lt(AnswerEntity::getId, cursorId)
                 // 按 ID 排序(order)
                 .orderByDesc(AnswerEntity::getId)
                 // 限制查询的记录数量，只查前 size 条
                 .last(String.format("LIMIT %d", size))
-                .list()
-                .stream()
+                .list();
+        List<AnswerDTO> records = answerEntities.stream()
                 // 匿名处理
                 .map(this::anonymousHandle)
                 // 根据 Long creator 字段获取用户信息，添加到 AnswerDTO 中
@@ -247,9 +247,12 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
      * @return
      */
     private AnswerDTO addUserAndToAnswerDTO(AnswerEntity e) {
-        UserBriefDTO userBrief = userService.getBriefById(e.getCreator());
         AnswerDTO answerDTO = converter.toDto(e);
-        answerDTO.setCreator(userBrief);
+        // 匿名处理过的entity没有creator字段
+        if (e.getCreator() != null) {
+            UserBriefDTO userBrief = userService.getBriefById(e.getCreator());
+            answerDTO.setCreator(userBrief);
+        }
         return answerDTO;
     }
 

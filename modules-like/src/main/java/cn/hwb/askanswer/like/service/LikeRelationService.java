@@ -48,7 +48,7 @@ public class LikeRelationService extends ServiceImpl<LikeRelationMapper, LikeRel
         List<Long> targetIds = this.lambdaQuery()
                 .eq(LikeRelationEntity::getCreator, userId)
                 .eq(LikeRelationEntity::getTargetType, targetType)
-                .gt(LikeRelationEntity::getTargetId, cursorId)
+                .lt(LikeRelationEntity::getTargetId, cursorId)
                 .orderByDesc(LikeRelationEntity::getCreateTime)
                 .last(String.format("LIMIT %d", size))
                 .list()

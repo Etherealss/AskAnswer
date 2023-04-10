@@ -56,7 +56,7 @@ public class QuestionController {
     @GetMapping("/pages/questions")
     @AnonymousAccess
     public PageDTO<QuestionDTO> page(
-            @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
+            @RequestParam(value = "cursor", defaultValue = "" + Long.MAX_VALUE) Long cursor,
             @RequestParam(value = "size", defaultValue = "10") int size) {
         if (size < 1) {
             log.debug("分页的size不能小于1，size: {}", size);
@@ -68,7 +68,7 @@ public class QuestionController {
     @GetMapping("/users/{userId}/pages/questions/collections/relations")
     @AnonymousAccess
     public PageDTO<QuestionDTO> pageUserCollections(
-            @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
+            @RequestParam(value = "cursor", defaultValue = "" + Long.MAX_VALUE) Long cursor,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @PathVariable Long userId) {
         if (size < 1) {
@@ -94,7 +94,7 @@ public class QuestionController {
     @GetMapping("/users/{userId}/pages/questions")
     @AnonymousAccess
     public PageDTO<QuestionDTO> pageByUser(
-            @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
+            @RequestParam(value = "cursor", defaultValue = "" + Long.MAX_VALUE) Long cursor,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @PathVariable Long userId) {
         if (size < 1) {

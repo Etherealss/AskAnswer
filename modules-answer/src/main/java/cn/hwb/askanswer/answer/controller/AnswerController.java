@@ -73,7 +73,7 @@ public class AnswerController {
     @AnonymousAccess
     @EntityExist
     public PageDTO<AnswerDTO> page(
-            @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
+            @RequestParam(value = "cursor", defaultValue = "" + Long.MAX_VALUE) Long cursor,
             @RequestParam(value = "size", defaultValue = "10") int size,
             @PathVariable @EntityExist(QUESTION) Long questionId) {
         if (size < 1) {

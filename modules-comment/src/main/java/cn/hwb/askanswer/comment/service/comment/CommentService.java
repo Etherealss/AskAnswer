@@ -20,6 +20,7 @@ import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserPageDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.metadata.OrderItem;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -156,7 +157,10 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
             // 获取评论了 targetId 的信息
             lambdaQuery.eq(CommentEntity::getTargetId, targetId);
         }
-        IPage<CommentEntity> page = lambdaQuery.page(new Page<>(currentPage, size));
+        Page<CommentEntity> pageSpec = new Page<>(currentPage, size);
+        // 根据ID降序，ID越大说明发布时间越新，排在越前
+        pageSpec.addOrder(OrderItem.desc("id"));
+        IPage<CommentEntity> page = lambdaQuery.page(pageSpec);
         List<CommentDTO> records = page.getRecords()
                 .stream().map(converter::toDto)
                 .collect(Collectors.toList());
@@ -171,7 +175,7 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
     public UserPageDTO<CommentDTO> page(Long cursorId, int size, Long targetId) {
         List<CommentDTO> records = this.lambdaQuery()
                 .eq(CommentEntity::getTargetId, targetId)
-                .gt(CommentEntity::getId, cursorId)
+                .lt(CommentEntity::getId, cursorId)
                 .orderByDesc(CommentEntity::getId)
                 .last(String.format("LIMIT %d", size))
                 .list()
