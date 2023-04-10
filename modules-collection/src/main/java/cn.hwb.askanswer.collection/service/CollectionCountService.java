@@ -2,14 +2,13 @@ package cn.hwb.askanswer.collection.service;
 
 import cn.hwb.askanswer.collection.infrastructure.pojo.entity.CollectionCountEntity;
 import cn.hwb.askanswer.collection.mapper.CollectionCountMapper;
-import com.baomidou.mybatisplus.core.metadata.OrderItem;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -20,12 +19,17 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Slf4j
 public class CollectionCountService extends ServiceImpl<CollectionCountMapper, CollectionCountEntity> {
+    private static final int DEAFULT_COUNT = 0;
+
     private final CollectionCountMapper mapper;
 
     @Transactional(rollbackFor = Exception.class)
+    public void create(Long targetId) {
+        mapper.insert(new CollectionCountEntity(targetId, DEAFULT_COUNT));
+    }
+
+    @Transactional(rollbackFor = Exception.class)
     public void increase(Long targetId) {
-        // 如果记录不存在，则创建，设置count为1；如果记录已存在，则更新count自增1
-        // 使用 ON DUPLICATE KEY UPDATE 实现"创建或更新"操作
         mapper.incre(targetId, 1);
     }
 
@@ -41,12 +45,14 @@ public class CollectionCountService extends ServiceImpl<CollectionCountMapper, C
         return opt.isPresent() ? opt.get().getCount() : 0;
     }
 
-    public Page<CollectionCountEntity> pageOrderByCount(int curPage, int size) {
-        Page<CollectionCountEntity> page = new Page<>(curPage, size);
-        page.addOrder(OrderItem.desc("count"), OrderItem.desc("create_time"));
-        page = this.lambdaQuery()
+    public List<CollectionCountEntity> pageOrderByCount(Long cursorId, Integer cursorCount, int size) {
+        return this.lambdaQuery()
+                .le(CollectionCountEntity::getCount, cursorCount)
+                .le(CollectionCountEntity::getId, cursorId)
+                // id越大说明发布时间越新
+                .orderByDesc(CollectionCountEntity::getCount, CollectionCountEntity::getId)
                 .select(CollectionCountEntity::getId, CollectionCountEntity::getCount)
-                .page(page);
-        return page;
+                .last(String.format("LIMIT %d", size))
+                .list();
     }
 }

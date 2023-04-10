@@ -9,7 +9,6 @@ import cn.hwb.askanswer.question.infrastructure.pojo.request.UpdateQuestionReque
 import cn.hwb.askanswer.question.service.question.QuestionService;
 import cn.hwb.common.security.auth.annotation.AnonymousAccess;
 import cn.hwb.common.security.token.user.UserSecurityContextHolder;
-import cn.hwb.common.security.xss.XssEscape;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -82,13 +81,14 @@ public class QuestionController {
     @GetMapping("/pages/questions/collections/count")
     @AnonymousAccess
     public PageDTO<QuestionDTO> pageUserCollections(
-            @RequestParam(value = "size", defaultValue = "10") int size,
-            @RequestParam(value = "current", defaultValue = "1") int currentPage) {
+            @RequestParam(value = "cursorId", defaultValue = ""  + Long.MAX_VALUE) Long cursorId,
+            @RequestParam(value = "cursorCount", defaultValue = "" + Integer.MAX_VALUE) Integer cursorCount,
+            @RequestParam(value = "size", defaultValue = "10") int size) {
         if (size < 1) {
             log.debug("分页的size不能小于1，size: {}", size);
             size = 10;
         }
-        return questionService.pageByCollectionCount(currentPage, size);
+        return questionService.pageByCollectionCount(cursorId, cursorCount, size);
     }
 
     @GetMapping("/users/{userId}/pages/questions")

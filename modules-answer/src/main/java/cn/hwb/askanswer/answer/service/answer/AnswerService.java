@@ -65,7 +65,8 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
      * @return
      */
     @Transactional(rollbackFor = Exception.class)
-    public Long publish(Long questionId, Long userId, AgeBracketEnum ageBracket, CreateAnswerRequest req) {
+    public Long publish(Long questionId, Long userId, AgeBracketEnum ageBracket,
+                        CreateAnswerRequest req) {
         // 验证年龄段是否可以回答问题
         eventPublisher.publishEvent(new AnswerAgeLimitEvent(questionId, userId, ageBracket));
         // 保存回答

@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author hwb
@@ -25,4 +26,6 @@ public class UserBriefDTO {
     Date createTime;
 
     Integer ageBracket;
+
+    List<String> roles;
 }

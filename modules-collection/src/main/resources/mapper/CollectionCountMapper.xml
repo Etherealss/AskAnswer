@@ -11,8 +11,8 @@
     </resultMap>
 
     <update id="incre">
-        INSERT INTO `collection_count` (`id`, `count`, `modify_time`, `create_time`, `creator`)
-        VALUES (#{targetId}, #{increment}, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 0)
-        ON DUPLICATE KEY UPDATE `count` = `count` + #{increment}
+        UPDATE `collection_count`
+        SET `count` = `count` + #{increment}
+        WHERE `id` = #{targetId}
     </update>
 </mapper>

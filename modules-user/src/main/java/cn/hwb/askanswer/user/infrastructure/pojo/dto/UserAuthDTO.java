@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author hwb
@@ -21,4 +22,6 @@ public class UserAuthDTO {
     Date createTime;
 
     String reviewImg;
+
+    List<String> roles;
 }

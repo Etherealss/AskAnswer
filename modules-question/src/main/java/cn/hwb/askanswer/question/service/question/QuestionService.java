@@ -18,7 +18,6 @@ import cn.hwb.askanswer.question.infrastructure.pojo.request.UpdateQuestionReque
 import cn.hwb.askanswer.question.mapper.QuestionMapper;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +52,9 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
         QuestionEntity questionEntity = converter.toEntity(req);
         questionEntity.setAgeBracket(ageBracket);
         this.save(questionEntity);
-        return questionEntity.getId();
+        Long id = questionEntity.getId();
+        collectionCountService.create(id);
+        return id;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -174,18 +175,21 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
                 .build();
     }
 
-    public PageDTO<QuestionDTO> pageByCollectionCount(int curPage, int size) {
-        Page<CollectionCountEntity> page = collectionCountService.pageOrderByCount(curPage, size);
-        List<CollectionCountEntity> records = page.getRecords();
+    public PageDTO<QuestionDTO> pageByCollectionCount(Long cursorId, Integer cursorCount, int size) {
+        // 获取收藏数最高的 size 条问题的id和收藏数
+        List<CollectionCountEntity> records = collectionCountService.pageOrderByCount(cursorId, cursorCount, size);
+        // 如果列表为空，说明当前页面也有要显示的记录，返回空列表
         if (CollectionUtils.isEmpty(records)) {
             return PageDTO.<QuestionDTO>builder()
                     .records(Collections.emptyList())
                     .pageSize(size)
                     .build();
         }
+        // 从 CollectionCountEntity 中抽取出id
         List<Long> ids = records.stream()
                 .map(CollectionCountEntity::getId)
                 .collect(Collectors.toList());
+        // 根据id获取问题信息
         List<QuestionEntity> list = this.lambdaQuery()
                 .in(QuestionEntity::getId, ids)
                 .list();
@@ -194,7 +198,9 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
         for (int i = 0; i < list.size(); i++) {
             QuestionEntity entity = list.get(i);
             QuestionDTO dto = converter.toDto(entity);
+            // 设置收藏数
             dto.setCollectionCount(records.get(i).getCount());
+            // 获取并设置作者信息
             UserBriefDTO userBrief = userService.getBriefById(entity.getCreator());
             dto.setCreator(userBrief);
             dtos.add(dto);
