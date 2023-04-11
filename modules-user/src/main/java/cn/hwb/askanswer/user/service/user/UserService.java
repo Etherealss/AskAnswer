@@ -56,15 +56,21 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
         if (this.checkUsernameExists(request.getUsername())) {
             throw new ExistException(UserEntity.class, request.getUsername());
         }
+        // 上传审核图片
+        FileUploadDTO fileUploadDTO = userReviewService.uploadReview(
+                request.getUsername(), request.getReviewImg());
+        // 更新审核图片的url
+        String reviewImgUrl = fileUploadDTO.getUrl();
         UserEntity userEntity = userConverter.toEntity(request)
                 .setAvatar(userAvatarService.getDefaultAvatar())
                 .setRoles(new ArrayList<>(0))
                 .setIsReviewed(false)
-                .setReviewImg("");
+                .setReviewImg(reviewImgUrl);
         // 密码加密
         userEntity.setPassword(passwordEncryptor.encode(userEntity.getPassword()));
         this.save(userEntity);
-        return userEntity.getId();
+        Long userId = userEntity.getId();
+        return userId;
     }
 
     /**
@@ -159,25 +165,6 @@ public class UserService extends ServiceImpl<UserMapper, UserEntity> {
         return url;
     }
 
-    /**
-     * 更新用户审核图片
-     * @param userId
-     * @param file
-     */
-    @Transactional(rollbackFor = Exception.class)
-    public void updateReviewImg(Long userId, MultipartFile file) {
-        // 上传审核图片
-        FileUploadDTO fileUploadDTO = userReviewService.uploadAvatar(userId, file);
-        // 更新审核图片的url
-        String reviewImgUrl = fileUploadDTO.getUrl();
-        boolean update = this.lambdaUpdate()
-                .eq(UserEntity::getId, userId)
-                .set(UserEntity::getReviewImg, reviewImgUrl)
-                .update();
-        if (!update) {
-            throw new NotFoundException(UserEntity.class, userId.toString());
-        }
-    }
 
     /**
      * 审核通过，更新用户审核状态

@@ -1,13 +1,13 @@
 package cn.hwb.askanswer.user.infrastructure.pojo.request;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
+import org.springframework.web.multipart.MultipartFile;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 /**
@@ -15,16 +15,12 @@ import java.util.Date;
  */
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class CreateUserRequest {
-    @NotBlank
-    @Pattern(regexp = "^[a-zA-Z0-9_-]{3,16}$", message = "用户名只能包含这些字符“a-zA-Z0-9_-”，长度为3-16")
     String username;
-
-    @NotBlank
-    @Pattern(regexp = "^[a-fA-F0-9]{64}$", message = "密码应该加密，是一个具有64位的十六进制字符串")
     String password;
-
-    @NotNull
-    @Past
     Date birthday;
+    MultipartFile reviewImg;
 }

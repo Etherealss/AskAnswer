@@ -43,7 +43,7 @@ public class UserAvatarService {
      * 获取默认头像文件的URL
      * @return
      */
-    @Cacheable("${app.user.avatar.oss.cache-key}")
+    @Cacheable(value = {"AskAnswer:cache:avatar:str"}, key = "'default-avatars'")
     public String getDefaultAvatar() {
         return fileService.getFileUrl(userAvatarProperties.getDefaultAvatarKey());
     }

@@ -5,8 +5,9 @@ import cn.hwb.askanswer.user.service.user.UserService;
 import cn.hwb.common.security.token.user.UserSecurityContextHolder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author hwb
@@ -18,12 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 @ResponseAdvice
 public class UserReviewController {
     private final UserService userService;
-
-    @PutMapping
-    public void uploadReviewImg(@RequestParam("imgFile") MultipartFile imgFile) {
-        Long userId = UserSecurityContextHolder.require().getUserId();
-        userService.updateReviewImg(userId, imgFile);
-    }
 
     @GetMapping
     public String getReviewImg() {

@@ -1,6 +1,7 @@
 # 服务配置
 server:
   port: 8086
+
 app:
   security:
     xss:
@@ -8,9 +9,8 @@ app:
   user:
     avatar:
       oss:
-        dir: askanswer/avatars/
+        dir: askanswer/avatars
         default-avatar-key: askanswer/avatars/default-boy.png
-        cache-key: ${spring.application.name}:cache:token:str:default-avatars
     review:
       oss:
         dir: askanswer/review/

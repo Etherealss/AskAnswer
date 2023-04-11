@@ -18,6 +18,6 @@ public class ExistException extends BadRequestException {
     }
 
     public ExistException(Class<?> clazz, String identification) {
-        super(ResultCode.EXIST, "'" + identification + "'对应的" + clazz.getSimpleName() + "不存在");
+        super(ResultCode.EXIST, "'" + identification + "'对应的" + clazz.getSimpleName() + "已经存在");
     }
 }

@@ -14,13 +14,13 @@ import java.util.Date;
 @Getter
 @AllArgsConstructor
 public enum AgeBracketEnum implements BaseEnum {
-    CHILDHOOD(0, "童年", "少年", 0),
-    ADOLESCENCE(1, "花季", "青少年", 15),
-    ADULTHOOD(2, "青春", "青年", 18),
-    YOUNG(3, "入世", "壮年", 25),
-    MIDDLE_AGE(4, "发展", "壮年", 28),
-    ELDERLY(5, "沉淀", "中年", 35),
-    OLDER(6, "淡薄", "老年", 65),
+    CHILDHOOD(1, "少年", "少年", 0),
+    ADOLESCENCE(2, "花季", "青少年", 15),
+    ADULTHOOD(3, "青春", "青年", 18),
+    YOUNG(4, "入世", "壮年", 25),
+    MIDDLE_AGE(5, "发展", "壮年", 28),
+    ELDERLY(6, "沉淀", "中年", 35),
+    OLDER(7, "淡薄", "老年", 65),
     ;
     final int code;
     /**

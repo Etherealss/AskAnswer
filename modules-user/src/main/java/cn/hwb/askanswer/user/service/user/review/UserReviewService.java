@@ -36,20 +36,20 @@ public class UserReviewService {
 
     /**
      * 上传审核图片
-     * @param userId
+     * @param username
      * @param imgFile
      * @return 头像保存路径，同时也是访问文件的url
      */
-    public FileUploadDTO uploadAvatar(Long userId, MultipartFile imgFile) {
+    public FileUploadDTO uploadReview(String username, MultipartFile imgFile) {
         ImgFileUtil.verifyImgFile(imgFile);
         String originalFilename = imgFile.getOriginalFilename();
         assert originalFilename != null;
         String fileExt = FileUtil.getFileExt(originalFilename);
-        String fileName = userId + fileExt;
+        String fileName = username + fileExt;
         try {
             return fileService.uploadFile(imgFile, getSaveDir(), fileName);
         } catch (IOException e) {
-            log.error("用户头像上传失败：userId：{}，fileName：{}", userId, fileName, e);
+            log.error("用户头像上传失败：username：{}，fileName：{}", username, fileName, e);
             throw new RuntimeException(e);
         }
     }
