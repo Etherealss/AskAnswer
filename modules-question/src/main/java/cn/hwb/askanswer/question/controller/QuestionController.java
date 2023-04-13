@@ -103,4 +103,10 @@ public class QuestionController {
         }
         return questionService.pageByUser(userId, cursor, size);
     }
+
+    @GetMapping("/users/{userId}/count/questions")
+    @AnonymousAccess
+    public Integer countByUser(@PathVariable Long userId) {
+        return questionService.countByUser(userId);
+    }
 }

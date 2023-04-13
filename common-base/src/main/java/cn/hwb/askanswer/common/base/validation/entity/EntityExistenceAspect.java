@@ -53,6 +53,7 @@ public class EntityExistenceAspect {
             EntityExist annotation = parameter.getAnnotation(EntityExist.class);
             if (annotation != null) {
                 for (String beanName : annotation.value()) {
+                    // 通过beanName获取对应的 EntityValidator
                     EntityValidator validator = SpringUtil.getBean(beanName);
                     // validate可能会抛出 NotFoundException，说明ID对应的实体不存在
                     validator.validate(id);

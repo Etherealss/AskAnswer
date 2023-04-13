@@ -38,4 +38,10 @@ public class UserAnswerController {
         }
         return answerService.pageByUser(cursor, size, userId);
     }
+
+    @GetMapping("/users/{userId}/count/answers")
+    @AnonymousAccess
+    public Integer countByUser(@PathVariable Long userId) {
+        return answerService.countByUser(userId);
+    }
 }

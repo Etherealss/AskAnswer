@@ -330,4 +330,8 @@ public class AnswerService extends ServiceImpl<AnswerMapper, AnswerEntity> {
         );
         return commentId;
     }
+
+    public Integer countByUser(Long userId) {
+        return this.lambdaQuery().eq(AnswerEntity::getCreator, userId).count();
+    }
 }

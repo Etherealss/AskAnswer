@@ -30,6 +30,7 @@ public class AnswerController {
     private final AnswerService answerService;
 
     @PostMapping("/answers")
+    @EntityExist
     public Long publish(@RequestBody @Validated CreateAnswerRequest req,
                         @PathVariable @EntityExist(QUESTION) Long questionId) {
         Long answerCreator = UserSecurityContextHolder.require().getUserId();

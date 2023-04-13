@@ -124,6 +124,12 @@ public class QuestionService extends ServiceImpl<QuestionMapper, QuestionEntity>
                 .build();
     }
 
+    public Integer countByUser(Long userId) {
+        return this.lambdaQuery()
+                .eq(QuestionEntity::getCreator, userId)
+                .count();
+    }
+
     /**
      * 获取用户发布过的问题
      * @param userId
