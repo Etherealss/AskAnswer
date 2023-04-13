@@ -27,9 +27,13 @@ public class LogicAuthService {
      * @param requiredRoles 注解对象
      */
     public void checkRole(RequiredRoles requiredRoles) {
+        // @RequiredRoles注解中可以设置多个角色，
+        // 此处判断是只需要一个角色满足即可，还是所有角色都要满足
         if (requiredRoles.logical() == Logical.AND) {
+            // 与操作：必须具有所有权限
             checkRoleAnd(requiredRoles.value());
         } else {
+            // 或操作：只需要满足某一个权限
             checkRoleOr(requiredRoles.value());
         }
     }
