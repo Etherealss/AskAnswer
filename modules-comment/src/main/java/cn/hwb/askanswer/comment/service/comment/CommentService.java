@@ -17,7 +17,6 @@ import cn.hwb.askanswer.like.service.LikeRelationService;
 import cn.hwb.askanswer.like.service.LikeService;
 import cn.hwb.askanswer.notification.service.NotificationService;
 import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
-import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserPageDTO;
 import cn.hwb.askanswer.user.service.user.UserService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.metadata.OrderItem;
@@ -32,8 +31,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -148,7 +145,7 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
      * 如果是false，则会按照评论的发布顺序获取信息（按顺序就是1、2、3……，即使23回复了1也不会被查出来）
      * @return
      */
-    public UserPageDTO<CommentDTO> page(int currentPage, int size, Long targetId, boolean isSubReply) {
+    public PageDTO<CommentDTO> page(int currentPage, int size, Long targetId, boolean isSubReply) {
         LambdaQueryChainWrapper<CommentEntity> lambdaQuery = this.lambdaQuery();
         if (isSubReply) {
             // 获取回复了 targetId 的信息
@@ -162,17 +159,23 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
         pageSpec.addOrder(OrderItem.desc("id"));
         IPage<CommentEntity> page = lambdaQuery.page(pageSpec);
         List<CommentDTO> records = page.getRecords()
-                .stream().map(converter::toDto)
+                .stream()
+                .map(this::toDtoAndSetUser)
                 .collect(Collectors.toList());
-        Map<Long, UserBriefDTO> userMap = records.stream()
-                .map(CommentDTO::getCreator)
-                .distinct() // 去重
-                .map(userService::getBriefById)
-                .collect(Collectors.toMap(UserBriefDTO::getId, Function.identity()));
-        return new UserPageDTO<>(records, page, userMap);
+        return PageDTO.<CommentDTO>builder()
+                .records(records)
+                .pageSize(size)
+                .build();
     }
 
-    public UserPageDTO<CommentDTO> page(Long cursorId, int size, Long targetId) {
+    private CommentDTO toDtoAndSetUser(CommentEntity e) {
+        UserBriefDTO userBrief = userService.getBriefById(e.getCreator());
+        CommentDTO dto = converter.toDto(e);
+        dto.setCreator(userBrief);
+        return dto;
+    }
+
+    public PageDTO<CommentDTO> page(Long cursorId, int size, Long targetId) {
         List<CommentDTO> records = this.lambdaQuery()
                 .eq(CommentEntity::getTargetId, targetId)
                 .lt(CommentEntity::getId, cursorId)
@@ -180,21 +183,15 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
                 .last(String.format("LIMIT %d", size))
                 .list()
                 .stream()
-                .map(converter::toDto)
+                .map(this::toDtoAndSetUser)
                 .collect(Collectors.toList());
-        UserPageDTO<CommentDTO> page = new UserPageDTO<>();
-        page.setRecords(records);
-        page.setPageSize(size);
-        Map<Long, UserBriefDTO> userMap = records.stream()
-                .map(CommentDTO::getCreator)
-                .distinct() // 去重
-                .map(userService::getBriefById)
-                .collect(Collectors.toMap(UserBriefDTO::getId, Function.identity()));
-        page.setUserMap(userMap);
-        return page;
+        return PageDTO.<CommentDTO>builder()
+                .records(records)
+                .pageSize(size)
+                .build();
     }
 
-    public UserPageDTO<CommentDTO> pageByLike(Long userId, Long cursorId, int size) {
+    public PageDTO<CommentDTO> pageByLike(Long userId, Long cursorId, int size) {
         List<Long> commentIds = likeRelationService.page(userId, cursorId, size, LikeTargetType.COMMENT);
         List<CommentDTO> records;
         if (CollectionUtils.isEmpty(commentIds)) {
@@ -205,30 +202,25 @@ public class CommentService extends ServiceImpl<CommentMapper, CommentEntity> {
                     .orderByDesc(CommentEntity::getId)
                     .list()
                     .stream()
-                    .map(converter::toDto)
+                    .map(this::toDtoAndSetUser)
                     .collect(Collectors.toList());
         }
-        UserPageDTO<CommentDTO> page = new UserPageDTO<>();
-        page.setRecords(records);
-        page.setPageSize(size);
-        Map<Long, UserBriefDTO> userMap = records.stream()
-                .map(CommentDTO::getCreator)
-                .distinct() // 去重
-                .map(userService::getBriefById)
-                .collect(Collectors.toMap(UserBriefDTO::getId, Function.identity()));
-        page.setUserMap(userMap);
-        return page;
+        return PageDTO.<CommentDTO>builder()
+                .records(records)
+                .pageSize(size)
+                .build();
     }
 
     public PageDTO<CommentDTO> pageByUser(Long userId, Long cursorId, int size) {
-        List<CommentDTO> records  = this.lambdaQuery()
-                    // 只获取某一个用户的评论
-                    .eq(CommentEntity::getCreator, userId)
-                    .orderByDesc(CommentEntity::getId)
-                    .list()
-                    .stream()
-                    .map(converter::toDto)
-                    .collect(Collectors.toList());
+        List<CommentDTO> records = this.lambdaQuery()
+                // 只获取某一个用户的评论
+                .eq(CommentEntity::getCreator, userId)
+                .orderByDesc(CommentEntity::getId)
+                .last(String.format("LIMIT %d", size))
+                .list()
+                .stream()
+                .map(this::toDtoAndSetUser)
+                .collect(Collectors.toList());
         return PageDTO.<CommentDTO>builder()
                 .records(records)
                 .pageSize(size)

@@ -45,7 +45,7 @@ public class UserSecurityContextHolder {
     }
 
     /**
-     * 要求必须要有Token，不存在则保存
+     * 要求必须要有Token，不存在则报错
      */
     @NonNull
     public static UserTokenCertificate require() throws TokenException{

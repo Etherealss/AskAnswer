@@ -6,6 +6,7 @@ import org.mapstruct.Mapper;
 import cn.hwb.askanswer.comment.infrastructure.pojo.dto.CommentDTO;
 import cn.hwb.askanswer.comment.infrastructure.pojo.entity.CommentEntity;
 import cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateCommentRequest;
+import org.mapstruct.Mapping;
 
 /**
  * @author hwb
@@ -14,5 +15,6 @@ import cn.hwb.askanswer.comment.infrastructure.pojo.request.CreateCommentRequest
 public interface CommentConverter {
     CommentEntity toEntity(CreateCommentRequest req);
     CommentEntity toEntity(CreateReplyRequest req);
+    @Mapping(target = "creator", ignore = true)
     CommentDTO toDto(CommentEntity entity);
 }

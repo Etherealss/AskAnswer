@@ -7,6 +7,7 @@ import cn.hwb.askanswer.user.infrastructure.pojo.dto.UserBriefDTO;
 import cn.hwb.askanswer.common.base.enums.MapperComponentModel;
 import cn.hwb.askanswer.user.infrastructure.pojo.entity.UserEntity;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 /**
  * @author hwb
@@ -15,6 +16,7 @@ import org.mapstruct.Mapper;
 public interface UserConverter {
     UserBriefDTO toBriefDTO(UserEntity user);
     UserAuthDTO toAuthDTO(UserEntity user);
+    @Mapping(target = "reviewImg", ignore = true)
     UserEntity toEntity(CreateUserRequest request);
     UserEntity toEntity(UpdateUserInfoRequest request);
 }
