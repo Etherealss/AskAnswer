@@ -14,6 +14,7 @@ import java.util.Date;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AnswerDTO {
     Long id;
+    Long questionId;
     UserBriefDTO creator;
     Date createTime;
     Date modifyTime;
